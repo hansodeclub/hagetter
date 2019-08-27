@@ -1,7 +1,8 @@
 steps:
   # create .env file
-  - name: ubuntu
-    args: ['/bin/sh', '-c', 'echo ${_B64_ENV} | base64 -d > .env']
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: /bin/sh
+    args: ['echo ${_B64_ENV} | base64 -d > .env']
   # build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '.']
@@ -10,6 +11,6 @@ steps:
     args: ['push', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA']
     # Deploy container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'run', 'deploy', 'hagetter-$BRANCH_NAME', '--image', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '--region', 'asia-northeast1', '--quiet']
+    args: ['beta', 'run', 'deploy', 'hagetter-$BRANCH_NAME', '--image', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '--region', 'asia-northeast1', '--platform', 'managed', '--quiet']
 images:
   - gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA
