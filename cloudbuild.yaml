@@ -13,4 +13,4 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['beta', 'run', 'deploy', 'hagetter-$BRANCH_NAME', '--image', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '--region', 'asia-northeast1', '--platform', 'managed', '--allow-unauthenticated', '--quiet']
 images:
-  - gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA
+  - asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA
