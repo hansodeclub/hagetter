@@ -11,7 +11,6 @@ export { observer } from 'mobx-react-lite';
 export const RootStore = types
   .model('RootStore', {
     session: SessionStore,
-    testTimeline: TimelineStore,
     localTimeline: TimelineStore,
     publicTimeline: TimelineStore,
     homeTimeline: TimelineStore,
@@ -34,7 +33,6 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
   const store = useLocalStore(() =>
     RootStore.create({
       session: {},
-      testTimeline: { type: 'test' },
       localTimeline: { type: 'local' },
       publicTimeline: { type: 'public' },
       homeTimeline: { type: 'home' },
@@ -60,9 +58,7 @@ export const useStore = () => {
 // ダサい(typeつかう)
 export const useTimeline = (name: string) => {
   const store = useStore();
-  if (name === 'test') {
-    return store.testTimeline;
-  } else if (name === 'local') {
+  if (name === 'local') {
     return store.localTimeline;
   } else if (name === 'public') {
     return store.publicTimeline;
