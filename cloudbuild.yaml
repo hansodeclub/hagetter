@@ -1,7 +1,7 @@
 steps:
   # create .env file
   - name: ubuntu
-    args: ['/bin/sh -c', 'echo ${_B64_ENV} | base64 -D > .env']
+    args: ['/bin/sh', '-c', 'echo ${_B64_ENV} | base64 -D > .env']
   # build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '.']
