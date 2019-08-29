@@ -6,6 +6,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { amber } from '@material-ui/core/colors';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useStore, observer } from '../stores';
+import {postError} from'../utils/hage';
 
 const useStyle = makeStyles((theme: Theme) => ({
   warning: {
@@ -24,8 +25,22 @@ const useStyle = makeStyles((theme: Theme) => ({
   }
 }));
 
-const action = (
-  <Button color="primary" size="small">
+const sendError = async (error: Error) => {
+  let url;
+  try {
+    const id = await postError(window.location.href, error.message, error.stack.split('\n'));
+    url = `${window.location.origin}/errors/${id}`;
+  } catch (err) {}
+
+  window.open(
+    `https://handon.club/share?text=${encodeURIComponent(
+      `@osa9 バグってるぞ殺すぞ\nERROR: ${error.message}${url && '\n'+url}`
+    )}`
+  );
+};
+
+const Action: React.FC<{ error?: Error }> = ({ error }) => (
+  <Button color="primary" size="small" onClick={() => sendError(error)}>
     報告する
   </Button>
 );
@@ -58,7 +73,7 @@ const ErrorNotification = observer(() => {
             {rootStore.error.message}
           </span>
         }
-        action={action}
+        action={<Action error={rootStore.error} />}
       />
     </Snackbar>
   );

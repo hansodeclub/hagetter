@@ -2515,12 +2515,10 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-emoji-mart@^2.11.1:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-2.11.1.tgz#fc9330b513803c17b98c9ad289c12ab61ff05f8f"
-  integrity sha512-Hr4N56YEkaPtmojO2dfgnMLLE/d5HpnhH0+M8cw9LRHpG2EgQQaCelRad3d5qQAPHI5+K0wMc/rwM0eRo0FnUA==
-  dependencies:
-    prop-types "^15.6.0"
+emoji-mart@2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-2.8.1.tgz#4ffcb807237989a953085c80a6553d21f1effc62"
+  integrity sha512-9ScBU9ObG4qVQOMvQWQwUkYVNK/eOu/TRk8o+LABtnL2BE/o9CU4OvtjcoBPNiC/7QtRhW9vOwmvUx/OjT+mwA==
 
 emojis-list@^2.0.0:
   version "2.1.0"
@@ -5006,7 +5004,7 @@ prop-types-exact@1.2.0:
     object.assign "^4.1.0"
     reflect.ownkeys "^0.2.0"
 
-prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5216,6 +5214,11 @@ react-js-pull-to-refresh@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-js-pull-to-refresh/-/react-js-pull-to-refresh-1.2.2.tgz#bd4288049cb564953ab1fa27187c1c37bc309a91"
   integrity sha512-fb4gBIGIE7Mehj1ZzMegl3Ca8abSc2zT6s60n+iCALdUeI9H9XvD5T+v2M8N2MDyJcxvghKdzLHZlRbSVDwK7w==
+
+react-modal-image@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-modal-image/-/react-modal-image-2.4.0.tgz#43fa76c7085995a6546d53a5d6ba0d6a1a303e5f"
+  integrity sha512-FvOHFgrBw8Ym5NY0iVBj6ddtFrADUJAJGBeMf5rKX2mpxPHuknkasmkzuVXMh0Jf2GSTW0GCLeTON6yX4ySVKQ==
 
 react-redux@^7.0.3:
   version "7.1.0"

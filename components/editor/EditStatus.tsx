@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme =>
       marginBottom: 2
     },
     howTo: {
-      margin: theme.spacing(5),
+      margin: theme.spacing(3),
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
       backgroundColor: '#f1f1f1'
@@ -89,6 +89,9 @@ const useStyles = makeStyles(theme =>
     howToText: {
       width: '100%',
       textAlign: 'center'
+    },
+    toot: {
+      borderBottom: '1px solid #ccc'
     }
   })
 );

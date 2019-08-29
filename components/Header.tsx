@@ -56,9 +56,7 @@ const Header: React.FC = observer(() => {
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           <Link href="/">
-            <a style={{ textDecoration: 'none', color: 'black' }}>
-              Hagetter(ロゴ募集中)
-            </a>
+            <a style={{ textDecoration: 'none', color: 'black' }}>Hagetter</a>
           </Link>
         </Typography>
         <div className={classes.grow} />

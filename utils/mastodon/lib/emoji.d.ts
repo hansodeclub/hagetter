@@ -1,3 +1,5 @@
 import { Emoji } from '../types';
 
-export default function emojify(str: string, customEmojis: Emoji[]): string
+export type EmojiMap = any
+export default function emojify(str: string, customEmojis?: EmojiMap): string
+export function buildCustomEmojis(emojis: Emoji[]): EmojiMap

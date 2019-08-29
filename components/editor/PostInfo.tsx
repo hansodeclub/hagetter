@@ -4,16 +4,19 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
-import { useSession, useEditor, observer } from '../../stores';
+import { useStore, useSession, useEditor, observer } from '../../stores';
 import cookie from 'js-cookie';
+import Router from 'next/router';
 
 const useStyles = makeStyles(theme =>
   createStyles({
     postButtonContainer: {
-      marginTop: 20,
-      textAlign: 'right'
+      marginTop: 20
     },
     title: {
       display: 'flex'
@@ -36,31 +39,56 @@ const PostInfo = observer(() => {
   const classes = useStyles({});
   const session = useSession();
   const editor = useEditor();
+  const app = useStore();
 
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [unlisted, setUnlisted] = React.useState(false);
+  const [postLoading, setPostLoading] = React.useState(false);
+
   React.useEffect(() => {
     session
       .getAccount()
       .then(account => {})
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(app.notifyError);
   }, []);
 
+  React.useEffect(() => {
+    if (editor.hasPrivateStatus && !unlisted) setUnlisted(true);
+  }, [editor.hasPrivateStatus]);
+
+  const handleUnlistedChange = event => {
+    if (editor.hasPrivateStatus) {
+      setUnlisted(unlisted);
+    } else {
+      setUnlisted(!unlisted);
+    }
+  };
+
+  const successPost = res => {
+    Router.push(`/hi/${res.data.key}`);
+  };
+
   const onSubmit = () => {
+    if (postLoading) return;
     if (!title || !description) {
       alert('タイトル、説明は必須入力です');
       return;
     }
+
     const token = cookie.get('token');
     if (!token) {
       console.error('Not logged in');
+      alert('ログインしていないようです');
+      return;
     }
+
+    setPostLoading(true);
 
     const body = {
       title,
       description,
+      visibility: unlisted || editor.hasPrivateStatus ? 'unlisted' : 'public',
       data: editor.items.toJS()
     };
 
@@ -78,8 +106,14 @@ const PostInfo = observer(() => {
 
     fetch('/api/post', options)
       .then(res => res.json())
-      .then(console.log)
-      .catch(console.error);
+      .then(data => {
+        successPost(data);
+        setPostLoading(false);
+      })
+      .catch(err => {
+        app.notifyError(err);
+        setPostLoading(false);
+      });
   };
 
   return (
@@ -121,9 +155,35 @@ const PostInfo = observer(() => {
         />
       </div>
       <div className={classes.postButtonContainer}>
-        <Button variant="contained" color="primary" onClick={onSubmit}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={unlisted || editor.hasPrivateStatus}
+              onChange={handleUnlistedChange}
+              value="unlisted"
+            />
+          }
+          label="未収載"
+        />
+        {postLoading && <CircularProgress />}
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ float: 'right' }}
+          onClick={onSubmit}
+        >
           投稿する
         </Button>
+      </div>
+      <div>
+        {editor.hasPrivateStatus && (
+          <p style={{ color: '#ff4040' }}>
+            ※非公開のステータスを含むため未収載のみ選択可能です(URLの取り扱いには大いなる責任が伴います)
+          </p>
+        )}
+        <p>
+          ※未収載を選択するとまとめ一覧に表示されません(URLを知っている人は誰でも見る事が出来ます)
+        </p>
       </div>
     </div>
   );

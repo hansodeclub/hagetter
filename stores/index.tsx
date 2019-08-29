@@ -21,7 +21,7 @@ export const RootStore = types
   })
   .actions(self => ({
     notifyError(error: Error) {
-      self.error = error;
+      self.error = error; // see _app.tsx
     }
   }));
 

@@ -13,7 +13,7 @@ export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const datastore = new Datastore();
     const result = await datastore.get(
-        datastore.key(['Hagetter', Number.parseInt(id)]),
+      datastore.key(['Hagetter', Number.parseInt(id)]),
     );
     if (result[0]) {
         console.log(result);
@@ -33,12 +33,12 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
         throw Error('Invalid credentials');
     }
 
-    const {verifyCredentials} = await Masto.login({
+    const masto = await Masto.login({
         uri: process.env.MASTODON_SERVER,
         accessToken: token
     });
 
-    const profile = await verifyCredentials();
+    const profile = await masto.verifyCredentials();
 
     const data = {
         title: req.body.title,
@@ -50,17 +50,18 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
         stars: 0,
         created_at: new Date(),
         data: req.body.data,
-        user: profile
+        user: profile,
+        visibility: req.body.visibility
     }
 
     // 記事のURL返す
     const datastore = new Datastore();
-    await datastore.insert({
+    const result = await datastore.insert({
         key: datastore.key(['Hagetter']),
         data: data
     });
 
-    respondSuccess(res);
+    respondSuccess(res, {key: result[0].mutationResults[0].key.path[0].id});
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

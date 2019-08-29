@@ -7,7 +7,7 @@ import {
   useEditor
 } from '../../stores';
 
-import Toot from '../Toot/Toot';
+import Toot, { isPublic } from '../Toot/Toot';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -32,6 +32,7 @@ import {
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Status } from '../../utils/mastodon/types';
+import HowTo, { Tips } from './HowTo';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -45,9 +46,13 @@ const useStyles = makeStyles(theme =>
       position: 'relative',
       flexGrow: 1,
       boxSizing: 'border-box',
-      marginBottom: 2,
+      marginTop: 5,
+      marginBottom: 2, // TODO: 微調整(消したい)
       height: '100%',
       backgroundColor: 'white'
+    },
+    searchArea: {
+      marginTop: 5
     },
     tootSelector: {
       flexGrow: 1,
@@ -80,7 +85,7 @@ const useStyles = makeStyles(theme =>
       marginBottom: 2
     },
     howTo: {
-      margin: theme.spacing(5),
+      margin: theme.spacing(3),
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
       backgroundColor: '#f1f1f1'
@@ -95,19 +100,24 @@ const useStyles = makeStyles(theme =>
       left: 0,
       width: '100%',
       zIndex: 2
+    },
+    toot: {
+      borderBottom: '1px solid #ccc'
     }
   })
 );
 
-const HowTo: React.FC = () => {
+const HowT: React.FC = () => {
   const classes = useStyles({});
+
   return (
     <div className={classes.howToContainer}>
       <div className={classes.howTo}>
         <p className={classes.howToText}>使い方</p>
         <ul>
-          <li>上のボタンを押してトゥートを探しましょう。</li>
+          <li>タイムラインからまとめるやつを探しましょう</li>
           <li>クリックで右に追加されます</li>
+          <li>まとめには大きな責任が伴います</li>
         </ul>
       </div>
     </div>
@@ -143,7 +153,7 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
 
   return (
     <>
-      <div className="searchArea">
+      <div className={classes.searchArea}>
         <TextField
           id="filter-input"
           label={'フィルタ'}
@@ -171,6 +181,8 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
                   onClick={onStatusSelect}
                   key={status.id}
                   status={status}
+                  disabled={!isPublic(status.visibility)}
+                  className={classes.toot}
                 />
               ))}
               {!store.init &&
@@ -308,7 +320,7 @@ const StatusSelector: React.FC = observer(() => {
           <Tab style={{ minWidth: 50 }} icon={<LinkIcon />} aria-label="url" />
         </Tabs>
       </Paper>
-      {viewType === false && <HowTo />}
+      {viewType === false && <HowT />}
       {viewType === 0 && <Timeline name="home" />}
       {viewType === 1 && <Timeline name="local" />}
       {viewType === 2 && <Timeline name="public" />}
