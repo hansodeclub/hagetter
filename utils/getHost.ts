@@ -8,14 +8,16 @@ function getHost(req) {
 
     let host;
     if (req.headers) {
+        // server side
         host = req.headers.host;
     } else if (req.location) {
+        // client side
         host = req.location.host;
     } else {
         throw Error('getHost: Unknown parameter');
     }
 
-    if (host.startsWith('localhost')) {
+    if (host.startsWith('localhost') || host.startsWith('10.') || host.startsWith('192.')) {
         return `http://${host}`
     }
     return `https://${host}`

@@ -16,7 +16,6 @@ export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
       datastore.key(['Hagetter', Number.parseInt(id)]),
     );
     if (result[0]) {
-        console.log(result);
         respondSuccess(res, {
             ...result[0],
             id,

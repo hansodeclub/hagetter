@@ -1,7 +1,7 @@
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 // comment out when using custom theme
-declare module '@material-ui/core/styles/createMuiTheme' {
+/*declare module '@material-ui/core/styles/createMuiTheme' {
   interface Theme {
     item: {
       borderBottom: string;
@@ -13,12 +13,12 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       borderBottom?: string;
     };
   }
-}
+}*/
 
 const theme = createMuiTheme({
-  item: {
+  /*item: {
     borderBottom: '1px solid #cccccc'
-  }
+  }*/
 });
 
 export default theme;

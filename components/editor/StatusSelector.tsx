@@ -4,6 +4,7 @@ import {
   useStore,
   useTimeline,
   useSearchTimeline,
+  useUrlSearchTimeline,
   useEditor
 } from '../../stores';
 
@@ -12,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 import HomeIcon from '@material-ui/icons/HomeRounded';
 import PeopleIcon from '@material-ui/icons/PeopleRounded';
@@ -62,6 +64,7 @@ const useStyles = makeStyles(theme =>
       height: '100%',
       width: '100%',
       overflow: 'scroll',
+      '-webkit-overflow-scrolling': 'touch',
       border: '1px solid #ccc',
       borderRadius: 5,
       boxSizing: 'border-box'
@@ -204,12 +207,17 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
 
 const SearchTimeline: React.FC = observer(() => {
   const store = useSearchTimeline();
+  const editor = useEditor();
 
   const classes = useStyles({});
   const [keyword, setKeyword] = React.useState('');
   const onSearch = async (keyword: string) => {
     await store.search(keyword);
     //for await (const it of store.search(keyword)) { console.log('it') }
+  };
+  const onStatusSelect = (status: Status) => {
+    editor.addStatus(status, editor.getAnchor());
+    return false;
   };
 
   const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,10 +270,81 @@ const SearchTimeline: React.FC = observer(() => {
           >
             <div id="basic-container">
               {store.filteredStatuses.map(status => (
-                <Toot key={status.id} status={status} />
+                <Toot
+                  onClick={onStatusSelect}
+                  key={status.id}
+                  status={status}
+                  disabled={!isPublic(status.visibility)}
+                  className={classes.toot}
+                />
               ))}
             </div>
           </PullToRefresh>
+        </div>
+      </div>
+    </>
+  );
+});
+
+const UrlSearchTimeline: React.FC = observer(() => {
+  const store = useUrlSearchTimeline();
+  const editor = useEditor();
+  const app = useStore();
+
+  const classes = useStyles({});
+  const [keyword, setKeyword] = React.useState('');
+
+  const onStatusSelect = (status: Status) => {
+    editor.addStatus(status, editor.getAnchor());
+    return false;
+  };
+
+  const onSearch = async (keyword: string) => {
+    try {
+      await store.search(keyword);
+    } catch (err) {
+      console.error(err);
+      app.notifyError(err);
+    }
+    //for await (const it of store.search(keyword)) { console.log('it') }
+  };
+
+  return (
+    <>
+      <div className="queryArea">
+        <TextField
+          id="filter-input"
+          label={'URL'}
+          variant="outlined"
+          onChange={event => setKeyword(event.target.value)}
+          fullWidth
+          multiline
+          rows={2}
+          style={{ backgroundColor: 'white', marginTop: 5 }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ float: 'right' }}
+          onClick={() => onSearch(keyword)}
+        >
+          検索
+        </Button>
+      </div>
+      <div className={classes.gridContent}>
+        {store.loading && <LinearProgress className={classes.progress} />}
+        <div className={classes.tootSelector}>
+          <div id="basic-container">
+            {store.statuses.map(status => (
+              <Toot
+                onClick={onStatusSelect}
+                key={status.id}
+                status={status}
+                disabled={!isPublic(status.visibility)}
+                className={classes.toot}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </>
@@ -326,6 +405,7 @@ const StatusSelector: React.FC = observer(() => {
       {viewType === 2 && <Timeline name="public" />}
       {viewType === 3 && <Timeline name="favourites" />}
       {viewType === 4 && <SearchTimeline />}
+      {viewType === 5 && <UrlSearchTimeline />}
     </>
   );
 });

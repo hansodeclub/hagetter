@@ -89,7 +89,7 @@ const PostInfo = observer(() => {
       title,
       description,
       visibility: unlisted || editor.hasPrivateStatus ? 'unlisted' : 'public',
-      data: editor.items.toJS()
+      data: editor.items.map(item => item.postData)
     };
 
     const headers = {

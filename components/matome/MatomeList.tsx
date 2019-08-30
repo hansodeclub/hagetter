@@ -6,6 +6,7 @@ import { getList } from '../../utils/hage';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -55,26 +56,33 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const Content: React.FC<{ items: any }> = ({ items }) => {
+const Content: React.FC<{ items: any; className?: string }> = ({
+  items,
+  className
+}) => {
   const classes = useStyles({});
 
-  return items.map(item => (
-    <div key={item.id} className={classes.itemBox}>
-      <a href={`/hi/${item.id}`} style={{ textDecoration: 'none' }}>
-        <div className={classes.innerBox}>
-          <div className={classes.title}>{item.title}</div>
-          <div className={classes.footer}>
-            <Avatar src={item.avatar} className={classes.avatar} />
-            <div className={classes.name}>{item.displayName}</div>
-            <div className={classes.grow} />
-            <div style={{ marginTop: 5 }}>
-              {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
+  return (
+    <div className={clsx(className)}>
+      {items.map(item => (
+        <div key={item.id} className={classes.itemBox}>
+          <a href={`/hi/${item.id}`} style={{ textDecoration: 'none' }}>
+            <div className={classes.innerBox}>
+              <div className={classes.title}>{item.title}</div>
+              <div className={classes.footer}>
+                <Avatar src={item.avatar} className={classes.avatar} />
+                <div className={classes.name}>{item.displayName}</div>
+                <div className={classes.grow} />
+                <div style={{ marginTop: 5 }}>
+                  {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
+                </div>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
-      </a>
+      ))}
     </div>
-  ));
+  );
 };
 
 const MatomeList = () => {

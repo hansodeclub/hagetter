@@ -37,9 +37,6 @@ const Content = ({ item }) => {
       <div>
         {item.data.map(item => <Item item={item} />)}
       </div>
-      <div style={{textAlign: 'right', marginTop: 10}}>
-        <button>シェアボタン</button>
-      </div>
     </div>
   );
 };

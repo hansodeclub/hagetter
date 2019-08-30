@@ -5,6 +5,7 @@ import TimelineStore from './timelineStore';
 import SearchTimelineStore from './searchTimelineStore';
 import SessionStore from './sessionStore';
 import EditorStore from './editorStore';
+import UrlSearchTimelineStore from './urlSearchTimelineStore';
 
 export { observer } from 'mobx-react-lite';
 
@@ -16,6 +17,7 @@ export const RootStore = types
     homeTimeline: TimelineStore,
     favouriteTimeline: TimelineStore,
     searchTimeline: SearchTimelineStore,
+    urlSearchTimeline: UrlSearchTimelineStore,
     editor: EditorStore,
     error: types.maybeNull(types.frozen<Error>())
   })
@@ -38,6 +40,7 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
       homeTimeline: { type: 'home' },
       favouriteTimeline: { type: 'favourites' },
       searchTimeline: { type: 'search' },
+      urlSearchTimeline: { type: 'urls' },
       editor: {}
     })
   );
@@ -74,6 +77,11 @@ export const useTimeline = (name: string) => {
 export const useSearchTimeline = () => {
   const store = useStore();
   return store.searchTimeline;
+};
+
+export const useUrlSearchTimeline = () => {
+  const store = useStore();
+  return store.urlSearchTimeline;
 };
 
 export const useLocalTimeline = () => {
