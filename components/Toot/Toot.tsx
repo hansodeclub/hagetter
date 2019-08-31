@@ -135,7 +135,10 @@ const Toot: React.FC<StatusProps> = ({
           <div className={classes.displayName}>
             {status.account.display_name}
           </div>
-          <div className={classes.acct}>{status.account.acct}</div>
+          <div className={classes.acct}>
+            {status.account.acct +
+              (status.account.acct.includes('@') ? '@handon.club' : '')}
+          </div>
         </div>
         <div className={classes.body}>
           {size && (

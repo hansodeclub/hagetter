@@ -10,6 +10,39 @@ import NextError from 'next/error';
 import {TextItem} from '../../components/matome/Item';
 import Toot from '../../components/Toot/Toot';
 import {Status} from '../../utils/mastodon/types';
+import Avatar from '@material-ui/core/Avatar';
+import moment from 'moment';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    name: {
+      paddingTop: 5,
+      height: 30,
+      marginLeft: 5
+    },
+    avatar: {
+      width: 32,
+      height: 32
+    },
+    title: {
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      paddingLeft: 5
+    },
+    footer: {
+      paddingTop: theme.spacing(1),
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    grow: {
+      flexGrow: 1
+    }
+  })
+);
 
 const getPost = async (id: string) => {
   const result = await fetch(`/api/post?id=${id}`);
@@ -29,10 +62,19 @@ const Item = ({ item, onClick }: { item: any, onClick?: (item: any) => any }) =>
 };
 
 const Content = ({ item }) => {
+  const classes = useStyles({});
   return (
     <div style={{maxWidth: 600, border: '1px solid #ccc', borderRadius: 10, padding: '10px 5px', backgroundColor: '#fff'}}>
       <Typography variant="h5"><b>{item['title']}</b></Typography>
       <Typography variant="body2">{item['description']}</Typography>
+      <div className={classes.footer}>
+        <Avatar src={item.avatar} className={classes.avatar} />
+        <div className={classes.name}>{item.displayName}</div>
+        <div className={classes.grow} />
+        <div style={{ marginTop: 5 }}>
+          {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
+        </div>
+      </div>
       <hr />
       <div>
         {item.data.map(item => <Item item={item} />)}
