@@ -8,25 +8,24 @@ import head from '../../../utils/head';
 import NextError from 'next/error';
 import {getUserPost} from '../../../utils/hage';
 import {useStore} from '../../../stores';
-
-
+import  {deletePost} from '../../../utils/hage';
+import moment from 'moment';
 
 const UserPost = () => {
   const app = useStore();
   const router = useRouter();
   const username = head(router.query.username);
   const [loading, setLoading] = React.useState(true);
+  const [invoke, setInvoke] = React.useState(false);
   const [code, setCode] = React.useState<number>();
-  const [item, setItem] = React.useState<any>();
+  const [items, setItems] = React.useState<any>();
 
   React.useEffect(() => {
     let unmounted = false;
     if(!username) return;
     getUserPost(username).then(result => {
       if (!unmounted) {
-        console.log(result);
-        setItem(result.data);
-        setCode(result.status);
+        setItems(result.data.items);
         setLoading(false);
       }
     }).catch(err => {
@@ -36,14 +35,31 @@ const UserPost = () => {
     return () => {
       unmounted = true;
     };
-  }, [username]);
+  }, [username, invoke]);
+
+  const onDeletePost = async (id:string) => {
+    if(window.confirm("削除しますか?")) {
+      try {
+        await deletePost(id);
+        setInvoke(!invoke); // TODO: yabai
+      } catch(err) {
+        app.notifyError(err);
+      }
+    }
+  }
 
   return (<div>
     <Header/>
     <Container>
       {loading && <CircularProgress/>}
-      {!loading && code === 404 && <NextError statusCode={404}/>}
-      {!loading && code === 200 && item && JSON.stringify(item) }
+      {!loading && <div>
+        <h4>あなたのまとめ一覧</h4>
+        <ul>
+          {!loading && items && items.map(item =>
+            <li><a href={`/hi/${item.id}`}>{item.title}</a>{item.visibility==='unlisted'&&'(未収載)'}  {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
+              <button onClick={() => onDeletePost(item.id)}>削除</button></li>)}
+        </ul>
+      </div>}
     </Container>
   </div>);
 };

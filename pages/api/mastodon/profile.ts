@@ -16,6 +16,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         const profile = await masto.verifyCredentials();
+        if(!profile.acct.includes('@')) {
+            profile.acct += '@handon.club'; // TODO: dynamic server name
+        }
         respondSuccess(res, profile);
     } catch (err) {
         console.log(err);

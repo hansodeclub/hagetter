@@ -78,9 +78,14 @@ const Header: React.FC = observer(() => {
                 </Button>
               </Link>
               <Typography className={classes.title} variant="subtitle1" noWrap>
-                @{session.account.acct}
+                {session.account.acct}
               </Typography>
-              <Avatar src={session.account.avatar} />
+              <Link href={`/user/${session.account.acct}/posts`}>
+                <Avatar
+                  src={session.account.avatar}
+                  style={{ cursor: 'pointer' }}
+                />
+              </Link>
               <Button onClick={() => session.logout()}>ログアウト</Button>
             </>
           )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { request } from './api/client';
+import { request, request2 } from './api/client';
 
 // TODO: improvement
 export const getPost = async (id: string) => {
@@ -16,6 +16,11 @@ export const getList = async () => {
   const res = await request('/api/posts/list', false);
   return res;
 };
+
+export const deletePost = async (id: string) => {
+  const res = await request2(`/api/post?id=${id}`, {auth: true, method: 'DELETE'});
+  return res;
+}
 
 export const postError = async (page: string, message: string, stack: string[]) => {
   const body = {

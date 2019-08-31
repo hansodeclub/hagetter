@@ -63,12 +63,49 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
     respondSuccess(res, {key: result[0].mutationResults[0].key.path[0].id});
 }
 
+export const deletePost = async (req: NextApiRequest, res: NextApiResponse) => {
+    const id = head(req.query.id);
+    const token = req.headers.authorization;
+    if (!token || !id) {
+        throw Error('Invalid credentials');
+    }
+
+    const masto = await Masto.login({
+        uri: process.env.MASTODON_SERVER,
+        accessToken: token
+    });
+
+    const profile = await masto.verifyCredentials();
+    const loginId = profile.acct + (!profile.acct.includes('@') ? '@handon.club' : '');
+
+    const datastore = new Datastore();
+    const result = await datastore.get(
+      datastore.key(['Hagetter', Number.parseInt(id)]),
+    );
+
+    if (result[0]) {
+        if(result[0].username !== loginId) {
+            throw Error('Invalid user');
+        }
+
+        await datastore.delete(
+          datastore.key(['Hagetter', Number.parseInt(id)])
+        );
+    } else {
+        respondError(res, 'Item not found', 404);
+    }
+
+    respondSuccess(res);
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         if (req.method === 'GET') {
             await getData(req, res);
         } else if (req.method === 'POST') {
             await postData(req, res);
+        } else if (req.method === 'DELETE') {
+            await deletePost(req, res);
         } else {
             respondError(res, `Unknown method: ${req.method}`);
         }
