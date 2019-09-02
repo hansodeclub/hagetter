@@ -6,9 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import LockIcon from '@material-ui/icons/Lock';
 import Avatar from '@material-ui/core/Avatar';
 import { Status } from '../../utils/mastodon/types';
-//import emojify, { buildCustomEmojis } from '../../utils/mastodon/emoji';
+import emojify, { buildCustomEmojis } from '../../utils/mastodon/emoji';
 import Timestamp from './Timestamp';
 import clsx from 'clsx';
+
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
@@ -143,13 +144,13 @@ const Toot: React.FC<StatusProps> = ({
         <div className={classes.body}>
           {size && (
             <Typography variant={size as any} style={{ color: color }}>
-              <span dangerouslySetInnerHTML={{ __html: status['content'] }} />
+              <span dangerouslySetInnerHTML={{ __html: emojify(status['content'], buildCustomEmojis(status.emojis)) }} />
             </Typography>
           )}
           {!size && (
             <span
               dangerouslySetInnerHTML={{
-                __html: status['content']
+                __html: emojify(status['content'], buildCustomEmojis(status.emojis))
               }}
             />
           )}

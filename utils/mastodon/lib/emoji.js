@@ -1,12 +1,14 @@
-import unicodeMapping from './emoji_unicode_mapping_light';
+// import unicodeMapping from './emoji_unicode_mapping_light';
 import Trie from 'substring-trie';
 
-const trie = new Trie(Object.keys(unicodeMapping));
+const trie = new Trie([]); //Object.keys(unicodeMapping));
 
 const assetHost = process.env.CDN_HOST || 'https://handon.club';
 
 const emojify = (str, customEmojis = {}) => {
-  return str;
+  if(Object.keys(customEmojis).length>0) {
+    console.log(str, customEmojis);
+  }
   const tagCharsWithoutEmojis = '<&';
   const tagCharsWithEmojis = Object.keys(customEmojis).length ? '<&:' : '<&';
   let rtn = '', tagChars = tagCharsWithEmojis, invisible = 0;
@@ -24,11 +26,11 @@ const emojify = (str, customEmojis = {}) => {
         if (!rend) return false; // no pair of ':'
         const lt = str.indexOf('<', i + 1);
         if (!(lt === -1 || lt >= rend)) return false; // tag appeared before closing ':'
-        const shortname = str.slice(i, rend);
+        const shortname = str.slice(i+1, rend-1);
         // now got a replacee as ':shortname:'
         // if you want additional emoji handler, add statements below which set replacement and return true.
         if (shortname in customEmojis) {
-          const filename = customEmojis[shortname].url;
+          const filename = customEmojis[shortname].imageUrl;
           replacement = `<img draggable="false" class="emojione" alt="${shortname}" title="${shortname}" src="${filename}" />`;
           return true;
         }
@@ -76,7 +78,7 @@ const emojify = (str, customEmojis = {}) => {
 export default emojify;
 
 export const buildCustomEmojis = (customEmojis) => {
-  const emojis = [];
+  const emojis = {};
 
   customEmojis.forEach(emoji => {
     const shortcode = emoji['shortcode']; //.get('shortcode');
@@ -88,7 +90,7 @@ export const buildCustomEmojis = (customEmojis) => {
     }
     const name      = shortcode.replace(':', '');
 
-    emojis.push({
+    emojis[shortcode] = {
       id: name,
       name,
       short_names: [name],
@@ -97,7 +99,7 @@ export const buildCustomEmojis = (customEmojis) => {
       keywords: [name],
       imageUrl: url,
       custom: true,
-    });
+    };
   });
 
   return emojis;
