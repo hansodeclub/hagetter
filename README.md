@@ -1,3 +1,14 @@
 # Hagetter
 
-![donmi](static/donmi_kusa.png)
+![donmi](public/donmi_kusa.png)
+
+## Release Note
+### 0.2.0
+✅ 認証まわりを改善
+### 0.1.0
+✅ パッケージのアップデート  
+✅ セッションの有効期限が過ぎてもログインしたままに見えるバグを修正  
+✅ noteが長いと投稿エラーが出るバグを修正  
+
+### 0.1.0
+㊗️リリース
