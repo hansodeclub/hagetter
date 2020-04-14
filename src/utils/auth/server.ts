@@ -107,8 +107,6 @@ export const generateToken = (
     }
   )
 
-  console.error(`token is ${token}`)
-
   return token
 }
 

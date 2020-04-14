@@ -4,7 +4,7 @@ import {
   respondError,
   withApi,
   withApiAuth,
-  withApiMasto
+  withApiMasto,
 } from '../../utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
 import head from '../../utils/head'
@@ -36,21 +36,21 @@ const createPost = withApiMasto(
       title: req.body.title,
       description: req.body.description,
       image: null,
-      username: user, //`${profile.username}@handon.club`,
-      displayName: profile.display_name,
+      username: user,
+      displayName: profile.display_name || profile.username,
       avatar: profile.avatar,
       stars: 0,
       created_at: new Date(),
       data: req.body.data,
       user: profile,
-      visibility: req.body.visibility
+      visibility: req.body.visibility,
     }
 
     // Create post and get ID
     const datastore = new Datastore()
     const result = await datastore.insert({
       key: datastore.key(['Hagetter']),
-      data: data
+      data: data,
     })
 
     return { key: result[0].mutationResults[0].key.path[0].id }

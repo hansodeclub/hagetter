@@ -124,7 +124,7 @@ const Toot: React.FC<StatusProps> = ({
       <div className={classes.left}>
         <div>
           <Avatar
-            alt={status.account.display_name}
+            alt={status.account.display_name || status.account.username}
             src={status.account.avatar}
             className={classes.avatar}
           />
@@ -133,7 +133,7 @@ const Toot: React.FC<StatusProps> = ({
       <div className={classes.right}>
         <div className={classes.header}>
           <div className={classes.displayName}>
-            {status.account.display_name}
+            {status.account.display_name || status.account.username}
           </div>
           <div className={classes.acct}>{status.account.acct}</div>
         </div>
