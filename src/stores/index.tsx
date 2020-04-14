@@ -19,15 +19,15 @@ export const RootStore = types
     searchTimeline: SearchTimelineStore,
     urlSearchTimeline: UrlSearchTimelineStore,
     editor: EditorStore,
-    error: types.maybeNull(types.frozen<Error>())
+    error: types.maybeNull(types.frozen<Error>()),
   })
   .actions((self) => ({
     notifyError(error: Error) {
       self.error = error // see _app.tsx
-    }
+    },
   }))
 
-export type TRootStore = Instance<typeof RootStore> //.Type;
+export type TRootStore = Instance<typeof RootStore>
 
 export const storeContext = React.createContext<TRootStore | null>(null)
 
@@ -42,7 +42,7 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
       favouriteTimeline: { type: 'favourites', session: sessionStore.id },
       searchTimeline: { type: 'search', session: sessionStore.id },
       urlSearchTimeline: { type: 'urls', session: sessionStore.id },
-      editor: {}
+      editor: {},
     })
   })
   return <storeContext.Provider value={store}>{children}</storeContext.Provider>

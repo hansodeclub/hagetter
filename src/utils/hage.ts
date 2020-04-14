@@ -28,7 +28,7 @@ export const createPost = async (
     title,
     description,
     visibility,
-    data: items
+    data: items,
   }
 
   const options = {
@@ -36,9 +36,9 @@ export const createPost = async (
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   }
 
   const res = await fetch('/api/post', options)
@@ -58,7 +58,7 @@ export const getList = async () => {
 export const deletePost = async (id: string, token: string) => {
   const res = await request(`/api/post?id=${id}`, {
     token,
-    method: 'DELETE'
+    method: 'DELETE',
   })
   return res
 }
@@ -72,18 +72,18 @@ export const postError = async (
     page,
     message,
     stack,
-    time: new Date()
+    time: new Date(),
   }
 
   const headers = {
     Accept: 'application/json',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }
 
   const options = {
     method: 'POST',
     headers,
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   }
 
   const result = await fetch('/api/errors', options)
@@ -119,8 +119,8 @@ export const login = async (instance: string, code: string): Promise<any> => {
 export const fetchProfile = async (token: string) => {
   const res = await fetch('/api/mastodon/profile', {
     headers: {
-      Authorization: token
-    }
+      Authorization: `Bearer ${token}`,
+    },
   })
 
   // TODO: error handling (check error without response -> with error response)
@@ -137,8 +137,8 @@ export const fetchTimeline = async (
   if (max_id) url = `${url}?max_id=${max_id}`
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   })
   const data = await res.json()
   return data.data as Status[]
@@ -149,8 +149,8 @@ export const fetchSearchTimeline = async (token: string, keyword: string) => {
     `/api/mastodon/search?keyword=${encodeURIComponent(keyword)}`,
     {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
   )
 
@@ -164,9 +164,9 @@ export const fetchUrlTimeline = async (token: string, urls: string[]) => {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ urls })
+    body: JSON.stringify({ urls }),
   })
 
   const data = await res.json()
