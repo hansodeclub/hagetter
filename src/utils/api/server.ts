@@ -2,7 +2,8 @@ import { ApiResponse } from './types'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization } from '../auth/server'
 import { NotFound } from './response'
-import { Masto } from 'masto'
+import { Masto, Status } from 'masto'
+
 /*
  Subset of Google JSON Guide
  https://google.github.io/styleguide/jsoncstyleguide.xml
@@ -70,7 +71,7 @@ export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
       if (err instanceof NotFound) {
         respondError(res, err.message, 404)
       } else {
-        console.log(err)
+        console.error(err)
         respondError(res, 'Internal Server Error', 500)
       }
     }
@@ -97,12 +98,28 @@ export const withApiMasto = (
   proc: (params: WithMastoParams) => Promise<any>
 ) => {
   return withApiAuth(async ({ req, res, user, accessToken }) => {
-    const [_username, server] = user.split('@')
+    const [_, server] = user.split('@')
     const masto = await Masto.login({
       uri: `https://${server}`,
       accessToken: accessToken,
     })
 
     return proc({ req, res, user, accessToken, masto })
+  })
+}
+
+export const globalizeAcct = (statuses: Status[], server: string) => {
+  return statuses.map((status) => {
+    const account = {
+      ...status.account,
+      acct: status.account.acct.includes('@')
+        ? status.account.acct
+        : `${status.account.acct}@${server}`,
+    }
+
+    return {
+      ...status,
+      account,
+    }
   })
 }

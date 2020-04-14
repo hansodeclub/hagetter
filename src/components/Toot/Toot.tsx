@@ -1,36 +1,35 @@
-import * as React from 'react';
-import Media from './Media';
-import moment from 'moment';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import LockIcon from '@material-ui/icons/Lock';
-import Avatar from '@material-ui/core/Avatar';
-import { Status } from '../../utils/mastodon/types';
-import emojify, { buildCustomEmojis } from '../../utils/mastodon/emoji';
-import Timestamp from './Timestamp';
-import clsx from 'clsx';
+import * as React from 'react'
+import Media from './Media'
+import moment from 'moment'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import LockIcon from '@material-ui/icons/Lock'
+import Avatar from '@material-ui/core/Avatar'
+import { Status } from '../../utils/mastodon/types'
+import emojify, { buildCustomEmojis } from '../../utils/mastodon/emoji'
+import Timestamp from './Timestamp'
+import clsx from 'clsx'
 
-
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex'
+      display: 'flex',
     },
     selected: {
-      backgroundColor: '#ffeeee'
+      backgroundColor: '#ffeeee',
     },
     disabled: {
       //backgroundColor: '#eeeeee'
     },
     left: {
-      padding: theme.spacing(1)
+      padding: theme.spacing(1),
     },
     avatar: {
       width: 48,
       height: 48,
-      borderRadius: 5
+      borderRadius: 5,
     },
     right: {
       display: 'flex',
@@ -39,19 +38,19 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: 0,
       flexGrow: 1,
       minWidth: 0,
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
     header: {
       display: 'flex',
       width: '100%',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     lock: {
       fontSize: 20,
-      color: '#ff4040'
+      color: '#ff4040',
     },
     displayName: {
-      flexShrink: 0
+      flexShrink: 0,
     },
     acct: {
       paddingLeft: theme.spacing(1),
@@ -62,42 +61,42 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-      wordBreak: 'break-all'
+      wordBreak: 'break-all',
     },
     noWrap: {},
 
     body: {
       minHeight: 30,
-      wordBreak: 'break-all'
+      wordBreak: 'break-all',
     },
     attachments: {
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
     footer: {
       display: 'flex',
       alignItem: 'middle',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
     },
     timestamp: {
-      color: '#888'
-    }
+      color: '#888',
+    },
   })
-);
+)
 
 export interface StatusProps {
-  status: Status;
-  selected?: boolean;
-  disabled?: boolean;
-  color?: string;
-  size?: string;
-  onClick?: (status: Status) => any;
-  className?: string;
-  missingAvatar?: string;
+  status: Status
+  selected?: boolean
+  disabled?: boolean
+  color?: string
+  size?: string
+  onClick?: (status: Status) => any
+  className?: string
+  missingAvatar?: string
 }
 
-export const isPublic = visibility => {
-  return visibility === 'public' || visibility === 'unlisted';
-};
+export const isPublic = (visibility) => {
+  return visibility === 'public' || visibility === 'unlisted'
+}
 
 const Toot: React.FC<StatusProps> = ({
   status,
@@ -107,9 +106,9 @@ const Toot: React.FC<StatusProps> = ({
   onClick,
   className,
   disabled,
-  missingAvatar = '/public/missing.png'
+  missingAvatar = '/public/missing.png',
 }) => {
-  const classes = useStyles({});
+  const classes = useStyles({})
 
   // TODO: fix server name
   return (
@@ -136,21 +135,28 @@ const Toot: React.FC<StatusProps> = ({
           <div className={classes.displayName}>
             {status.account.display_name}
           </div>
-          <div className={classes.acct}>
-            {status.account.acct +
-              (!status.account.acct.includes('@') ? '@handon.club' : '')}
-          </div>
+          <div className={classes.acct}>{status.account.acct}</div>
         </div>
         <div className={classes.body}>
           {size && (
             <Typography variant={size as any} style={{ color: color }}>
-              <span dangerouslySetInnerHTML={{ __html: emojify(status['content'], buildCustomEmojis(status.emojis)) }} />
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: emojify(
+                    status['content'],
+                    buildCustomEmojis(status.emojis)
+                  ),
+                }}
+              />
             </Typography>
           )}
           {!size && (
             <span
               dangerouslySetInnerHTML={{
-                __html: emojify(status['content'], buildCustomEmojis(status.emojis))
+                __html: emojify(
+                  status['content'],
+                  buildCustomEmojis(status.emojis)
+                ),
               }}
             />
           )}
@@ -168,7 +174,7 @@ const Toot: React.FC<StatusProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Toot;
+export default Toot

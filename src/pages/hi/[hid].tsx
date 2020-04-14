@@ -20,34 +20,34 @@ const useStyles = makeStyles((theme) =>
     name: {
       paddingTop: 5,
       height: 30,
-      marginLeft: 5
+      marginLeft: 5,
     },
     avatar: {
       width: 32,
-      height: 32
+      height: 32,
     },
     title: {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
-      paddingLeft: 5
+      paddingLeft: 5,
     },
     footer: {
       paddingTop: theme.spacing(1),
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     grow: {
-      flexGrow: 1
-    }
+      flexGrow: 1,
+    },
   })
 )
 
 const Item = ({
-                item,
-                onClick
-              }: {
+  item,
+  onClick,
+}: {
   item: any
   onClick?: (item: any) => any
 }) => {
@@ -88,7 +88,7 @@ const Content = ({ item }) => {
         border: '1px solid #ccc',
         borderRadius: 10,
         padding: '10px 5px',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
       }}
     >
       <Typography variant="h5">
@@ -96,17 +96,17 @@ const Content = ({ item }) => {
       </Typography>
       <Typography variant="body2">{item['description']}</Typography>
       <div className={classes.footer}>
-        <Avatar src={item.avatar} className={classes.avatar}/>
+        <Avatar src={item.avatar} className={classes.avatar} />
         <div className={classes.name}>{item.displayName}</div>
-        <div className={classes.grow}/>
+        <div className={classes.grow} />
         <div style={{ marginTop: 5 }}>
           {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
         </div>
       </div>
-      <hr/>
+      <hr />
       <div>
         {item.data.map((item) => (
-          <Item item={item}/>
+          <Item key={item.id} item={item} />
         ))}
       </div>
     </div>
@@ -149,11 +149,11 @@ const Post = () => {
 
   return (
     <div>
-      <Header/>
+      <Header />
       <Container>
-        {loading && <CircularProgress/>}
-        {!loading && code === 404 && <NextError statusCode={404}/>}
-        {!loading && code === 200 && item && <Content item={item}/>}
+        {loading && <CircularProgress />}
+        {!loading && code === 404 && <NextError statusCode={404} />}
+        {!loading && code === 200 && item && <Content item={item} />}
       </Container>
     </div>
   )

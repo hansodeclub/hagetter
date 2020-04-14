@@ -1,55 +1,55 @@
-import * as React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Link from 'next/link';
-import { useSession } from '../stores';
-import Avatar from '@material-ui/core/Avatar';
-import { observer } from 'mobx-react-lite';
+import * as React from 'react'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import Link from 'next/link'
+import { useSession } from '../stores'
+import Avatar from '@material-ui/core/Avatar'
+import { observer } from 'mobx-react-lite'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appbar: {
       paddingLeft: '5%',
       paddingRight: '5%',
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     menuButton: {
-      marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2),
     },
     title: {
       justifyContent: 'center',
       margin: 'auto',
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     matomeButton: {
-      marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2),
     },
     rightSide: {
       display: 'flex',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   })
-);
+)
 
 const Header: React.FC = observer(() => {
-  const classes = useStyles({});
+  const classes = useStyles({})
 
   // TODO: HOCにしたい
-  const session = useSession();
+  const session = useSession()
   React.useEffect(() => {
     session
       .getAccount()
-      .then(account => {})
-      .catch(err => {
-        console.log(err);
-      });
-  }, []);
+      .then((account) => {})
+      .catch((err) => {
+        console.error(err)
+      })
+  }, [])
 
   return (
     <AppBar color="default" position="static" className={classes.appbar}>
@@ -92,7 +92,7 @@ const Header: React.FC = observer(() => {
         </div>
       </Toolbar>
     </AppBar>
-  );
-});
+  )
+})
 
-export default Header;
+export default Header

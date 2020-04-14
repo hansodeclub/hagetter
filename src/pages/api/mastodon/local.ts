@@ -1,11 +1,13 @@
-import { withApiMasto } from '../../../utils/api/server'
+import { withApiMasto, globalizeAcct } from '../../../utils/api/server'
 import head from '../../../utils/head'
 
 export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
   const timeline = await masto.fetchCommunityTimeline({
-    max_id: head(req.query.max_id)
+    max_id: head(req.query.max_id),
   })
+
+  const [_, instance] = user.split('@')
   for await (const statuses of timeline) {
-    return statuses
+    return globalizeAcct(statuses, instance)
   }
 })

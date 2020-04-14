@@ -1,95 +1,95 @@
 // https://github.com/zeit/next.js/blob/canary/examples/with-cookie-auth/utils/auth.js
 
-import { Component } from 'react';
-import Router from 'next/router';
-import nextCookie from 'next-cookies';
-import cookie from 'js-cookie';
-import { Account } from '../mastodon/types';
+import { Component } from 'react'
+import Router from 'next/router'
+import nextCookie from 'next-cookies'
+import cookie from 'js-cookie'
+import { Account } from '../mastodon/types'
 
 export const initSession = (user: string, token: string) => {
-  cookie.remove('token'); // remove old implementation's token
-  window.localStorage.setItem('user', user);
-  window.localStorage.setItem('token', token);
-  window.localStorage.removeItem('profile');
-};
+  cookie.remove('token') // remove old implementation's token
+  window.localStorage.setItem('user', user)
+  window.localStorage.setItem('token', token)
+  window.localStorage.removeItem('profile')
+}
 
 export const clearSession = () => {
-  cookie.remove('token');
+  cookie.remove('token')
   // to support logging out from all windows
-  window.localStorage.setItem('logout', Date.now().toString());
-  window.localStorage.removeItem('user');
-  window.localStorage.removeItem('token');
-  window.localStorage.removeItem('profile');
-};
+  window.localStorage.setItem('logout', Date.now().toString())
+  window.localStorage.removeItem('user')
+  window.localStorage.removeItem('token')
+  window.localStorage.removeItem('profile')
+}
 
 export const getToken = (): string | null => {
-  return window.localStorage.getItem('token');
-};
+  return window.localStorage.getItem('token')
+}
 
 export const getProfile = (): Account | null => {
-  const profile = window.localStorage.getItem('profile');
+  const profile = window.localStorage.getItem('profile')
   if (profile) {
     // Deal with bug
     if (profile === 'undefined' || profile === 'null') {
-      console.warn(`profile is ${profile}`);
-      window.localStorage.removeItem('profile');
-      return null;
+      console.warn(`profile is ${profile}`)
+      window.localStorage.removeItem('profile')
+      return null
     }
 
-    return JSON.parse(profile) as Account;
+    return JSON.parse(profile) as Account
   }
 
-  return null;
-};
+  return null
+}
 
 export const clearProfile = () => {
-  window.localStorage.removeItem('profile');
-};
+  window.localStorage.removeItem('profile')
+}
 
 // Gets the display name of a JSX component for dev tools
 const getDisplayName = (Component) =>
-  Component.displayName || Component.name || 'Component';
+  Component.displayName || Component.name || 'Component'
 
 export function withAuthSync(WrappedComponent) {
   return class extends Component {
-    static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`;
+    static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`
 
     static async getInitialProps(ctx) {
-      const token = auth(ctx);
+      const token = auth(ctx)
 
       const componentProps =
         WrappedComponent.getInitialProps &&
-        (await WrappedComponent.getInitialProps(ctx));
+        (await WrappedComponent.getInitialProps(ctx))
 
-      return { ...componentProps, token };
+      return { ...componentProps, token }
     }
 
     constructor(props) {
-      super(props);
+      super(props)
 
-      this.syncLogout = this.syncLogout.bind(this);
+      this.syncLogout = this.syncLogout.bind(this)
     }
 
     componentDidMount() {
-      window.addEventListener('storage', this.syncLogout);
+      window.addEventListener('storage', this.syncLogout)
     }
 
     componentWillUnmount() {
-      window.removeEventListener('storage', this.syncLogout);
-      window.localStorage.removeItem('logout');
+      window.removeEventListener('storage', this.syncLogout)
+      window.localStorage.removeItem('logout')
     }
 
     syncLogout(event) {
       if (event.key === 'logout') {
-        console.log('logged out from storage!');
-        Router.push('/login');
+        console.info('logged out from storage!')
+        Router.push('/login')
       }
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return <WrappedComponent {...this.props} />
     }
-  };
+  }
 }
 
 /*
@@ -128,21 +128,21 @@ export const getAccount = async (): Promise<Account | null> => {//TODO: ctx„ÅÆÂû
 } */
 
 export function auth(ctx) {
-  const { token } = nextCookie(ctx);
+  const { token } = nextCookie(ctx)
 
   /*
    * If `ctx.req` is available it means we are on the server.
    * Additionally if there's no token it means the user is not logged in.
    */
   if (ctx.req && !token) {
-    ctx.res.writeHead(302, { Location: '/login' });
-    ctx.res.end();
+    ctx.res.writeHead(302, { Location: '/login' })
+    ctx.res.end()
   }
 
   // We already checked for server. This should only happen on client.
   if (!token) {
-    Router.push('/login');
+    Router.push('/login')
   }
 
-  return token;
+  return token
 }

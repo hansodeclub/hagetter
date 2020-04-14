@@ -1,4 +1,4 @@
-import { withApiMasto } from '../../../utils/api/server'
+import { globalizeAcct, withApiMasto } from '../../../utils/api/server'
 import head from '../../../utils/head'
 
 export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
@@ -6,18 +6,18 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
     throw Error('Invalid method')
   }
 
-  const [_username, server] = user.split('@')
+  const [_, instance] = user.split('@')
 
   const urls = req.body['urls']
   const ids = []
   urls.forEach((url) => {
-    const match = url.match(`https://${server.replace('.', '\\.')}/.*/(\\d*)$`)
+    const match = url.match(
+      `https://${instance.replace('.', '\\.')}/.*/(\\d*)$`
+    )
     if (match) {
       ids.push(match[1])
     }
   })
-
-  console.log(ids)
 
   const result = []
   for (const id of ids) {
@@ -25,7 +25,7 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
     result.push(status)
   }
 
-  return { statuses: result }
+  return { statuses: globalizeAcct(result, instance) }
 })
 
 /*
