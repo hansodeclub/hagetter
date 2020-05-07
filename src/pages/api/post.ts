@@ -46,6 +46,8 @@ const createPost = withApiMasto(
       visibility: req.body.visibility,
     }
 
+    data.user.note = ''; // TODO: improve later
+
     // Create post and get ID
     const datastore = new Datastore()
     const result = await datastore.insert({
