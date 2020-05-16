@@ -82,38 +82,78 @@ const PostPage = () => {
     }
   }, [hid])
 
-  const contentStyle = wideMonitor ? {
-    maxWidth: 600,
-    border: '1px solid #ccc',
-    borderRadius: 10,
-    padding: '10px 5px',
-    backgroundColor: '#fff',
-  } : {
-    padding: '20px 5px',
-    width: '100%',
-    backgroundColor: '#fff',
-  }
-
-  return (
-    <div>
+  if(wideMonitor) {
+    return (
+      <div>
+        <Header />
+        <Container>
+          {loading && <CircularProgress />}
+          {!loading && code === 404 && <NextError statusCode={404} />}
+          {!loading && code === 200 && item && <Content  item={item} />}
+        </Container>
+      </div>
+    )
+  } else {
+    return(<div>
       <Header />
-      <Container style={wideMonitor ? {} : {marginTop: '-20px', padding: 0}}>
         {loading && <CircularProgress />}
         {!loading && code === 404 && <NextError statusCode={404} />}
-        {!loading && code === 200 && item && <Content style={contentStyle} item={item} />}
-      </Container>
-    </div>
-  )
+        {!loading && code === 200 && item && <MobileContent  item={item} />}
+    </div>)
+  }
+
 }
 
-const Content = observer<any>(({ item, style }) => {
+const MobileContent = observer<any>(({ item, style }) => {
   const classes = useStyles({})
   const session = useSession()
   const router = useRouter()
 
   return (
     <div
-      style={style}
+      style={{
+        padding: '20px 5px',
+        width: '100%',
+        backgroundColor: '#fff',
+      }}
+    >
+      <Typography variant="h5">
+        <b>{item['title']}</b>
+      </Typography>
+      <Typography variant="body2">{item['description']}</Typography>
+      <div className={classes.footer}>
+        <Avatar src={item.avatar} className={classes.avatar} />
+        <div className={classes.name}>{item.displayName}</div>
+        <div className={classes.grow} />
+        <div style={{ marginTop: 5 }}>
+          {moment(item.created_at).format('YYYY-MM-DD HH:MM')}
+        </div>
+        { item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
+      </div>
+      <hr />
+      <div>
+        {item.data.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
+      </div>
+    </div>
+  )
+})
+
+const Content = observer<any>(({ item }) => {
+  const classes = useStyles({})
+  const session = useSession()
+  const router = useRouter()
+
+  return (
+    <div
+      style={{
+        maxWidth: 600,
+        border: '1px solid #ccc',
+        borderRadius: 10,
+        padding: '10px 5px',
+        backgroundColor: '#fff',
+      }}
     >
       <Typography variant="h5">
         <b>{item['title']}</b>
