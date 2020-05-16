@@ -42,7 +42,7 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
       favouriteTimeline: { type: 'favourites', session: sessionStore.id },
       searchTimeline: { type: 'search', session: sessionStore.id },
       urlSearchTimeline: { type: 'urls', session: sessionStore.id },
-      editor: {},
+      editor: {title:'', description: ''},
     })
   })
   return <storeContext.Provider value={store}>{children}</storeContext.Provider>

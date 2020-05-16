@@ -72,7 +72,7 @@ export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
         respondError(res, err.message, 404)
       } else {
         console.error(err)
-        respondError(res, 'Internal Server Error', 500)
+        respondError(res, err.message, 500)
       }
     }
   }

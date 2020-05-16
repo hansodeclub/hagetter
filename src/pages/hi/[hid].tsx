@@ -14,6 +14,9 @@ import Avatar from '@material-ui/core/Avatar'
 import moment from 'moment'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { fetchPost } from '../../utils/hage'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useSession } from '../../stores'
+import { observer } from 'mobx-react-lite'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -44,10 +47,101 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
+const PostPage = () => {
+  const router = useRouter()
+  const hid = head(router.query.hid)
+  const [loading, setLoading] = React.useState(true)
+  const [code, setCode] = React.useState<number>()
+  const [item, setItem] = React.useState<any>()
+  const wideMonitor = useMediaQuery('(min-width:667px)');
+
+  React.useEffect(() => {
+    let unmounted = false
+    if (!hid) return
+    fetchPost(hid)
+      .then((result) => {
+        if (!unmounted) {
+          if (result.status === 200) {
+            result.json().then((data) => {
+              setItem(data.data)
+              setLoading(false)
+              setCode(200)
+            })
+          } else {
+            setLoading(false)
+            setCode(result.status)
+          }
+        }
+      })
+      .catch((err) => {
+        setCode(500)
+        setLoading(false)
+      })
+    return () => {
+      unmounted = true
+    }
+  }, [hid])
+
+  const contentStyle = wideMonitor ? {
+    maxWidth: 600,
+    border: '1px solid #ccc',
+    borderRadius: 10,
+    padding: '10px 5px',
+    backgroundColor: '#fff',
+  } : {
+    padding: '20px 5px',
+    width: '100%',
+    backgroundColor: '#fff',
+  }
+
+  return (
+    <div>
+      <Header />
+      <Container style={wideMonitor ? {} : {marginTop: '-20px', padding: 0}}>
+        {loading && <CircularProgress />}
+        {!loading && code === 404 && <NextError statusCode={404} />}
+        {!loading && code === 200 && item && <Content style={contentStyle} item={item} />}
+      </Container>
+    </div>
+  )
+}
+
+const Content = observer<any>(({ item, style }) => {
+  const classes = useStyles({})
+  const session = useSession()
+  const router = useRouter()
+
+  return (
+    <div
+      style={style}
+    >
+      <Typography variant="h5">
+        <b>{item['title']}</b>
+      </Typography>
+      <Typography variant="body2">{item['description']}</Typography>
+      <div className={classes.footer}>
+        <Avatar src={item.avatar} className={classes.avatar} />
+        <div className={classes.name}>{item.displayName}</div>
+        <div className={classes.grow} />
+        <div style={{ marginTop: 5 }}>
+          {moment(item.created_at).format('YYYY-MM-DD HH:MM')}
+        </div>
+        { item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
+      </div>
+      <hr />
+      <div>
+        {item.data.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
+      </div>
+    </div>
+  )
+})
+
 const Item = ({
-  item,
-  onClick,
-}: {
+                item,
+                onClick,
+              }: {
   item: any
   onClick?: (item: any) => any
 }) => {
@@ -79,84 +173,5 @@ const Item = ({
   }
 }
 
-const Content = ({ item }) => {
-  const classes = useStyles({})
-  return (
-    <div
-      style={{
-        maxWidth: 600,
-        border: '1px solid #ccc',
-        borderRadius: 10,
-        padding: '10px 5px',
-        backgroundColor: '#fff',
-      }}
-    >
-      <Typography variant="h5">
-        <b>{item['title']}</b>
-      </Typography>
-      <Typography variant="body2">{item['description']}</Typography>
-      <div className={classes.footer}>
-        <Avatar src={item.avatar} className={classes.avatar} />
-        <div className={classes.name}>{item.displayName}</div>
-        <div className={classes.grow} />
-        <div style={{ marginTop: 5 }}>
-          {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
-        </div>
-      </div>
-      <hr />
-      <div>
-        {item.data.map((item) => (
-          <Item key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
-  )
-}
 
-const Post = () => {
-  const router = useRouter()
-  const hid = head(router.query.hid)
-  const [loading, setLoading] = React.useState(true)
-  const [code, setCode] = React.useState<number>()
-  const [item, setItem] = React.useState<any>()
-
-  React.useEffect(() => {
-    let unmounted = false
-    if (!hid) return
-    fetchPost(hid)
-      .then((result) => {
-        if (!unmounted) {
-          if (result.status === 200) {
-            result.json().then((data) => {
-              setItem(data.data)
-              setLoading(false)
-              setCode(200)
-            })
-          } else {
-            setLoading(false)
-            setCode(result.status)
-          }
-        }
-      })
-      .catch((err) => {
-        setCode(500)
-        setLoading(false)
-      })
-    return () => {
-      unmounted = true
-    }
-  }, [hid])
-
-  return (
-    <div>
-      <Header />
-      <Container>
-        {loading && <CircularProgress />}
-        {!loading && code === 404 && <NextError statusCode={404} />}
-        {!loading && code === 200 && item && <Content item={item} />}
-      </Container>
-    </div>
-  )
-}
-
-export default Post
+export default PostPage

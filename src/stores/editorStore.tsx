@@ -24,6 +24,10 @@ const generateId = () => {
 
 const EditorStore = types
   .model('EditorModel', {
+    hid: types.optional(types.string, ''),
+    title: types.optional(types.string, ''),
+    description: types.optional(types.string, ''),
+    visibility: types.optional(types.string, 'public'),
     items: types.optional(types.array(HagetterItem), []),
   })
   .actions((self) => ({
@@ -35,6 +39,34 @@ const EditorStore = types
       return undefined
       //const item = self.items.find(item => item.selected);
       //return item ? item.id : undefined;
+    },
+    reset() {
+      self.title = ''
+      self.description = ''
+      self.items = []
+      self.visibility = 'public'
+    },
+    setId(hid: string) {
+      self.hid = hid
+    },
+    setTitle(title: string) {
+      self.title = title
+    },
+    setDescription(description: string) {
+      self.description = description
+    },
+    setVisibility(visibility: 'unlisted' | 'public') {
+      self.visibility = visibility
+    }
+    ,bulkAdd(items: any[]) {
+      items.forEach((item => {
+        console.log(item)
+        if (item.type === 'status') {
+          self.addStatus(item.data)
+        } else if (item.type === 'text') {
+          self.addText(item.data.text, item.size, item.color)
+        }
+      }))
     },
     addStatus(status: Status, anchor?: string) {
       if (self.items.find((item) => item.id === status.id)) {

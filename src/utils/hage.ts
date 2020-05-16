@@ -22,13 +22,17 @@ export const createPost = async (
   title: string,
   description: string,
   visibility: 'unlisted' | 'public',
-  items: (TextItem | Status)[]
+  items: (TextItem | Status)[],
+  hid?: string,
 ) => {
   const body = {
     title,
     description,
     visibility,
     data: items,
+  } as any
+  if(hid !== '') {
+    body.hid = hid
   }
 
   const options = {
@@ -42,6 +46,8 @@ export const createPost = async (
   }
 
   const res = await fetch('/api/post', options)
+  if(res.status !== 200)
+    throw Error((await res.json()).error.message)
   return await res.json()
 }
 

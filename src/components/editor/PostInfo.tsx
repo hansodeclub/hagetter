@@ -41,9 +41,9 @@ const PostInfo = observer(() => {
   const editor = useEditor()
   const app = useStore()
 
-  const [title, setTitle] = React.useState('')
-  const [description, setDescription] = React.useState('')
-  const [unlisted, setUnlisted] = React.useState(false)
+  //const [title, setTitle] = React.useState('')
+  //const [description, setDescription] = React.useState('')
+  // const [unlisted, setUnlisted] = React.useState(false)
   const [postLoading, setPostLoading] = React.useState(false)
 
   React.useEffect(() => {
@@ -55,14 +55,14 @@ const PostInfo = observer(() => {
   }, [])
 
   React.useEffect(() => {
-    if (editor.hasPrivateStatus && !unlisted) setUnlisted(true)
+    if (editor.hasPrivateStatus && editor.vibility === 'public') editor.setVisibility('unlisted')
   }, [editor.hasPrivateStatus])
 
   const handleUnlistedChange = (event) => {
     if (editor.hasPrivateStatus) {
-      setUnlisted(unlisted)
+      editor.setVisibility('unlisted')
     } else {
-      setUnlisted(!unlisted)
+      editor.setVisibility(event.target.checked ? 'unlisted' : 'public')
     }
   }
 
@@ -72,7 +72,7 @@ const PostInfo = observer(() => {
 
   const onSubmit = () => {
     if (postLoading) return
-    if (!title || !description) {
+    if (!editor.title || !editor.description) {
       alert('タイトル、説明は必須入力です')
       return
     }
@@ -88,10 +88,11 @@ const PostInfo = observer(() => {
 
     createPost(
       session.token,
-      title,
-      description,
-      unlisted || editor.hasPrivateStatus ? 'unlisted' : 'public',
-      editor.items.map((item) => item.postData) as any[]
+      editor.title,
+      editor.description,
+      editor.hasPrivateStatus ? 'unlisted' : editor.visibility,
+      editor.items.map((item) => item.postData) as any[],
+      editor.hid
     )
       .then((data) => {
         successPost(data)
@@ -101,29 +102,6 @@ const PostInfo = observer(() => {
         app.notifyError(err)
         setPostLoading(false)
       })
-
-    /*const headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: token,
-    }
-
-    const options = {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-    }
-
-    fetch('/api/post', options)
-      .then((res) => res.json())
-      .then((data) => {
-        successPost(data)
-        setPostLoading(false)
-      })
-      .catch((err) => {
-        app.notifyError(err)
-        setPostLoading(false)
-      }) */
   }
 
   return (
@@ -150,7 +128,8 @@ const PostInfo = observer(() => {
           variant="outlined"
           fullWidth
           style={{ backgroundColor: 'white' }}
-          onChange={(event) => setTitle(event.target.value)}
+          defaultValue={editor.title}
+          onChange={(event) => editor.setTitle(event.target.value)}
         />
       </div>
       <h3>説明文</h3>
@@ -161,14 +140,15 @@ const PostInfo = observer(() => {
           fullWidth
           rows={4}
           style={{ backgroundColor: 'white' }}
-          onChange={(event) => setDescription(event.target.value)}
+          defaultValue={editor.description}
+          onChange={(event) => editor.setDescription(event.target.value)}
         />
       </div>
       <div className={classes.postButtonContainer}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={unlisted || editor.hasPrivateStatus}
+              checked={editor.visibility!=='public' || editor.hasPrivateStatus}
               onChange={handleUnlistedChange}
               value="unlisted"
             />
