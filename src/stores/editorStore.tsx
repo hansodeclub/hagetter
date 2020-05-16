@@ -43,7 +43,7 @@ const EditorStore = types
     reset() {
       self.title = ''
       self.description = ''
-      self.items = []
+      self.items = cast([])
       self.visibility = 'public'
     },
     setId(hid: string) {
@@ -57,16 +57,6 @@ const EditorStore = types
     },
     setVisibility(visibility: 'unlisted' | 'public') {
       self.visibility = visibility
-    }
-    ,bulkAdd(items: any[]) {
-      items.forEach((item => {
-        console.log(item)
-        if (item.type === 'status') {
-          self.addStatus(item.data)
-        } else if (item.type === 'text') {
-          self.addText(item.data.text, item.size, item.color)
-        }
-      }))
     },
     addStatus(status: Status, anchor?: string) {
       if (self.items.find((item) => item.id === status.id)) {
@@ -163,6 +153,17 @@ const EditorStore = types
       // TODO: 日付以外のソートにも対応する
       // sortKeyは重複するので安定ソート
       self.items = cast(stable(self.items, (a, b) => a.sortKey > b.sortKey))
+    },
+  }))
+  .actions((self) => ({
+    bulkAdd(items: any[]) {
+      items.forEach((item => {
+        if (item.type === 'status') {
+          self.addStatus(item.data as Status)
+        } else if (item.type === 'text') {
+          self.addText(item.data.text, item.size, item.color)
+        }
+      }))
     },
   }))
   .views((self) => ({

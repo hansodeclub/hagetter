@@ -55,7 +55,7 @@ const PostInfo = observer(() => {
   }, [])
 
   React.useEffect(() => {
-    if (editor.hasPrivateStatus && editor.vibility === 'public') editor.setVisibility('unlisted')
+    if (editor.hasPrivateStatus && editor.visibility === 'public') editor.setVisibility('unlisted')
   }, [editor.hasPrivateStatus])
 
   const handleUnlistedChange = (event) => {
@@ -90,7 +90,7 @@ const PostInfo = observer(() => {
       session.token,
       editor.title,
       editor.description,
-      editor.hasPrivateStatus ? 'unlisted' : editor.visibility,
+      editor.hasPrivateStatus ? 'unlisted' : editor.visibility as any,
       editor.items.map((item) => item.postData) as any[],
       editor.hid
     )
