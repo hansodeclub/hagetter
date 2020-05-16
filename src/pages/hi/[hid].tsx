@@ -128,7 +128,7 @@ const MobileContent = observer<any>(({ item, style }) => {
         <div style={{ marginTop: 5 }}>
           {moment(item.created_at).format('YYYY-MM-DD HH:MM')}
         </div>
-        { item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
+        { session.loggedIn && item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
       </div>
       <hr />
       <div>
