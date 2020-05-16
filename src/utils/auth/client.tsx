@@ -5,6 +5,7 @@ import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 import { Account } from '../mastodon/types'
+import jwt from 'jsonwebtoken'
 
 export const initSession = (user: string, token: string) => {
   cookie.remove('token') // remove old implementation's token
@@ -23,7 +24,18 @@ export const clearSession = () => {
 }
 
 export const getToken = (): string | null => {
-  return window.localStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
+  if(!token) return null;
+
+  const exp = jwt.decode(token).exp * 1000
+  const now = (new Date()).getTime()
+  if (exp > now + 1000 * 60 * 60) {
+    // JWTトークンの有効期限が1時間以上余っている時のみトークンを返す
+    return token
+  } else {
+    clearSession()
+    return null
+  }
 }
 
 export const getProfile = (): Account | null => {

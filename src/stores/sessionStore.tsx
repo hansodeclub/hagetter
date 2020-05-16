@@ -1,5 +1,7 @@
 import { types, flow } from 'mobx-state-tree'
 import { Account } from '../utils/mastodon/types'
+import jwt from 'jsonwebtoken'
+
 import {
   initSession,
   clearSession,
@@ -28,15 +30,16 @@ const SessionStore = types
       if (self.loading) return null
       self.initializing = false
 
-      if (self.account) {
-        return self.account
-      }
-
       const jwtToken = getToken()
 
       // Login check
       if (!jwtToken) {
         return null // Not logged in
+      }
+
+      // get Profile cache
+      if (self.account) {
+        return self.account
       }
 
       const localStorageAccount = getProfile()
