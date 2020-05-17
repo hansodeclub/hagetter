@@ -56,11 +56,14 @@ const useStyles = makeStyles((theme) =>
       justifyContent: 'center',
     },
     container: {
-      padding: '20px 5px',
-      width: '100%',
-      backgroundColor: '#fff',
+      [theme.breakpoints.down('sm')]: {
+        padding: '20px 5px',
+        width: '100%',
+        backgroundColor: '#fff',
+      },
       [theme.breakpoints.up('sm')]: {
         maxWidth: 600,
+        marginLeft: 10,
         border: '1px solid #ccc',
         borderRadius: 10,
         padding: '10px 5px',
