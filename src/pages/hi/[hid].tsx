@@ -121,18 +121,21 @@ const PostPage: NextPage<Props> = (props) => {
     ? {
         title: post.title,
         description: post.description,
+        image: post.avatar,
       }
     : {
         title: 'エラー',
         description: 'エラー',
+        image: null,
       }
 
   return (
     <div>
       <Head>
         <title>{ogp.title} - Hagetter</title>
-        <meta property="og:title" content={ogp.title} key="title" />
-        <meta property="og:description" content={ogp.description} key="title" />
+        <meta property="og:title" content={ogp.title} />
+        <meta property="og:description" content={ogp.description} />
+        {ogp.image && <meta property="og:image" content={ogp.image} />}
       </Head>
       <Header />
       <Container className={classes.container}>
