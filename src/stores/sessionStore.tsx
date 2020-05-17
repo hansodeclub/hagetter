@@ -19,7 +19,11 @@ const SessionStore = types
   })
   .views((self) => ({
     get loggedIn() {
-      return window.localStorage.getItem('token') !== null
+      if(typeof window !== 'undefined') {
+        return window.localStorage.getItem('token') !== null
+      }
+
+      return false
     },
     get token() {
       return getToken()

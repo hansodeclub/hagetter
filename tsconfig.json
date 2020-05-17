@@ -17,7 +17,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "assumeChangesOnlyAffectDirectDependencies": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    }
   },
   "exclude": [
     "node_modules"

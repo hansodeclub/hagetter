@@ -7,10 +7,7 @@ import HagetterItem, { THagetterItem } from '../stores/hagetterItem'
 import { TextItem } from '../stores/editorStore'
 
 // TODO: improvement
-export const getPost = async (id: string) => {
-  const result = await request(`/api/post?id=${id}`)
-  return result
-}
+
 
 export const fetchPost = async (id: string) => {
   const result = await fetch(`/api/post?id=${encodeURIComponent(id)}`)

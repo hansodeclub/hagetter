@@ -43,6 +43,7 @@ const Header: React.FC = observer(() => {
   // TODO: HOCにしたい
   const session = useSession()
   React.useEffect(() => {
+    // useEffect内はクライアントサイドで呼ばれる
     session
       .getAccount()
       .then((account) => {})

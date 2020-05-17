@@ -1,22 +1,36 @@
 import * as React from 'react'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import Header from '../../components/Header'
+import Head from 'next/head'
+import NextError from 'next/error'
+import { observer } from 'mobx-react-lite'
+import moment from 'moment'
+
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import '../App.scss'
-import head from '../../utils/head'
-import NextError from 'next/error'
-import { TextItem } from '../../components/matome/Item'
-import Toot from '../../components/Toot/Toot'
-import { Status } from '../../utils/mastodon/types'
 import Avatar from '@material-ui/core/Avatar'
-import moment from 'moment'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { fetchPost } from '../../utils/hage'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useSession } from '../../stores'
-import { observer } from 'mobx-react-lite'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+
+import Header from '~/components/Header'
+import { TextItem } from '~/components/matome/Item'
+import Toot from '~/components/Toot/Toot'
+
+import { useSession } from '~/stores'
+import head from '~/utils/head'
+import { Status } from '~/utils/mastodon/types'
+import { fetchPost } from '~/utils/hage'
+
+import '../App.scss'
+import {
+  PostRepositoryClient,
+  PostRepositoryServer,
+  GetPost,
+} from '~/usecases/GetPost'
+import { Convert, HagetterPost } from '@/entities/HagetterPost'
+import { JsonString, fromJson, toJson } from '@/utils/serialized'
+import { NotFound } from '~/utils/api/response'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -41,136 +55,125 @@ const useStyles = makeStyles((theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
+    container: {
+      padding: '20px 5px',
+      width: '100%',
+      backgroundColor: '#fff',
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 600,
+        border: '1px solid #ccc',
+        borderRadius: 10,
+        padding: '10px 5px',
+        backgroundColor: '#fff',
+      },
+    },
     grow: {
       flexGrow: 1,
     },
   })
 )
 
-const PostPage = () => {
-  const router = useRouter()
-  const hid = head(router.query.hid)
-  const [loading, setLoading] = React.useState(true)
-  const [code, setCode] = React.useState<number>()
-  const [item, setItem] = React.useState<any>()
-  const wideMonitor = useMediaQuery('(min-width:667px)');
-
-  React.useEffect(() => {
-    let unmounted = false
-    if (!hid) return
-    fetchPost(hid)
-      .then((result) => {
-        if (!unmounted) {
-          if (result.status === 200) {
-            result.json().then((data) => {
-              setItem(data.data)
-              setLoading(false)
-              setCode(200)
-            })
-          } else {
-            setLoading(false)
-            setCode(result.status)
-          }
-        }
-      })
-      .catch((err) => {
-        setCode(500)
-        setLoading(false)
-      })
-    return () => {
-      unmounted = true
-    }
-  }, [hid])
-
-  if(wideMonitor) {
-    return (
-      <div>
-        <Header />
-        <Container>
-          {loading && <CircularProgress />}
-          {!loading && code === 404 && <NextError statusCode={404} />}
-          {!loading && code === 200 && item && <Content  item={item} />}
-        </Container>
-      </div>
-    )
-  } else {
-    return(<div>
-      <Header />
-        {loading && <CircularProgress />}
-        {!loading && code === 404 && <NextError statusCode={404} />}
-        {!loading && code === 200 && item && <MobileContent  item={item} />}
-    </div>)
-  }
-
+interface Props {
+  code: number
+  post: JsonString<HagetterPost> | null
+  error: string | null
 }
 
-const MobileContent = observer<any>(({ item, style }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const hid: string = head(context.query.hid)
+  const action = new GetPost(new PostRepositoryServer())
+
+  try {
+    const post = await action.execute(hid)
+
+    return {
+      props: {
+        code: 200,
+        post: toJson(post),
+        error: null,
+      },
+    }
+  } catch (err) {
+    return {
+      props: {
+        code: err.code ?? 500,
+        post: null,
+        error: err.message,
+      },
+    }
+  }
+}
+
+const PostPage: NextPage<Props> = (props) => {
   const classes = useStyles({})
-  const session = useSession()
-  const router = useRouter()
+  const post = props.post
+    ? fromJson(props.post, Convert.toHagetterPost)
+    : undefined
+
+  const { code, error } = props
+
+  const ogp = post
+    ? {
+        title: post.title,
+        description: post.description,
+      }
+    : {
+        title: 'エラー',
+        description: 'エラー',
+      }
 
   return (
-    <div
-      style={{
-        padding: '20px 5px',
-        width: '100%',
-        backgroundColor: '#fff',
-      }}
-    >
-      <Typography variant="h5">
-        <b>{item['title']}</b>
-      </Typography>
-      <Typography variant="body2">{item['description']}</Typography>
-      <div className={classes.footer}>
-        <Avatar src={item.avatar} className={classes.avatar} />
-        <div className={classes.name}>{item.displayName}</div>
-        <div className={classes.grow} />
-        <div style={{ marginTop: 5 }}>
-          {moment(item.created_at).format('YYYY-MM-DD HH:MM')}
-        </div>
-        { session.loggedIn && item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
-      </div>
-      <hr />
-      <div>
-        {item.data.map((item) => (
-          <Item key={item.id} item={item} />
-        ))}
-      </div>
+    <div>
+      <Head>
+        <title>{ogp.title} - Hagetter</title>
+        <meta property="og:title" content={ogp.title} key="title" />
+        <meta property="og:description" content={ogp.description} key="title" />
+      </Head>
+      <Header />
+      <Container className={classes.container}>
+        {code === 404 && <NextError statusCode={404} />}
+        {code === 200 && <Content post={post} />}
+        {code !== 200 && code !== 404 && (
+          <p>エラー：{error ?? '不明なエラー'}</p>
+        )}
+      </Container>
     </div>
   )
-})
+}
 
-const Content = observer<any>(({ item }) => {
+const Content = observer<{ post: HagetterPost }>(({ post }) => {
   const classes = useStyles({})
   const session = useSession()
   const router = useRouter()
 
   return (
-    <div
-      style={{
-        maxWidth: 600,
-        border: '1px solid #ccc',
-        borderRadius: 10,
-        padding: '10px 5px',
-        backgroundColor: '#fff',
-      }}
-    >
+    <div>
       <Typography variant="h5">
-        <b>{item['title']}</b>
+        <b>{post['title']}</b>
       </Typography>
-      <Typography variant="body2">{item['description']}</Typography>
+      <Typography variant="body2">{post['description']}</Typography>
       <div className={classes.footer}>
-        <Avatar src={item.avatar} className={classes.avatar} />
-        <div className={classes.name}>{item.displayName}</div>
+        <Avatar src={post.avatar} className={classes.avatar} />
+        <div className={classes.name}>{post.displayName}</div>
         <div className={classes.grow} />
         <div style={{ marginTop: 5 }}>
-          {moment(item.created_at).format('YYYY-MM-DD HH:MM')}
+          {moment(post.created_at).format('YYYY-MM-DD HH:MM')}
         </div>
-        { session.loggedIn && item.username === session.account.acct && <div style={{paddingLeft: '5px'}}><button onClick={() => router.push(`/edit/${item.id}`)}>編集</button></div> }
+        {session.loggedIn &&
+          session.account &&
+          post.username === session.account.acct && (
+            <div style={{ paddingLeft: '5px' }}>
+              <button onClick={() => router.push(`/edit/${post.id}`)}>
+                編集
+              </button>
+            </div>
+          )}
       </div>
       <hr />
       <div>
-        {item.data.map((item) => (
+        {post.data.map((item) => (
           <Item key={item.id} item={item} />
         ))}
       </div>
@@ -179,9 +182,9 @@ const Content = observer<any>(({ item }) => {
 })
 
 const Item = ({
-                item,
-                onClick,
-              }: {
+  item,
+  onClick,
+}: {
   item: any
   onClick?: (item: any) => any
 }) => {
@@ -212,6 +215,5 @@ const Item = ({
     throw Error(`Unknown item type: ${item.type}`)
   }
 }
-
 
 export default PostPage
