@@ -1,9 +1,9 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Toot from '../../components/Toot/Toot';
-import { Status } from '../../utils/mastodon/types';
+import React from 'react'
+import Container from '@material-ui/core/Container'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import Toot from '../../components/Toot/Toot'
+import { Status } from '../../utils/mastodon/types'
 
 const TestPage = () => {
   const testStatus: Status = {
@@ -45,15 +45,16 @@ const TestPage = () => {
       following_count: 234,
       statuses_count: 1234,
       emojis: [],
-      fields: []
+      fields: [],
+      last_status_at: '2018-08-17T12:06:59.137Z',
     },
     media_attachments: [],
     mentions: [],
     tags: [],
     emojis: [],
-    card: null
+    card: null,
     // poll: null
-  };
+  }
 
   return (
     <Container>
@@ -64,7 +65,7 @@ const TestPage = () => {
           color={'black'}
           size="body2"
           status={testStatus}
-          onClick={status => alert(`Click status: ${status.id}`)}
+          onClick={(status) => alert(`Click status: ${status.id}`)}
         />
       </Paper>
       <Paper style={{ width: 600, marginTop: 16 }}>
@@ -73,7 +74,7 @@ const TestPage = () => {
           color={'black'}
           size="body2"
           status={testStatus}
-          onClick={status => alert(`Click status: ${status.id}`)}
+          onClick={(status) => alert(`Click status: ${status.id}`)}
         />
       </Paper>
       <Paper style={{ width: 300, marginTop: 16 }}>
@@ -83,11 +84,11 @@ const TestPage = () => {
           color={'black'}
           size="body2"
           status={{ ...testStatus, visibility: 'private' }}
-          onClick={status => alert(`Click status: ${status.id}`)}
+          onClick={(status) => alert(`Click status: ${status.id}`)}
         />
       </Paper>
     </Container>
-  );
-};
+  )
+}
 
-export default TestPage;
+export default TestPage

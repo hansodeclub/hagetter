@@ -1,6 +1,6 @@
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
-export type { Status } from 'masto'
+export type { Status, Attachment } from 'masto'
 
 export interface Account {
   id: string
@@ -88,7 +88,7 @@ export interface Emoji {
   visible_in_picker: boolean
 }
 
-export interface Attachment {
+/*export interface Attachment {
   id: string
   type: 'image' | 'video' | 'gifv' | 'unknown'
   url: string
@@ -97,7 +97,7 @@ export interface Attachment {
   text_url?: string
   meta?: string
   description?: string
-}
+}*/
 
 export interface Tag {
   name: string

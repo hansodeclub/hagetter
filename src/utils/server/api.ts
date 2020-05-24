@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization } from '../auth/server'
-import { NotFound } from '../../entities/api/response'
+import { NotFound } from '~/entities/api/status'
 
 export interface WithAuhParams {
   req: NextApiRequest
