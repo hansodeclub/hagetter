@@ -23,14 +23,11 @@ import { Status } from '~/utils/mastodon/types'
 import { fetchPost } from '~/utils/hage'
 
 import '../App.scss'
-import {
-  PostRepositoryClient,
-  PostRepositoryServer,
-  GetPost,
-} from '~/usecases/GetPost'
+import { GetPost } from '~/usecases/GetPost'
 import { Convert, HagetterPost } from '@/entities/HagetterPost'
 import { JsonString, fromJson, toJson } from '@/utils/serialized'
-import { NotFound } from '~/utils/api/response'
+import { NotFound } from '~/entities/api/status'
+import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -86,7 +83,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   const hid: string = head(context.query.hid)
-  const action = new GetPost(new PostRepositoryServer())
+  const action = new GetPost(PostRepositoryFactory.createServer())
 
   try {
     const post = await action.execute(hid)
@@ -153,6 +150,10 @@ const Content = observer<{ post: HagetterPost }>(({ post }) => {
   const classes = useStyles({})
   const session = useSession()
   const router = useRouter()
+  const isOwner =
+    session.loggedIn &&
+    session.account &&
+    session.account.acct === post.username
 
   return (
     <div>
@@ -167,15 +168,13 @@ const Content = observer<{ post: HagetterPost }>(({ post }) => {
         <div style={{ marginTop: 5 }}>
           {moment(post.created_at).format('YYYY-MM-DD HH:MM')}
         </div>
-        {session.loggedIn &&
-          session.account &&
-          post.username === session.account.acct && (
-            <div style={{ paddingLeft: '5px' }}>
-              <button onClick={() => router.push(`/edit/${post.id}`)}>
-                編集
-              </button>
-            </div>
-          )}
+        {isOwner && (
+          <div style={{ paddingLeft: '5px' }}>
+            <button onClick={() => router.push(`/edit/${post.id}`)}>
+              編集
+            </button>
+          </div>
+        )}
       </div>
       <hr />
       <div>

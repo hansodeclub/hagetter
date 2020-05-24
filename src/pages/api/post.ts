@@ -1,14 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
-  respondSuccess,
   respondError,
   withApi,
   withApiAuth,
   withApiMasto,
+  secureStatus,
 } from '../../utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
 import head from '../../utils/head'
-import { NotFound } from '../../utils/api/response'
+import { NotFound } from '~/entities/api/status'
+import { verifyStatus } from '~/utils/api/server'
+import { IHagetterItemOut } from '~/stores/hagetterItem'
+import { SecureStatus } from '~/entities/SecuredStatus'
+import { HagetterPost } from '~/entities/HagetterPost'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.id)
@@ -28,7 +32,36 @@ const getPost = withApi(async ({ req, res }) => {
   }
 })
 
-const getRecordAndVerifyOwner = async (id: string, username:string) => {  const datastore = new Datastore()
+const getMyPost = withApiAuth(async ({ req, user }) => {
+  const id = head(req.query.id)
+  if (!id) {
+    throw Error('No ID')
+  }
+
+  const datastore = new Datastore()
+  const [post]: [HagetterPost] = await datastore.get(
+    datastore.key(['Hagetter', Number.parseInt(id)])
+  )
+
+  if (post) {
+    if (post.username !== user) {
+      throw Error("It's not your post, fuck you")
+    }
+
+    const securePost = {
+      ...post,
+      data: secureItems(post.data),
+      id,
+    }
+
+    return securePost
+  } else {
+    throw new NotFound('Item not found')
+  }
+})
+
+const getRecordAndVerifyOwner = async (id: string, username: string) => {
+  const datastore = new Datastore()
   const result = await datastore.get(
     datastore.key(['Hagetter', Number.parseInt(id)])
   )
@@ -40,23 +73,52 @@ const getRecordAndVerifyOwner = async (id: string, username:string) => {  const 
   return false
 }
 
+const secureItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
+  return items.map((item) => {
+    if (item.type === 'status') {
+      return {
+        ...item,
+        data: secureStatus(item.data as SecureStatus),
+      }
+    } else return item
+  })
+}
+
+const verifyItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
+  try {
+    return items.map((item) => {
+      if (item.type === 'status') {
+        return {
+          ...item,
+          data: verifyStatus(item.data as SecureStatus),
+        }
+      } else return item
+    })
+  } catch (err) {
+    console.error(err)
+    throw Error('不正なステータス')
+  }
+}
+
 const createPost = withApiMasto(
   async ({ req, res, user, accessToken, masto }) => {
     const profile = await masto.verifyCredentials()
 
-    if(req.body.hid) {
+    if (req.body.hid) {
       // update post
       const oldRecord = await getRecordAndVerifyOwner(req.body.hid, user)
-      if(!oldRecord) {
+      if (!oldRecord) {
         throw Error("You are trying to update other owner's post, fuck you")
       }
+
+      const items = verifyItems(req.body.data)
 
       const data = {
         ...oldRecord,
         updated_at: new Date(),
         title: req.body.title,
         description: req.body.description,
-        data: req.body.data,
+        data: items,
         visibility: req.body.visibility,
       }
 
@@ -69,6 +131,16 @@ const createPost = withApiMasto(
 
       return { key: Number.parseInt(req.body.hid) }
     } else {
+      // Validationする
+      const items = (req.body.data as any[]).map((item) => {
+        if (item.type === 'status') {
+          return {
+            ...item,
+            data: verifyStatus(item.data),
+          }
+        } else return item
+      })
+
       const data = {
         title: req.body.title,
         description: req.body.description,
@@ -76,15 +148,15 @@ const createPost = withApiMasto(
         username: user,
         displayName: profile.display_name || profile.username,
         avatar: profile.avatar,
-        data: req.body.data,
+        data: items,
         user: profile,
         visibility: req.body.visibility,
         created_at: new Date(),
-        stars: 0
+        stars: 0,
       }
-      data.user.note = ''; // TODO: improve later
-      // Create post and get ID
+      data.user.note = '' // TODO: improve later
 
+      // Create post and get ID
       const datastore = new Datastore()
       const key = datastore.key(['Hagetter'])
       const result = await datastore.insert({
@@ -118,7 +190,10 @@ const deletePost = withApiAuth(async ({ req, user }) => {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === 'GET') {
-      await getPost(req, res)
+      const action = head(req.query.action)
+      if (action === 'edit') {
+        await getMyPost(req, res)
+      } else await getPost(req, res)
     } else if (req.method === 'POST') {
       await createPost(req, res)
     } else if (req.method === 'DELETE') {

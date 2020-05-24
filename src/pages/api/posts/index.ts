@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withApi, respondError, withApiAuth } from '../../../utils/api/server'
+import { withApi, respondError, withApiAuth } from '~/utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
 
-import head from '../../../utils/head'
+import head from '~/utils/head'
+import { ListPublicPosts } from '~/usecases/ListPublicPosts'
+import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
 
 const getUserPosts = withApiAuth(async ({ req, res, user }) => {
   const username = head(req.query.user)
@@ -16,41 +18,24 @@ const getUserPosts = withApiAuth(async ({ req, res, user }) => {
     .createQuery('Hagetter')
     .filter('username', '=', username)
     .order('created_at', {
-      descending: true
+      descending: true,
     })
 
   const [tasks] = await datastore.runQuery(query)
   const results = tasks.map((task) => ({
     id: task[datastore.KEY].id,
-    ...task
+    ...task,
   }))
 
   return {
     count: results.length,
-    items: results
+    items: results,
   }
 })
 
 const getPosts = withApi(async ({ req, res }) => {
-  const datastore = new Datastore()
-
-  const query = datastore
-    .createQuery('Hagetter')
-    .filter('visibility', '=', 'public')
-    .order('created_at', {
-      descending: true
-    })
-
-  const [tasks] = await datastore.runQuery(query)
-  const results = tasks.map((task) => ({
-    id: task[datastore.KEY].id,
-    ...task
-  }))
-
-  return {
-    count: results.length,
-    items: results
-  }
+  const action = new ListPublicPosts(PostRepositoryFactory.createServer())
+  return await action.execute()
 })
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,5 +1,8 @@
-import { globalizeAcct, withApiMasto } from '../../../utils/api/server'
-import head from '../../../utils/head'
+import {
+  globalizeAcct,
+  withApiMasto,
+  preprocessMastodonStatus,
+} from '../../../utils/api/server'
 
 export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
   if (req.method !== 'POST') {
@@ -25,7 +28,7 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
     result.push(status)
   }
 
-  return { statuses: globalizeAcct(result, instance) }
+  return { statuses: preprocessMastodonStatus(result, instance) }
 })
 
 /*

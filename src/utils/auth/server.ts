@@ -104,6 +104,7 @@ export const generateToken = (
     process.env.JWT_SECRET,
     {
       expiresIn: '24h',
+      algorithm: 'HS256',
     }
   )
 
@@ -116,7 +117,9 @@ export const generateToken = (
  */
 export const verifyToken = (token: string) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ['HS256'],
+    })
 
     return {
       user: decoded.user,
@@ -147,7 +150,7 @@ export const verifyAuthorization = (authorization: string) => {
  * @param displayName
  * @param content
  */
-export const signStatus = (status: any) => {
+/*export const signStatus = (status: any) => {
   const privKey = process.env.SIGN_PRIVKEY
   if (!privKey) {
     throw Error('Unable to read private key')
@@ -155,7 +158,7 @@ export const signStatus = (status: any) => {
   const sign = crypto.createSign('RSA-SHA256')
   sign.update(new Buffer(JSON.stringify(status)))
   return sign.sign(privKey.replace('\\n', '\n'), 'hex') // set private key
-}
+}*/
 
 /**
  * Check if user does not modify status
@@ -163,7 +166,7 @@ export const signStatus = (status: any) => {
  * @param displayName
  * @param content
  */
-export const verifyStatus = (status: any): boolean => {
+/*export const verifyStatus = (status: any): boolean => {
   const pubKey = process.env.SIGN_PUBKEY
   if (!pubKey) {
     throw Error('Unable to read public key')
@@ -171,4 +174,4 @@ export const verifyStatus = (status: any): boolean => {
   const sign = crypto.createVerify('RSA-SHA256')
   sign.update(new Buffer(JSON.stringify(status)))
   return sign.verify(pubKey.replace('\\n', '\n'), 'hex') // set public key
-}
+}*/

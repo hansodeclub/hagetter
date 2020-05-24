@@ -1,31 +1,32 @@
-import * as React from 'react';
-import { useRouter } from 'next/router';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { getList } from '../../utils/hage';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import moment from 'moment';
-import clsx from 'clsx';
+import * as React from 'react'
+import Typography from '@material-ui/core/Typography'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import moment from 'moment'
+import clsx from 'clsx'
+import { ListPublicPosts } from '~/usecases/ListPublicPosts'
+import { HagetterPostInfo } from '~/entities/HagetterPost'
+import { PostClientRepository } from '~/infrastructure/PostClientRepository'
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     matomeTitle: {
-      padding: 5
+      padding: 5,
     },
     itemBox: {
       minHeight: 50,
       borderTop: '1px solid gray',
-      margin: 0
+      margin: 0,
     },
     name: {
       paddingTop: 5,
       height: 30,
-      marginLeft: 5
+      marginLeft: 5,
     },
     avatar: {
       width: 32,
-      height: 32
+      height: 32,
     },
     innerBox: {
       textDecoration: 'none',
@@ -36,35 +37,35 @@ const useStyles = makeStyles(theme =>
       color: '#000',
       '&:hover': {
         backgroundColor: '#eee',
-        color: 'orange'
-      }
+        color: 'orange',
+      },
     },
     title: {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
-      paddingLeft: 5
+      paddingLeft: 5,
     },
     footer: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     grow: {
-      flexGrow: 1
-    }
+      flexGrow: 1,
+    },
   })
-);
+)
 
 const Content: React.FC<{ items: any; className?: string }> = ({
   items,
-  className
+  className,
 }) => {
-  const classes = useStyles({});
+  const classes = useStyles({})
 
   return (
     <div className={clsx(className)}>
-      {items.map(item => (
+      {items.map((item) => (
         <div key={item.id} className={classes.itemBox}>
           <a href={`/hi/${item.id}`} style={{ textDecoration: 'none' }}>
             <div className={classes.innerBox}>
@@ -82,33 +83,35 @@ const Content: React.FC<{ items: any; className?: string }> = ({
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
 const MatomeList = () => {
-  const router = useRouter();
-  const classes = useStyles({});
-  const [loading, setLoading] = React.useState(true);
-  const [items, setItems] = React.useState<any>();
-  const [error, setError] = React.useState<string>();
+  const classes = useStyles({})
+  const [loading, setLoading] = React.useState(true)
+  const [items, setItems] = React.useState<HagetterPostInfo[]>()
+  const [error, setError] = React.useState<string>()
 
   React.useEffect(() => {
-    let unmounted = false;
-    getList().then(result => {
-      if (!unmounted) {
-        if (result.data) {
-          setItems(result.data.items);
-          setLoading(false);
-        } else if (result.error) {
-          setError(result.error.message);
-          setLoading(false);
+    let unmounted = false
+    const action = new ListPublicPosts(new PostClientRepository())
+
+    action
+      .execute()
+      .then((result) => {
+        if (!unmounted) {
+          setItems(result.items)
+          setLoading(false)
         }
-      }
-    });
+      })
+      .catch((err) => {
+        setError('ポストを取得出来ませんでした')
+        setLoading(false)
+      })
     return () => {
-      unmounted = true;
-    };
-  }, []);
+      unmounted = true
+    }
+  }, [])
 
   return (
     <div>
@@ -119,7 +122,7 @@ const MatomeList = () => {
       {!loading && !error && items && <Content items={items} />}
       {!loading && error && <p>{error}</p>}
     </div>
-  );
-};
+  )
+}
 
-export default MatomeList;
+export default MatomeList

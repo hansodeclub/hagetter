@@ -1,7 +1,8 @@
-import { types, Instance } from 'mobx-state-tree'
+import { types, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree'
 import { Status } from '../utils/mastodon/types'
 import { TextItem } from './editorStore'
 
+// このままだとTypeGuardがきかないのでTextItemとStatusをunionで定義する
 const HagetterItem = types
   .model('HagetterItem', {
     id: types.string,
@@ -11,7 +12,7 @@ const HagetterItem = types
     type: types.string,
     size: types.optional(types.string, 'inherit'),
     color: types.optional(types.string, '#000000'),
-    data: types.frozen<TextItem | Status>()
+    data: types.frozen<TextItem | Status>(),
   })
   .actions((self) => ({
     setSelected(selected: boolean) {
@@ -19,7 +20,7 @@ const HagetterItem = types
     },
     toggleSelected() {
       self.selected = !self.selected
-    }
+    },
   }))
   .views((self) => ({
     get postData() {
@@ -28,11 +29,13 @@ const HagetterItem = types
         type: self.type,
         size: self.size,
         color: self.color,
-        data: self.data
+        data: self.data,
       }
-    }
+    },
   }))
 
 export type THagetterItem = Instance<typeof HagetterItem>
+export interface IHagetterItemIn extends SnapshotIn<typeof HagetterItem> {}
+export interface IHagetterItemOut extends SnapshotOut<typeof HagetterItem> {}
 
 export default HagetterItem

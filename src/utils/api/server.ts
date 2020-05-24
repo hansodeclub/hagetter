@@ -1,8 +1,9 @@
 import { ApiResponse } from './types'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { verifyAuthorization } from '../auth/server'
-import { NotFound } from './response'
+import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
+import { NotFound } from '~/entities/api/status'
 import { Masto, Status } from 'masto'
+import { SecureStatus } from '~/entities/SecuredStatus'
 
 /*
  Subset of Google JSON Guide
@@ -108,18 +109,52 @@ export const withApiMasto = (
   })
 }
 
-export const globalizeAcct = (statuses: Status[], server: string) => {
-  return statuses.map((status) => {
-    const account = {
-      ...status.account,
-      acct: status.account.acct.includes('@')
-        ? status.account.acct
-        : `${status.account.acct}@${server}`,
-    }
+export const globalizeAcct = (status: Status, server: string): Status => {
+  const account = {
+    ...status.account,
+    acct: status.account.acct.includes('@')
+      ? status.account.acct
+      : `${status.account.acct}@${server}`,
+    note: '',
+  }
 
-    return {
-      ...status,
-      account,
-    }
+  return {
+    ...status,
+    account,
+  }
+}
+
+/**
+ * ステータスの捏造防止のために暗号化情報を付与する
+ * @param status
+ */
+export const secureStatus = (status: Status): SecureStatus => {
+  return {
+    ...status,
+    secure: encrypt(JSON.stringify(status)),
+  }
+}
+
+export const verifyStatus = (secureStatus: SecureStatus): Status => {
+  const status = JSON.parse(decrypt(secureStatus.secure)) as Status
+  if (secureStatus.id !== status.id) throw Error('Invalid Status')
+
+  return status
+}
+
+/**
+ * Mastodonからの応答ステータスを返す前に初期化する
+ * @param statuses
+ * @param server
+ */
+export const preprocessMastodonStatus = (
+  statuses: Status[],
+  server: string
+): SecureStatus[] => {
+  return statuses.map((status) => {
+    const globalAcct = globalizeAcct(status, server)
+    const secure = secureStatus(globalAcct)
+
+    return secure
   })
 }

@@ -1,7 +1,10 @@
-import { globalizeAcct, withApiMasto } from '../../../utils/api/server'
+import {
+  withApiMasto,
+  preprocessMastodonStatus,
+} from '../../../utils/api/server'
 import head from '../../../utils/head'
 
-export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
+export default withApiMasto(async ({ req, user, masto }) => {
   const keyword = head(req.query.keyword)
   if (!keyword) {
     throw Error('keyword is not specified')
@@ -13,7 +16,7 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
   for await (const tl of timeline) {
     return {
       ...tl,
-      statuses: globalizeAcct(tl.statuses, instance),
+      statuses: preprocessMastodonStatus(tl.statuses, instance),
     }
   }
 })

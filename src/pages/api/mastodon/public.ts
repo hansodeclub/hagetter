@@ -1,5 +1,8 @@
 import head from '../../../utils/head'
-import { globalizeAcct, withApiMasto } from '../../../utils/api/server'
+import {
+  withApiMasto,
+  preprocessMastodonStatus,
+} from '../../../utils/api/server'
 
 export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
   const timeline = await masto.fetchPublicTimeline({
@@ -8,6 +11,6 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
 
   const [_, instance] = user.split('@')
   for await (const statuses of timeline) {
-    return globalizeAcct(statuses, instance)
+    return preprocessMastodonStatus(statuses, instance)
   }
 })

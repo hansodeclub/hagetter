@@ -1,13 +1,12 @@
 indexes:
+  - kind: Hagetter
+    properties:
+      - name: visibility
+      - name: created_at
+        direction: desc
 
-- kind: Hagetter
-  properties:
-    - name: visibility
-    - name: created_at
-      direction: desc
-
-- kind: Hagetter
-  properties:
-    - name: username
-    - name: created_at
-      direction: desc
+  - kind: Hagetter
+    properties:
+      - name: username
+      - name: created_at
+        direction: desc

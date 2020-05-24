@@ -1,5 +1,5 @@
 import { request } from './api/client'
-import { InstanceInfo } from './hagetter/types'
+import { InstanceInfo } from '~/entities/Instance'
 import fetch from 'isomorphic-unfetch'
 import { getUrlHost } from './api/utils'
 import { Status } from './mastodon/types'
@@ -8,9 +8,20 @@ import { TextItem } from '../stores/editorStore'
 
 // TODO: improvement
 
-
 export const fetchPost = async (id: string) => {
   const result = await fetch(`/api/post?id=${encodeURIComponent(id)}`)
+  return result
+}
+
+export const fetchMyPost = async (id: string, token: string) => {
+  const result = await fetch(
+    `/api/post?id=${encodeURIComponent(id)}&action=edit`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
   return result
 }
 
@@ -20,7 +31,7 @@ export const createPost = async (
   description: string,
   visibility: 'unlisted' | 'public',
   items: (TextItem | Status)[],
-  hid?: string,
+  hid?: string
 ) => {
   const body = {
     title,
@@ -28,7 +39,7 @@ export const createPost = async (
     visibility,
     data: items,
   } as any
-  if(hid !== '') {
+  if (hid !== '') {
     body.hid = hid
   }
 
@@ -43,18 +54,17 @@ export const createPost = async (
   }
 
   const res = await fetch('/api/post', options)
-  if(res.status !== 200)
-    throw Error((await res.json()).error.message)
+  if (res.status !== 200) throw Error((await res.json()).error.message)
   return await res.json()
 }
 
 export const getUserPosts = async (username: string, token: string) => {
-  const result = await request(`/api/posts/list?user=${username}`, { token })
+  const result = await request(`/api/posts?user=${username}`, { token })
   return result
 }
 
 export const getList = async () => {
-  const res = await request('/api/posts/list')
+  const res = await request('/api/posts')
   return res
 }
 

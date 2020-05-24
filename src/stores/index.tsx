@@ -6,6 +6,7 @@ import SearchTimelineStore from './searchTimelineStore'
 import SessionStore from './sessionStore'
 import EditorStore from './editorStore'
 import UrlSearchTimelineStore from './urlSearchTimelineStore'
+import makeInspectable from 'mobx-devtools-mst'
 
 export { observer } from 'mobx-react-lite'
 
@@ -42,9 +43,12 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
       favouriteTimeline: { type: 'favourites', session: sessionStore.id },
       searchTimeline: { type: 'search', session: sessionStore.id },
       urlSearchTimeline: { type: 'urls', session: sessionStore.id },
-      editor: {title:'', description: ''},
+      editor: { title: '', description: '' },
     })
   })
+  if (process.env.NODE_ENV === 'development') {
+    makeInspectable(store)
+  }
   return <storeContext.Provider value={store}>{children}</storeContext.Provider>
 }
 
