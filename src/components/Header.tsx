@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
     /* Right side of AppBar */
     right: {
-      flex: 1,
-      display: 'flex',
+      //flex: 1,
+      //display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'center',
     },

@@ -63,7 +63,7 @@ const Mobile = () => (
 
 const Home = () => {
   const classes = useStyles({})
-  const wideMonitor = useMediaQuery('(min-width:10px)')
+  const wideMonitor = useMediaQuery('(min-width:667px)')
   //const wideMonitor = useMediaQuery(theme => theme.breakpoints.up('sm'));
   const app = useStore()
 
