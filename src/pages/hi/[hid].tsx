@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) =>
       },
       [theme.breakpoints.up('sm')]: {
         maxWidth: 600,
+        marginTop: 10,
         marginLeft: 10,
         border: '1px solid #ccc',
         borderRadius: 10,
@@ -207,6 +208,7 @@ const Item = ({
     )
   } else if (item.type === 'text') {
     const textItem: any = item.data // TODO: Add type checking
+
     return (
       <TextItem
         text={textItem.text}

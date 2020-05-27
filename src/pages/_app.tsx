@@ -1,24 +1,20 @@
 //https://github.com/mui-org/material-ui/blob/master/examples/nextjs
 
 import React from 'react'
-import App from 'next/app'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../utils/theme'
-import { StoreProvider } from '../stores'
+import { StoreProvider, useSession } from '~/stores'
 import ErrorNotification from '../components/ErrorNotification'
 require('setimmediate')
 
 export default function MyApp(props) {
-  const { Component, pageProps } = props
+  //const { Component, pageProps } = props
 
-  React.useEffect(() => {
-    const jssStyles = document.querySelector('#jss-server-side')
-    if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles)
-    }
-  })
+  const fonts = [
+    'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
+  ]
 
   return (
     <>
@@ -29,14 +25,32 @@ export default function MyApp(props) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        {fonts.map((font) => (
+          <link rel="stylesheet" href={font} key={font} />
+        ))}
       </Head>
       <StoreProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Component {...pageProps} />
+          <MyComponent {...props} />
           <ErrorNotification />
         </ThemeProvider>
       </StoreProvider>
     </>
   )
+}
+
+const MyComponent = ({ Component, pageProps }) => {
+  const session = useSession()
+  React.useEffect(() => {
+    // useEffect内はクライアントサイドで呼ばれる
+    session
+      .getAccount()
+      .then((account) => {})
+      .catch((err) => {
+        console.error(err)
+      })
+  }, [])
+
+  return <Component {...pageProps} />
 }
