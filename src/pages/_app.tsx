@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../utils/theme'
 import { StoreProvider, useSession } from '~/stores'
 import ErrorNotification from '../components/ErrorNotification'
+import '../styles.scss'
 require('setimmediate')
 
 export default function MyApp(props) {

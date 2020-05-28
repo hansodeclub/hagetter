@@ -3,8 +3,6 @@ import Head from 'next/head'
 import Header from '../components/Header'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
-import './App.scss'
-//import { useTheme } from '@material-ui/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Hidden from '@material-ui/core/Hidden'
 import { useStore } from '../stores'

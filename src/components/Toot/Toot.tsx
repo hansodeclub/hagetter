@@ -68,6 +68,14 @@ const useStyles = makeStyles((theme: Theme) =>
     body: {
       minHeight: 30,
       wordBreak: 'break-all',
+      '& a': {
+        color: '#4040ff',
+        textDecoration: 'none',
+      },
+      '& a:hover': {
+        color: '#ff4040',
+        textDecoration: 'underline',
+      },
     },
     attachments: {
       maxWidth: '100%',
@@ -76,6 +84,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItem: 'middle',
       justifyContent: 'flex-end',
+      '& a': {
+        textDecoration: 'none',
+        color: '#888',
+      },
+      '& a:hover': {
+        textDecoration: 'underline',
+        color: '#888',
+      },
     },
     timestamp: {
       color: '#888',
@@ -110,7 +126,6 @@ const Toot: React.FC<StatusProps> = ({
 }) => {
   const classes = useStyles({})
 
-  // TODO: fix server name
   return (
     <div
       onClick={() => onClick && onClick(status)}
@@ -165,7 +180,13 @@ const Toot: React.FC<StatusProps> = ({
           <Media attachments={status.media_attachments} />
         </div>
         <div className={classes.footer}>
-          <Timestamp value={status.created_at} className={classes.timestamp} />
+          <a href={status.url} target="_blank">
+            <Timestamp
+              value={status.created_at}
+              className={classes.timestamp}
+            />
+          </a>
+
           <div className={classes.displayName}>
             {!isPublic(status.visibility) && (
               <LockIcon className={classes.lock} color="action" />

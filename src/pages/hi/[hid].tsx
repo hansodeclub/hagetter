@@ -9,8 +9,6 @@ import moment from 'moment'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import Header from '~/components/Header'
@@ -20,13 +18,10 @@ import Toot from '~/components/Toot/Toot'
 import { useSession } from '~/stores'
 import head from '~/utils/head'
 import { Status } from '~/utils/mastodon/types'
-import { fetchPost } from '~/utils/hage'
 
-import '../App.scss'
 import { GetPost } from '~/usecases/GetPost'
 import { Convert, HagetterPost } from '@/entities/HagetterPost'
 import { JsonString, fromJson, toJson } from '@/utils/serialized'
-import { NotFound } from '~/entities/api/status'
 import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
 
 const useStyles = makeStyles((theme) =>
