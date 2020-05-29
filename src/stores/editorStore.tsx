@@ -1,5 +1,5 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '../utils/mastodon/types'
+import { Status } from '~/entities/Mastodon'
 import moment from 'moment'
 import stable from 'stable'
 import HagetterItem from './hagetterItem'
@@ -58,7 +58,7 @@ const EditorStore = types
     setVisibility(visibility: 'unlisted' | 'public') {
       self.visibility = visibility
     },
-    addStatus(status: Status, anchor?: string, size?: string, color?:string) {
+    addStatus(status: Status, anchor?: string, size?: string, color?: string) {
       if (self.items.find((item) => item.id === status.id)) {
         return // duplicated item
       }
@@ -76,7 +76,7 @@ const EditorStore = types
         type: 'status',
         data: status2,
         size,
-        color
+        color,
       })
     },
     addText(text: string, size: string, color: string, anchor?: string) {
@@ -159,13 +159,18 @@ const EditorStore = types
   }))
   .actions((self) => ({
     bulkAdd(items: any[]) {
-      items.forEach((item => {
+      items.forEach((item) => {
         if (item.type === 'status') {
-          self.addStatus(item.data as Status, item.anchor, item.size, item.color)
+          self.addStatus(
+            item.data as Status,
+            item.anchor,
+            item.size,
+            item.color
+          )
         } else if (item.type === 'text') {
           self.addText(item.data.text, item.size, item.color)
         }
-      }))
+      })
     },
   }))
   .views((self) => ({

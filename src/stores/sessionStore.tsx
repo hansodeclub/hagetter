@@ -1,6 +1,5 @@
 import { types, flow } from 'mobx-state-tree'
-import { Account } from '../utils/mastodon/types'
-import jwt from 'jsonwebtoken'
+import { Account } from '~/entities/Mastodon'
 
 import {
   initSession,
@@ -8,7 +7,7 @@ import {
   getToken,
   getProfile,
 } from '../utils/auth/client'
-import { fetchProfile } from '../utils/hage'
+import { HagetterApiClient } from '~/utils/hage'
 
 const SessionStore = types
   .model('SessionModel', {
@@ -19,7 +18,7 @@ const SessionStore = types
   })
   .views((self) => ({
     get loggedIn() {
-      if(typeof window !== 'undefined') {
+      if (typeof window !== 'undefined') {
         return window.localStorage.getItem('token') !== null
       }
 
@@ -54,7 +53,8 @@ const SessionStore = types
 
       // fetch profile via Mastodon API
       self.loading = true
-      const account = yield fetchProfile(jwtToken)
+      const hagetterClient = new HagetterApiClient()
+      const account = yield hagetterClient.getAccount(jwtToken) //fetchProfile(jwtToken)
       setAccount(account)
       self.loading = false
       return self.account

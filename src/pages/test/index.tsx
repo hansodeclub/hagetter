@@ -3,7 +3,7 @@ import Container from '@material-ui/core/Container'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Toot from '../../components/Toot/Toot'
-import { Status } from '../../utils/mastodon/types'
+import { Status } from '../../entities/Mastodon'
 
 const TestPage = () => {
   const testStatus: Status = {

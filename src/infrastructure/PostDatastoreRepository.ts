@@ -4,7 +4,7 @@ import {
   Convert,
 } from '~/entities/HagetterPost'
 import { IPostRepository, QueryPostsOptions } from '~/interfaces/PostRepository'
-import { NotFound } from '~/entities/api/status'
+import { NotFound } from '~/entities/api/HttpResponse'
 import { Datastore } from '@google-cloud/datastore'
 
 /**

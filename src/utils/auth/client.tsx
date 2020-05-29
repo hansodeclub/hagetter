@@ -4,7 +4,7 @@ import { Component } from 'react'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
-import { Account } from '../mastodon/types'
+import { Account } from '../../entities/Mastodon'
 import jwt from 'jsonwebtoken'
 
 export const initSession = (user: string, token: string) => {
@@ -25,10 +25,10 @@ export const clearSession = () => {
 
 export const getToken = (): string | null => {
   const token = window.localStorage.getItem('token')
-  if(!token) return null;
+  if (!token) return null
 
   const exp = jwt.decode(token).exp * 1000
-  const now = (new Date()).getTime()
+  const now = new Date().getTime()
   if (exp > now + 1000 * 60 * 60) {
     // JWTトークンの有効期限が1時間以上余っている時のみトークンを返す
     return token
@@ -103,41 +103,6 @@ export function withAuthSync(WrappedComponent) {
     }
   }
 }
-
-/*
-// どっかにまとめる
-const fetchProfile = async (token: string) => {
-    const res = await fetch('/api/mastodon/profile', {
-        headers: {
-            Authorization: token
-        }
-    });
-
-    // TODO: error handling (check error without response -> with error response)
-    const data = await res.json();
-    console.log(data);
-    return data.data;
-}
-
-export const getAccount = async (): Promise<Account | null> => {//TODO: ctxの型調べる
-    const localStorageAccount = window.localStorage.getItem('profile');
-    console.log('localStorage', localStorageAccount);
-    if (localStorageAccount) {
-        const account = JSON.parse(localStorageAccount);
-        return account;
-    }
-
-    const token = cookie.get('token');
-    console.log('Cookie', token);
-    if (token) {
-        const account = await fetchProfile(token);
-        window.localStorage.setItem('profile', JSON.stringify(account));
-        return account;
-    }
-
-    console.log('ログインしてない');
-    return null;
-} */
 
 export function auth(ctx) {
   const { token } = nextCookie(ctx)

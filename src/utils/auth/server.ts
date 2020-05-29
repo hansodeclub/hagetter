@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import { Masto } from 'masto'
-import { getInstanceInfo } from '../hagetter/server'
+//import { getInstanceInfo } from '../hagetter/server'
+import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
 
 export const encrypt = (token: string) => {
   const iv = crypto.randomBytes(16)
@@ -26,7 +27,8 @@ export const decrypt = (token: string) => {
 }
 
 export const login = async (code: string, instance: string, redirect_uri) => {
-  const instanceInfo = await getInstanceInfo(instance)
+  const instanceRepository = new InstanceDatastoreRepository()
+  const instanceInfo = await instanceRepository.getInstance(instance) //getInstanceInfo(instance)
   if (!instanceInfo) {
     throw Error(`Unable to find instance: ${instance}`)
   }
@@ -66,7 +68,9 @@ export const login = async (code: string, instance: string, redirect_uri) => {
 export const logout = async (token) => {
   const { user, accessToken } = verifyToken(token)
   const [_username, instance] = user.split('@')
-  const instanceInfo = await getInstanceInfo(instance)
+  const instanceRepository = new InstanceDatastoreRepository()
+  const instanceInfo = await instanceRepository.getInstance(instance)
+  //const instanceInfo = await getInstanceInfo(instance)
   if (!instanceInfo) {
     throw Error(`Unable to find instance: ${instance}`)
   }

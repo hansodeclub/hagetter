@@ -17,7 +17,7 @@ import Toot from '~/components/Toot/Toot'
 
 import { useSession } from '~/stores'
 import head from '~/utils/head'
-import { Status } from '~/utils/mastodon/types'
+import { Status } from '~/entities/Mastodon'
 
 import { GetPost } from '~/usecases/GetPost'
 import { Convert, HagetterPost } from '@/entities/HagetterPost'
