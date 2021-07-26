@@ -1,7 +1,7 @@
 import { withApi } from '~/utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
 import head from '~/utils/head'
-import { NotFound } from '~/entities/api/status'
+import { NotFound } from '~/entities/api/HttpResponse'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.hid)

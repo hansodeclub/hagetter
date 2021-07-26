@@ -1,5 +1,5 @@
 import React from 'react'
-import { Account } from '../../utils/mastodon/types'
+import { Account } from '../../entities/Mastodon'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import TextField from '@material-ui/core/TextField'
@@ -11,27 +11,27 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 import { useStore, useSession, useEditor, observer } from '../../stores'
 import Router from 'next/router'
-import { createPost } from '../../utils/hage'
+import { HagetterApiClient } from '~/utils/hage'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     postButtonContainer: {
-      marginTop: 20
+      marginTop: 20,
     },
     title: {
-      display: 'flex'
+      display: 'flex',
     },
     titleText: {
       margin: 'auto',
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     titleLogo: {
       color: 'black',
-      textDecoration: 'none'
+      textDecoration: 'none',
     },
     grow: {
-      flexGrow: 1
-    }
+      flexGrow: 1,
+    },
   })
 )
 
@@ -49,13 +49,13 @@ const PostInfo = observer(() => {
   React.useEffect(() => {
     session
       .getAccount()
-      .then((account) => {
-      })
+      .then((account) => {})
       .catch(app.notifyError)
   }, [])
 
   React.useEffect(() => {
-    if (editor.hasPrivateStatus && editor.visibility === 'public') editor.setVisibility('unlisted')
+    if (editor.hasPrivateStatus && editor.visibility === 'public')
+      editor.setVisibility('unlisted')
   }, [editor.hasPrivateStatus])
 
   const handleUnlistedChange = (event) => {
@@ -66,8 +66,8 @@ const PostInfo = observer(() => {
     }
   }
 
-  const successPost = (res) => {
-    Router.push(`/hi/${res.data.key}`)
+  const successPost = (key) => {
+    Router.push(`/hi/${key}`)
   }
 
   const onSubmit = () => {
@@ -86,16 +86,18 @@ const PostInfo = observer(() => {
 
     setPostLoading(true)
 
-    createPost(
-      session.token,
-      editor.title,
-      editor.description,
-      editor.hasPrivateStatus ? 'unlisted' : editor.visibility as any,
-      editor.items.map((item) => item.postData) as any[],
-      editor.hid
-    )
-      .then((data) => {
-        successPost(data)
+    const hagetterClient = new HagetterApiClient()
+    hagetterClient
+      .createPost(
+        session.token,
+        editor.title,
+        editor.description,
+        editor.hasPrivateStatus ? 'unlisted' : (editor.visibility as any),
+        editor.items.map((item) => item.postData) as any[],
+        editor.hid
+      )
+      .then((key) => {
+        successPost(key)
         setPostLoading(false)
       })
       .catch((err) => {
@@ -148,7 +150,9 @@ const PostInfo = observer(() => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={editor.visibility!=='public' || editor.hasPrivateStatus}
+              checked={
+                editor.visibility !== 'public' || editor.hasPrivateStatus
+              }
               onChange={handleUnlistedChange}
               value="unlisted"
             />

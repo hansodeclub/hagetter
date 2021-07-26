@@ -33,7 +33,7 @@ import {
 
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 
-import { Status } from '../../utils/mastodon/types'
+import { Status } from '../../entities/Mastodon'
 import HowTo, { Tips } from './HowTo'
 
 const useStyles = makeStyles((theme) =>

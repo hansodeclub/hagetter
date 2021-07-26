@@ -9,14 +9,14 @@ export class InstanceDatastoreRepository implements IInstanceRepository {
   readonly datastore: Datastore = new Datastore()
 
   async getInstance(name: string): Promise<InstanceInfo | null> {
-    const result = await this.datastore.get(
+    const [result] = await this.datastore.get(
       this.datastore.key(['Instances', name])
     )
 
-    if (result[0]) {
+    if (result) {
       return {
         name: name,
-        ...result[0],
+        ...result,
       }
     } else {
       return null
@@ -25,10 +25,14 @@ export class InstanceDatastoreRepository implements IInstanceRepository {
 
   async listInstances(): Promise<string[]> {
     const query = await this.datastore.createQuery('Instances')
-    const [instances] = await this.datastore.runQuery(query)
-    const results = instances.map(
-      (instance) => instance[this.datastore.KEY].name
-    )
-    return results
+    const [result] = await this.datastore.runQuery(query)
+    if (result) {
+      const instances = result.map(
+        (instance) => instance[this.datastore.KEY].name
+      )
+      return instances
+    } else {
+      return []
+    }
   }
 }

@@ -1,29 +1,29 @@
-import * as React from 'react';
-import { Attachment } from '../../utils/mastodon/types';
-import { Lightbox } from 'react-modal-image';
+import * as React from 'react'
+import { Attachment } from '../../entities/Mastodon'
+import { Lightbox } from 'react-modal-image'
 
 export interface MediaProps {
-  attachments: Attachment[];
+  attachments: Attachment[]
 }
 
 const filterImage = (attachments: Attachment[]) => {
-  return attachments.filter(attachment => attachment['type'] === 'image');
-};
+  return attachments.filter((attachment) => attachment['type'] === 'image')
+}
 
 const Media: React.FC<MediaProps> = ({ attachments }) => {
-  const [previewUrl, setPreviewUrl] = React.useState<string>();
-  const images: Attachment[] = filterImage(attachments);
+  const [previewUrl, setPreviewUrl] = React.useState<string>()
+  const images: Attachment[] = filterImage(attachments)
 
   return (
     <div>
-      {images.map(attachment => {
-        const displayUrl = attachment['remote_url'] || attachment['url'];
+      {images.map((attachment) => {
+        const displayUrl = attachment['remote_url'] || attachment['url']
         return (
           <div key={attachment.id}>
             <a
-              onClick={e => {
-                setPreviewUrl(displayUrl);
-                e.stopPropagation();
+              onClick={(e) => {
+                setPreviewUrl(displayUrl)
+                e.stopPropagation()
               }}
             >
               <img
@@ -32,12 +32,12 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
                 style={{
                   maxWidth: '100%',
                   border: '1px solid #eee',
-                  borderRadius: 5
+                  borderRadius: 5,
                 }}
               />
             </a>
           </div>
-        );
+        )
       })}
       {previewUrl && (
         <Lightbox
@@ -47,7 +47,7 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Media;
+export default Media

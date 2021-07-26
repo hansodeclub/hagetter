@@ -4,20 +4,22 @@ import Container from '@material-ui/core/Container'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import head from '../../utils/head'
 import NextError from 'next/error'
-import { getError } from '../../utils/hage'
+import { HagetterApiClient } from '../../utils/hage'
+import { ErrorReport } from '~/entities/ErrorReport'
 
 const Post = () => {
   const router = useRouter()
   const eid = head(router.query.eid)
   const [loading, setLoading] = React.useState(true)
   const [code, setCode] = React.useState<number>()
-  const [item, setItem] = React.useState<any>()
+  const [item, setItem] = React.useState<ErrorReport>()
 
   React.useEffect(() => {
     let unmounted = false
     if (!eid) return
-    getError(eid).then((result) => {
-      setItem(result.data)
+    const hagetterClient = new HagetterApiClient()
+    hagetterClient.getError(eid).then((report) => {
+      setItem(report)
       setLoading(false)
       setCode(200)
     })

@@ -1,7 +1,7 @@
-import { ApiResponse } from './types'
+import { ApiError, ApiResponse, ApiSuccess } from '~/entities/api/ApiResponse'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
-import { NotFound } from '~/entities/api/status'
+import { NotFound } from '~/entities/api/HttpResponse'
 import { Masto, Status } from 'masto'
 import { SecureStatus } from '~/entities/SecuredStatus'
 
@@ -10,8 +10,8 @@ import { SecureStatus } from '~/entities/SecuredStatus'
  https://google.github.io/styleguide/jsoncstyleguide.xml
 */
 
-export const success = <Data>(data?: Data): ApiResponse<Data> => {
-  if (!data) return { status: 'ok' }
+export const success = <Data>(data?: Data): ApiSuccess<Data> => {
+  if (!data) return { status: 'ok', data: null }
 
   return {
     status: 'ok',
@@ -19,10 +19,7 @@ export const success = <Data>(data?: Data): ApiResponse<Data> => {
   }
 }
 
-export const failure = <Data>(
-  message: string,
-  code?: number
-): ApiResponse<Data> => {
+export const failure = (message: string, code?: number): ApiError => {
   if (!code)
     return {
       status: 'error',

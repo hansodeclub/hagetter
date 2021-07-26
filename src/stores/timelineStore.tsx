@@ -1,8 +1,7 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '../utils/mastodon/types'
-import cookie from 'js-cookie'
+import { Status } from '~/entities/Mastodon'
 import SessionStore from './sessionStore'
-import { fetchTimeline } from '../utils/hage'
+import { HagetterApiClient } from '~/utils/hage'
 
 const filterStatus = (statuses: Status[], filter: string) => {
   return statuses.filter(
@@ -46,14 +45,19 @@ const TimelineStore = types
 
       this.setLoading(true)
 
-      const statuses = await fetchTimeline(self.type, self.session.token)
+      const hagetterClient = new HagetterApiClient()
+      const statuses = await hagetterClient.getTimeline(
+        self.type,
+        self.session.token
+      )
       this.setStatuses(statuses)
       this.setLoading(false)
     },
     async loadMore() {
       this.setLoading(true)
       const minId = self.statuses.slice(-1)
-      const statuses = await fetchTimeline(
+      const hagetterClient = new HagetterApiClient()
+      const statuses = await hagetterClient.getTimeline(
         self.type,
         self.session.token,
         minId.length ? minId[0].id : undefined

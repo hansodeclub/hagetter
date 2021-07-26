@@ -1,7 +1,7 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '../utils/mastodon/types'
+import { Status } from '~/entities/Mastodon'
 import SessionStore from './sessionStore'
-import { fetchSearchTimeline } from '../utils/hage'
+import { HagetterApiClient } from '~/utils/hage'
 
 const filterStatus = (statuses: Status[], filter: string) => {
   return statuses.filter(
@@ -45,23 +45,12 @@ const SearchTimelineStore = types
       }
       self.keyword = keyword
 
-      const statuses = await fetchSearchTimeline(
+      const hagetterClient = new HagetterApiClient()
+      const statuses = await hagetterClient.getSearchTimeline(
         self.session.token,
         self.keyword
       )
 
-      /* const res = await fetch(
-        `/api/mastodon/search?keyword=${encodeURIComponent(keyword)}`,
-        {
-          headers: {
-            Authorization: cookie.get('token'),
-          },
-        }
-      )
-
-      const data = await res.json() */
-
-      // https://github.com/mobxjs/mobx-state-tree#typing-self-in-actions-and-views
       this.setStatuses(statuses)
       this.setLoading(false)
     },
