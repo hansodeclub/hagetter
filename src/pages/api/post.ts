@@ -8,7 +8,7 @@ import {
 } from '../../utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
 import head from '../../utils/head'
-import { NotFound } from '~/entities/api/status'
+import { NotFound } from '~/entities/api/HttpResponse'
 import { verifyStatus } from '~/utils/api/server'
 import { IHagetterItemOut } from '~/stores/hagetterItem'
 import { SecureStatus } from '~/entities/SecuredStatus'
