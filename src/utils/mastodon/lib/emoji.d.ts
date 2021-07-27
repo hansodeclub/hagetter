@@ -1,4 +1,4 @@
-import { Emoji } from '../types';
+import { Emoji } from '../../../entities/Mastodon'
 
 export type EmojiMap = any
 export default function emojify(str: string, customEmojis?: EmojiMap): string

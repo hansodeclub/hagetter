@@ -6,7 +6,7 @@ import StatusSelector from '../../components/editor/StatusSelector'
 import EditStatus from '../../components/editor/EditStatus'
 import PostInfo from '../../components/editor/PostInfo'
 import head from '../../utils/head'
-import { fetchMyPost } from '../../utils/hage'
+import { HagetterApiClient } from '../../utils/hage'
 import { useRouter } from 'next/router'
 import Header from '../../components/Header'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -49,23 +49,18 @@ const EditPage = observer(() => {
       setError('ログインしていません')
     }
 
-    fetchMyPost(hid, session.token)
-      .then((result) => {
+    const hagetterClient = new HagetterApiClient()
+    hagetterClient
+      .getPostSecure(hid, session.token)
+      .then((data) => {
         if (!unmounted) {
-          if (result.status === 200) {
-            result.json().then((data) => {
-              editor.setId(hid)
-              editor.setTitle(data.data.title)
-              editor.setDescription(data.data.description)
-              editor.bulkAdd(data.data.data)
-              editor.setVisibility(data.data.visibility)
-              setCode(200)
-              setLoading(false)
-            })
-          } else {
-            setLoading(false)
-            setCode(result.status)
-          }
+          editor.setId(hid)
+          editor.setTitle(data.title)
+          editor.setDescription(data.description)
+          editor.bulkAdd(data.data)
+          editor.setVisibility(data.visibility as any)
+          setCode(200)
+          setLoading(false)
         }
       })
       .catch((err) => {

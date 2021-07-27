@@ -1,5 +1,4 @@
 import { IInstanceRepository } from '~/interfaces/InstanceRepository'
-import { Datastore } from '@google-cloud/datastore'
 import { InstanceInfo } from '~/entities/Instance'
 import { ApiHandler } from './handler/ApiHandler'
 

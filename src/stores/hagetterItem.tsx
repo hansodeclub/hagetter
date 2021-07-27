@@ -1,5 +1,5 @@
 import { types, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree'
-import { Status } from '../utils/mastodon/types'
+import { Status } from '~/entities/Mastodon'
 import { TextItem } from './editorStore'
 
 // このままだとTypeGuardがきかないのでTextItemとStatusをunionで定義する

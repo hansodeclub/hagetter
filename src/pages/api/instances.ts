@@ -1,30 +1,23 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { respondError, respondSuccess } from '../../utils/api/server';
-import head from '../../utils/head';
-import { getInstanceInfo, listInstance } from '../../utils/hagetter/server';
+import { withApi } from '~/utils/api/server'
+import { NotFound } from '~/entities/api/HttpResponse'
+import head from '~/utils/head'
+import { GetInstance } from '~/usecases/GetInstance'
+import { ListInstances } from '~/usecases/ListInstances'
+import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
 
+export default withApi(async ({ req }) => {
+  const instanceName = head(req.query.name)
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-        const instanceName = head(req.query.name);
+  // return instance list if instance name is not provided
+  if (!instanceName) {
+    const action = new ListInstances(new InstanceDatastoreRepository())
+    return await action.execute()
+  }
 
-        if (!instanceName) {
-            const instances = await listInstance();
-            respondSuccess(res, instances);
-            return;
-        }
+  // return instance info
+  const action = new GetInstance(new InstanceDatastoreRepository())
+  const instance = await action.execute(instanceName)
+  if (!instance) throw new NotFound('Instance not found')
 
-        const instanceInfo = await getInstanceInfo(instanceName);
-        if (instanceInfo) {
-            respondSuccess(res, {
-                ...instanceInfo,
-                access_token: undefined
-            })
-        } else {
-            respondError(res, 'server not found', 404);
-        }
-    } catch (err) {
-        respondError(res, err.message);
-    }
-
-}
+  return instance
+})

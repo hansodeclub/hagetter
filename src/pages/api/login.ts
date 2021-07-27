@@ -24,6 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       profile,
     })
   } catch (err) {
+    console.error(err)
     respondError(res, err.message)
   }
 }

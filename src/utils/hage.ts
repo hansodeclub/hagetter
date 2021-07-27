@@ -1,187 +1,293 @@
-import { request } from './api/client'
 import { InstanceInfo } from '~/entities/Instance'
 import fetch from 'isomorphic-unfetch'
-import { getUrlHost } from './api/utils'
-import { Status } from './mastodon/types'
-import HagetterItem, { THagetterItem } from '../stores/hagetterItem'
+import { Status } from '../entities/Mastodon'
 import { TextItem } from '../stores/editorStore'
+import { HagetterPost, HagetterPostInfo } from '~/entities/HagetterPost'
+import { ApiResponse } from '~/entities/api/ApiResponse'
+import { ErrorReport } from '~/entities/ErrorReport'
+import { QueryResult } from '~/entities/api/QueryResult'
 
-// TODO: improvement
+export class HagetterApiClient {
+  readonly apiRoot: string
 
-export const fetchPost = async (id: string) => {
-  const result = await fetch(`/api/post?id=${encodeURIComponent(id)}`)
-  return result
-}
+  constructor(apiRoot: string = '/api/') {
+    this.apiRoot = apiRoot.endsWith('/') ? apiRoot : apiRoot + '/'
+  }
 
-export const fetchMyPost = async (id: string, token: string) => {
-  const result = await fetch(
-    `/api/post?id=${encodeURIComponent(id)}&action=edit`,
-    {
+  private _getUrl(path, query: object = {}) {
+    const qs = Object.keys(query)
+      .map((key) => `${key}=${encodeURIComponent(query[key])}`)
+      .join('&')
+    const q = qs.length > 0 ? '?' : ' '
+    return `${this.apiRoot}${path}${q}${qs}`
+  }
+
+  private async get<T>(path, query: object = {}) {
+    const res = await fetch(this._getUrl(path, query))
+    return res.json()
+  }
+
+  async getAuth(path: string, token: string, query: object = {}) {
+    const res = await fetch(this._getUrl(path, query), {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    return res.json()
+  }
+
+  private async post(path, body: object) {
+    const options = {
+      method: 'POST',
       headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }
+
+    const res = await fetch(this._getUrl(path), options)
+    return res.json()
+  }
+
+  private async postAuth(path, token: string, body: object) {
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    }
+
+    const res = await fetch(this._getUrl(path), options)
+    return res.json()
+  }
+
+  private async deleteAuth(path, token: string, query = {}) {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     }
-  )
-  return result
-}
 
-export const createPost = async (
-  token: string,
-  title: string,
-  description: string,
-  visibility: 'unlisted' | 'public',
-  items: (TextItem | Status)[],
-  hid?: string
-) => {
-  const body = {
-    title,
-    description,
-    visibility,
-    data: items,
-  } as any
-  if (hid !== '') {
-    body.hid = hid
+    const res = await fetch(this._getUrl(path, query), options)
+    return res.json()
   }
 
-  const options = {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  }
-
-  const res = await fetch('/api/post', options)
-  if (res.status !== 200) throw Error((await res.json()).error.message)
-  return await res.json()
-}
-
-export const getUserPosts = async (username: string, token: string) => {
-  const result = await request(`/api/posts?user=${username}`, { token })
-  return result
-}
-
-export const getList = async () => {
-  const res = await request('/api/posts')
-  return res
-}
-
-export const deletePost = async (id: string, token: string) => {
-  const res = await request(`/api/post?id=${id}`, {
-    token,
-    method: 'DELETE',
-  })
-  return res
-}
-
-export const postError = async (
-  page: string,
-  message: string,
-  stack: string[]
-) => {
-  const body = {
-    page,
-    message,
-    stack,
-    time: new Date(),
-  }
-
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  }
-
-  const options = {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body),
-  }
-
-  const result = await fetch('/api/errors', options)
-  const data = await result.json()
-  return data.data.id
-}
-
-export const getError = async (errorId: string) => {
-  const res = await request(`/api/errors?id=${errorId}`)
-  return res
-}
-
-export const getInstanceList = async (
-  protocol: string,
-  host: string
-): Promise<any> => {
-  const res = await fetch(`${protocol}//${host}/api/instances`)
-  const json = await res.json()
-  return { instances: json.data as string[] }
-}
-
-export const getInstanceInfo = async (name: string): Promise<InstanceInfo> => {
-  const res = await request(`/api/instances?name=${encodeURIComponent(name)}`)
-  return res.data as InstanceInfo
-}
-
-export const login = async (instance: string, code: string): Promise<any> => {
-  const res = await fetch(`/api/login?instance=${instance}&code=${code}`)
-  const json = await res.json()
-  return { token: json.data.token, profile: json.data.profile } as any
-}
-
-export const fetchProfile = async (token: string) => {
-  const res = await fetch('/api/mastodon/profile', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  // TODO: error handling (check error without response -> with error response)
-  const data = await res.json()
-  return data.data as Account
-}
-
-export const fetchTimeline = async (
-  timeline: string,
-  token: string,
-  max_id?: string
-) => {
-  let url = `/api/mastodon/${timeline}`
-  if (max_id) url = `${url}?max_id=${max_id}`
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  const data = await res.json()
-  return data.data as Status[]
-}
-
-export const fetchSearchTimeline = async (token: string, keyword: string) => {
-  const res = await fetch(
-    `/api/mastodon/search?keyword=${encodeURIComponent(keyword)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  /**
+   * ログイン処理
+   * @param instance インスタンス名
+   * @param code OAuthコールバックのcode
+   */
+  async login(
+    instance: string,
+    code: string
+  ): Promise<{ token: string; profile: Account }> {
+    const res = await this.get('login', { instance, code })
+    return {
+      token: res.data.token as string,
+      profile: res.data.profile as Account,
     }
-  )
+  }
 
-  const data = await res.json()
-  return data.data.statuses as Status[]
-}
+  /**
+   * 自身のアカウント情報を取得
+   */
+  async getAccount(token: string): Promise<Account> {
+    const res = await this.getAuth('mastodon/profile', token)
+    return res.data as Account
+  }
 
-export const fetchUrlTimeline = async (token: string, urls: string[]) => {
-  const res = await fetch(`/api/mastodon/urls`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ urls }),
-  })
+  /**
+   * ポストを取得する
+   * @param id まとめID
+   */
+  async getPost(id: string): Promise<HagetterPost> {
+    const result = await this.get(`post`, { id })
+    return result.data as HagetterPost
+  }
 
-  const data = await res.json()
-  return data.data.statuses as Status[]
+  /**
+   * ポスト一覧を取得する(publicのみ)
+   */
+  async getPosts(): Promise<QueryResult<HagetterPostInfo>> {
+    const result = await this.get('posts')
+    return result.data as QueryResult<HagetterPostInfo>
+  }
+
+  /**
+   * 自分のポスト一覧を取得する(public/unlisted含む)
+   */
+  async getMyPosts(
+    user: string,
+    token: string
+  ): Promise<QueryResult<HagetterPostInfo>> {
+    const result = (await this.getAuth('posts', token, {
+      user,
+    })) as ApiResponse<QueryResult<HagetterPostInfo>>
+    if (result.status === 'ok') {
+      return result.data as QueryResult<HagetterPostInfo>
+    } else {
+      throw Error(result.error.message)
+    }
+  }
+
+  /**
+   * 署名付きポスト情報を取得する(自身のポストのみ取得可能)
+   * @param id まとめID
+   * @param token セッショントークン
+   */
+  async getPostSecure(id: string, token: string): Promise<HagetterPost> {
+    const result = (await this.getAuth(`post`, token, {
+      id,
+      action: 'edit',
+    })) as ApiResponse<HagetterPost>
+    if (result.status === 'ok') {
+      return result.data
+    } else {
+      throw new Error(result.error.message)
+    }
+  }
+
+  /**
+   * ポストを投稿する
+   * @param token
+   * @param title
+   * @param description
+   * @param visibility
+   * @param items
+   * @param hid
+   */
+  async createPost(
+    token: string,
+    title: string,
+    description: string,
+    visibility: 'draft' | 'unlisted' | 'public',
+    items: (TextItem | Status)[],
+    hid?: string
+  ): Promise<string> {
+    const body = {
+      title,
+      description,
+      visibility,
+      data: items,
+    } as any
+
+    if (hid !== '') {
+      body.hid = hid
+    }
+
+    const res = (await this.postAuth(`post`, token, body)) as ApiResponse<{
+      key: string
+    }>
+    if (res.status === 'ok') {
+      return res.data.key
+    } else {
+      throw Error(res.error.message)
+    }
+  }
+
+  /**
+   * ポストを削除する
+   * @param id まとめID
+   * @param token セッショントークン
+   */
+  async deletePost(id: string, token: string) {
+    const res = await this.deleteAuth('post', token, { id })
+    return res.data
+  }
+
+  /**
+   * インスタンス名一覧を取得する
+   * @param protocol
+   * @param host
+   */
+  async getInstanceList(): Promise<any> {
+    const res = await this.get('instances')
+    return { instances: res.data as string[] }
+  }
+
+  /**
+   * インスタンス情報(OAuthトークン等)を取得する
+   * @param name インスタンス名
+   */
+  async getInstanceInfo(name: string): Promise<InstanceInfo> {
+    const res = await this.get('instances', { name })
+    console.log(res)
+    return res.data as InstanceInfo
+  }
+
+  /**
+   * タイムラインを取得する
+   * @param timeline タイムライン種別(home, local, public)
+   * @param token セッショントークン
+   * @param max_id カーソル
+   */
+  async getTimeline(timeline: string, token: string, max_id?: string) {
+    const query = max_id ? { max_id } : {}
+    const res = await this.getAuth(`mastodon/${timeline}`, token, query)
+    return res.data as Status[]
+  }
+
+  /**
+   * タイムラインを検索
+   * @param token セッショントークン
+   * @param keyword 検索キーワード
+   */
+  async getSearchTimeline(token: string, keyword: string) {
+    const res = await this.getAuth('mastodon/search', token, { keyword })
+    return res.data.statuses as Status[]
+  }
+
+  /**
+   * URLでステータスを取得
+   * @param token セッショントークン
+   * @param urls ステータスのURL
+   */
+  async getUrlTimeline(token: string, urls: string[]) {
+    const res = await this.postAuth('mastodon/urls', token, { urls })
+    return res.data.statuses as Status[]
+  }
+
+  /**
+   * システムエラーを報告(バグってるぞ殺すぞのやつ)
+   * @returns エラーID
+   * @param page
+   * @param message
+   * @param stack
+   */
+  async postError(
+    page: string,
+    message: string,
+    stack: string[]
+  ): Promise<string> {
+    const body = {
+      page,
+      message,
+      stack,
+      time: new Date(),
+    }
+
+    const res = await this.post('errors', body)
+    return res.data.id
+  }
+
+  /**
+   * システムエラー情報を取得
+   * @param errorId エラーID
+   */
+  async getError(errorId: string): Promise<ErrorReport> {
+    const res = (await this.get('errors', { id: errorId })) as ApiResponse<
+      ErrorReport
+    >
+    if (res.status === 'ok') {
+      return res.data
+    } else {
+      throw Error('Error on getError')
+    }
+  }
 }

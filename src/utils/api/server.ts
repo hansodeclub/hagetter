@@ -1,7 +1,7 @@
-import { ApiResponse } from './types'
+import { ApiError, ApiResponse, ApiSuccess } from '~/entities/api/ApiResponse'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
-import { NotFound } from '~/entities/api/status'
+import { NotFound } from '~/entities/api/HttpResponse'
 import { Masto, Status } from 'masto'
 import { SecureStatus } from '~/entities/SecuredStatus'
 
@@ -10,8 +10,8 @@ import { SecureStatus } from '~/entities/SecuredStatus'
  https://google.github.io/styleguide/jsoncstyleguide.xml
 */
 
-export const success = <Data>(data?: Data): ApiResponse<Data> => {
-  if (!data) return { status: 'ok' }
+export const success = <Data>(data?: Data): ApiSuccess<Data> => {
+  if (!data) return { status: 'ok', data: null }
 
   return {
     status: 'ok',
@@ -19,10 +19,7 @@ export const success = <Data>(data?: Data): ApiResponse<Data> => {
   }
 }
 
-export const failure = <Data>(
-  message: string,
-  code?: number
-): ApiResponse<Data> => {
+export const failure = (message: string, code?: number): ApiError => {
   if (!code)
     return {
       status: 'error',
@@ -109,13 +106,36 @@ export const withApiMasto = (
   })
 }
 
+export const filterStatus = (status: Status): Status => {
+  const res: any = {
+    id: status.id,
+    media_attachments: status.media_attachments,
+    url: status.url,
+    emojis: status.emojis,
+    created_at: status.created_at,
+    visibility: status.visibility,
+    content: status.content,
+    sensitive: status.sensitive,
+    spoiler_text: status.spoiler_text,
+    in_reply_to_id: status.in_reply_to_id,
+    in_reply_to_account_id: status.in_reply_to_account_id,
+    account: {
+      display_name: status.account.display_name,
+      username: status.account.username,
+      acct: status.account.acct,
+      avatar: status.account.avatar,
+    }
+  }
+
+  return res
+}
+
 export const globalizeAcct = (status: Status, server: string): Status => {
   const account = {
     ...status.account,
     acct: status.account.acct.includes('@')
       ? status.account.acct
       : `${status.account.acct}@${server}`,
-    note: '',
   }
 
   return {
@@ -152,7 +172,8 @@ export const preprocessMastodonStatus = (
   server: string
 ): SecureStatus[] => {
   return statuses.map((status) => {
-    const globalAcct = globalizeAcct(status, server)
+    const filteredStatus = filterStatus(status)
+    const globalAcct = globalizeAcct(filteredStatus, server)
     const secure = secureStatus(globalAcct)
 
     return secure
