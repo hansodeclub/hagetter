@@ -34,6 +34,7 @@ export const login = async (code: string, instance: string, redirect_uri) => {
   }
 
   const { server, client_id, client_secret, access_token } = instanceInfo
+  console.log(instanceInfo)
 
   const masto = await Masto.login({
     uri: server,
@@ -48,14 +49,17 @@ export const login = async (code: string, instance: string, redirect_uri) => {
     grant_type: 'authorization_code',
   })
 
+  console.log('ouath token ok')
   const userMasto = await Masto.login({
     uri: server,
     accessToken: oauthToken.access_token,
   })
 
+  console.log('login ok')
   const profile = await userMasto.verifyCredentials()
   profile.acct = profile.username + '@' + instance
 
+  console.log('token ok')
   const token = generateToken(
     profile.username,
     instance,

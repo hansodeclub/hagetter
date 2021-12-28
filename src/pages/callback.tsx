@@ -24,6 +24,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       `${protocol}//${host}/api/login?instance=${instance}&code=${code}`
     )
     const json = await res.json()
+    if (json.status === 'error') {
+      throw Error(json.error.message)
+    }
     return { props: { token: json.data.token, profile: json.data.profile } }
   } catch (error) {
     console.error(error)
