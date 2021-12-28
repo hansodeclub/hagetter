@@ -2,8 +2,9 @@ import { ApiError, ApiResponse, ApiSuccess } from '~/entities/api/ApiResponse'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
 import { NotFound } from '~/entities/api/HttpResponse'
-import { Masto, Status } from 'masto'
+import { Status, MastoClient, login as mastoLogin } from 'masto'
 import { SecureStatus } from '~/entities/SecuredStatus'
+import { toSnake } from 'snake-camel'
 
 /*
  Subset of Google JSON Guide
@@ -89,7 +90,7 @@ export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
 }
 
 export interface WithMastoParams extends WithAuthParams {
-  masto: Masto
+  masto: MastoClient
 }
 
 export const withApiMasto = (
@@ -97,8 +98,8 @@ export const withApiMasto = (
 ) => {
   return withApiAuth(async ({ req, res, user, accessToken }) => {
     const [_, server] = user.split('@')
-    const masto = await Masto.login({
-      uri: `https://${server}`,
+    const masto = await mastoLogin({
+      url: `https://${server}`,
       accessToken: accessToken,
     })
 
@@ -173,7 +174,8 @@ export const preprocessMastodonStatus = (
 ): SecureStatus[] => {
   return statuses.map((status) => {
     const filteredStatus = filterStatus(status)
-    const globalAcct = globalizeAcct(filteredStatus, server)
+    const snaked = toSnake(filteredStatus) as Status
+    const globalAcct = globalizeAcct(snaked, server)
     const secure = secureStatus(globalAcct)
 
     return secure

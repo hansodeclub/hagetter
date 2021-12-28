@@ -8,7 +8,7 @@ import theme from '../utils/theme'
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="ja">
+      <Html>
         <Head>
           <meta charSet="utf-8" />
           {/* PWA primary color */}

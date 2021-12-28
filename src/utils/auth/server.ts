@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
-import { Masto } from 'masto'
+import * as Masto from 'masto'
 //import { getInstanceInfo } from '../hagetter/server'
 import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
 
@@ -26,6 +26,47 @@ export const decrypt = (token: string) => {
   return decrypted
 }
 
+interface OAuthToken {
+  accessToken: string
+  tokenType: string
+  scope: string
+  createdAt: number
+}
+
+const getAccessToken = async (code: string, client_id: string, client_secret: string, redirect_uri, instance: string, access_token: string): Promise<OAuthToken> => {
+  const formData = new FormData();
+  formData.append('grant_type', 'authorization_code');
+  formData.append('code', code);
+  formData.append('client_id', client_id);
+  formData.append('client_secret', client_secret);
+  formData.append('redirect_uri', redirect_uri);
+  console.log(formData);
+
+  const res = await fetch(`https://${instance}/oauth/token`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${access_token}`
+    },
+    body: formData
+  });
+
+  if (res.status === 200) {
+    const body = await res.json()
+    return {
+      accessToken: body.access_token,
+      tokenType: body.token_type,
+      scope: body.scope,
+      createdAt: body.createdAt
+    }
+  }
+  else if (res.status === 400 || res.status === 401) {
+    const body = await res.json()
+    throw Error(`${body.error}: ${body.error_description}`)
+  } else {
+    throw Error(`Error: code=${res.status}`)
+  }
+}
+
 export const login = async (code: string, instance: string, redirect_uri) => {
   const instanceRepository = new InstanceDatastoreRepository()
   const instanceInfo = await instanceRepository.getInstance(instance) //getInstanceInfo(instance)
@@ -34,36 +75,20 @@ export const login = async (code: string, instance: string, redirect_uri) => {
   }
 
   const { server, client_id, client_secret, access_token } = instanceInfo
-  console.log(instanceInfo)
+  const oauthToken = await getAccessToken(code, client_id, client_secret, redirect_uri, instance, access_token);
 
-  const masto = await Masto.login({
-    uri: server,
-    accessToken: access_token,
-  })
-
-  const oauthToken = await masto.fetchAccessToken({
-    code,
-    redirect_uri,
-    client_id,
-    client_secret,
-    grant_type: 'authorization_code',
-  })
-
-  console.log('ouath token ok')
   const userMasto = await Masto.login({
-    uri: server,
-    accessToken: oauthToken.access_token,
+    url: server,
+    accessToken: oauthToken.accessToken,
   })
 
-  console.log('login ok')
-  const profile = await userMasto.verifyCredentials()
+  const profile = await userMasto.accounts.verifyCredentials()
   profile.acct = profile.username + '@' + instance
 
-  console.log('token ok')
   const token = generateToken(
     profile.username,
     instance,
-    oauthToken.access_token
+    oauthToken.accessToken
   )
 
   return { token, profile }
@@ -82,14 +107,14 @@ export const logout = async (token) => {
   const { client_id, client_secret, server } = instanceInfo
 
   const masto = await Masto.login({
-    uri: server,
+    url: server,
     accessToken: accessToken,
   })
 
-  await masto.revokeAccessToken({
+  /*await masto.revokeAccessToken({
     client_id,
     client_secret,
-  })
+  })*/
 }
 
 /**
