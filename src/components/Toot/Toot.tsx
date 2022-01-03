@@ -125,6 +125,7 @@ const Toot: React.FC<StatusProps> = ({
   return (
     <Box
       onClick={() => onClick && onClick(status)}
+      typography="body2"
       sx={[
         styles.root,
         !disabled && selected && styles.selected,
@@ -151,8 +152,9 @@ const Toot: React.FC<StatusProps> = ({
         <Box sx={styles.body}>
           {size && (
             <Typography
-              variant={size === 'inherit' ? 'subtitle2' : (size as any)}
+              variant={size as any}
               style={{ color: color }}
+              component="div"
             >
               <span
                 dangerouslySetInnerHTML={{
