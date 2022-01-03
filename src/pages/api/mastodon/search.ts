@@ -1,8 +1,5 @@
-import {
-  withApiMasto,
-  preprocessMastodonStatus,
-} from '../../../utils/api/server'
-import head from '../../../utils/head'
+import { withApiMasto, preprocessMastodonStatus } from '~/utils/api/server'
+import head from '~/utils/head'
 
 export default withApiMasto(async ({ req, user, masto }) => {
   const keyword = head(req.query.keyword)
@@ -10,7 +7,7 @@ export default withApiMasto(async ({ req, user, masto }) => {
     throw Error('keyword is not specified')
   }
 
-  const timeline = await masto.search({ q: keyword })
+  const timeline = masto.search({ q: keyword })
 
   const [_, instance] = user.split('@')
   for await (const tl of timeline) {

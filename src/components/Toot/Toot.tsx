@@ -1,103 +1,98 @@
 import * as React from 'react'
 import Media from './Media'
-import moment from 'moment'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import LockIcon from '@material-ui/icons/Lock'
-import Avatar from '@material-ui/core/Avatar'
-import { Status } from '../../entities/Mastodon'
-import emojify, { buildCustomEmojis } from '../../utils/mastodon/emoji'
+import Typography from '@mui/material/Typography'
+import LockIcon from '@mui/icons-material/Lock'
+import Avatar from '@mui/material/Avatar'
+import { Status } from '~/entities/Mastodon'
+import emojify, { buildCustomEmojis } from '~/utils/mastodon/emoji'
 import Timestamp from './Timestamp'
-import clsx from 'clsx'
+import { SxProps, Theme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+const styles: any = {
+  root: {
+    display: 'flex',
+  },
+  selected: {
+    backgroundColor: '#ffeeee',
+  },
+  disabled: {
+    //backgroundColor: '#eeeeee'
+  },
+  left: {
+    padding: 1,
+  },
+  avatar: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '5px',
+  },
+  right: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 1,
+    paddingLeft: 0,
+    flexGrow: 1,
+    minWidth: 0,
+    maxWidth: '100%',
+  },
+  header: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+  },
+  lock: {
+    fontSize: '20px',
+    color: '#ff4040',
+  },
+  displayName: {
+    flexShrink: 0,
+  },
+  acct: {
+    paddingLeft: 1,
+    color: '#666',
+    minWidth: 0,
+    maxWidth: '100%',
+    flexGrow: 1,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
+  noWrap: {},
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
+  body: {
+    minHeight: '30px',
+    wordBreak: 'break-all',
+    '& a': {
+      color: '#4040ff',
+      textDecoration: 'none',
     },
-    selected: {
-      backgroundColor: '#ffeeee',
-    },
-    disabled: {
-      //backgroundColor: '#eeeeee'
-    },
-    left: {
-      padding: theme.spacing(1),
-    },
-    avatar: {
-      width: 48,
-      height: 48,
-      borderRadius: 5,
-    },
-    right: {
-      display: 'flex',
-      flexDirection: 'column',
-      padding: theme.spacing(1),
-      paddingLeft: 0,
-      flexGrow: 1,
-      minWidth: 0,
-      maxWidth: '100%',
-    },
-    header: {
-      display: 'flex',
-      width: '100%',
-      alignItems: 'center',
-    },
-    lock: {
-      fontSize: 20,
+    '& a:hover': {
       color: '#ff4040',
+      textDecoration: 'underline',
     },
-    displayName: {
-      flexShrink: 0,
-    },
-    acct: {
-      paddingLeft: theme.spacing(1),
-      color: '#666',
-      minWidth: 0,
-      maxWidth: '100%',
-      flexGrow: 1,
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      wordBreak: 'break-all',
-    },
-    noWrap: {},
-
-    body: {
-      minHeight: 30,
-      wordBreak: 'break-all',
-      '& a': {
-        color: '#4040ff',
-        textDecoration: 'none',
-      },
-      '& a:hover': {
-        color: '#ff4040',
-        textDecoration: 'underline',
-      },
-    },
-    attachments: {
-      maxWidth: '100%',
-    },
-    footer: {
-      display: 'flex',
-      alignItem: 'middle',
-      justifyContent: 'flex-end',
-      '& a': {
-        textDecoration: 'none',
-        color: '#888',
-      },
-      '& a:hover': {
-        textDecoration: 'underline',
-        color: '#888',
-      },
-    },
-    timestamp: {
+  },
+  attachments: {
+    maxWidth: '100%',
+  },
+  footer: {
+    display: 'flex',
+    alignItem: 'middle',
+    justifyContent: 'flex-end',
+    '& a': {
+      textDecoration: 'none',
       color: '#888',
     },
-  })
-)
+    '& a:hover': {
+      textDecoration: 'underline',
+      color: '#888',
+    },
+  } as SxProps<Theme>,
+  timestamp: {
+    color: '#888',
+  },
+}
 
 export interface StatusProps {
   status: Status
@@ -108,6 +103,7 @@ export interface StatusProps {
   onClick?: (status: Status) => any
   className?: string
   missingAvatar?: string
+  sx?: SxProps<Theme>
 }
 
 export const isPublic = (visibility) => {
@@ -123,38 +119,40 @@ const Toot: React.FC<StatusProps> = ({
   className,
   disabled,
   missingAvatar = '/public/missing.png',
+  sx,
 }) => {
-  const classes = useStyles({})
-
   return (
-    <div
+    <Box
       onClick={() => onClick && onClick(status)}
-      className={clsx(
-        className,
-        classes.root,
-        !disabled && selected && classes.selected,
-        disabled && classes.disabled
-      )}
+      sx={[
+        styles.root,
+        !disabled && selected && styles.selected,
+        disabled && styles.disabled,
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
-      <div className={classes.left}>
+      <Box sx={styles.left}>
         <div>
           <Avatar
             alt={status.account.display_name || status.account.username}
             src={status.account.avatar}
-            className={classes.avatar}
+            sx={styles.avatar}
           />
         </div>
-      </div>
-      <div className={classes.right}>
-        <div className={classes.header}>
-          <div className={classes.displayName}>
+      </Box>
+      <Box sx={styles.right}>
+        <Box sx={styles.header}>
+          <Box sx={styles.displayName}>
             {status.account.display_name || status.account.username}
-          </div>
-          <div className={classes.acct}>{status.account.acct}</div>
-        </div>
-        <div className={classes.body}>
+          </Box>
+          <Box sx={styles.acct}>{status.account.acct}</Box>
+        </Box>
+        <Box sx={styles.body}>
           {size && (
-            <Typography variant={size as any} style={{ color: color }}>
+            <Typography
+              variant={size === 'inherit' ? 'subtitle2' : (size as any)}
+              style={{ color: color }}
+            >
               <span
                 dangerouslySetInnerHTML={{
                   __html: emojify(
@@ -175,26 +173,23 @@ const Toot: React.FC<StatusProps> = ({
               }}
             />
           )}
-        </div>
-        <div className={classes.attachments}>
+        </Box>
+        <Box sx={styles.attachments}>
           <Media attachments={status.media_attachments} />
-        </div>
-        <div className={classes.footer}>
-          <a href={status.url} target="_blank">
-            <Timestamp
-              value={status.created_at}
-              className={classes.timestamp}
-            />
+        </Box>
+        <Box sx={styles.footer}>
+          <a href={status.url} target="_blank" rel="noreferrer">
+            <Timestamp value={status.created_at} sx={styles.timestamp} />
           </a>
 
-          <div className={classes.displayName}>
+          <Box sx={styles.displayName}>
             {!isPublic(status.visibility) && (
-              <LockIcon className={classes.lock} color="action" />
+              <LockIcon sx={styles.lock} color="action" />
             )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

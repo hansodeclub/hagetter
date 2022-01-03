@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import Container from '@material-ui/core/Container'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import head from '../../utils/head'
 import NextError from 'next/error'
-import { HagetterApiClient } from '../../utils/hage'
+import Container from '@mui/material/Container'
+import CircularProgress from '@mui/material/CircularProgress'
 import { ErrorReport } from '~/entities/ErrorReport'
+import head from '~/utils/head'
+import { HagetterApiClient } from '~/utils/hage'
 
 const Post = () => {
   const router = useRouter()

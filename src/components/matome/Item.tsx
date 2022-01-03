@@ -1,18 +1,16 @@
 import React from 'react'
-import { THagetterItem } from '../../stores/hagetterItem'
+import { THagetterItem } from '~/stores/hagetterItem'
 import { observer } from 'mobx-react-lite'
 import Toot, { isPublic } from '../Toot/Toot'
-import { Status } from '../../entities/Mastodon'
-import Typography from '@material-ui/core/Typography'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { Status } from '~/entities/Mastodon'
+import Typography from '@mui/material/Typography'
+import { SxProps, Theme } from '@mui/material/styles'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    toot: {
-      borderBottom: '1px solid #cccccc',
-    },
-  })
-)
+const styles: { [key: string]: SxProps<Theme> } = {
+  toot: {
+    borderBottom: '1px solid #cccccc',
+  },
+}
 
 export const TextItem: React.FC<{
   text: string
@@ -25,7 +23,7 @@ export const TextItem: React.FC<{
     <Typography
       variant={variant as any}
       onClick={() => onClick()}
-      style={{
+      sx={{
         margin: 0,
         padding: '5px 10px',
         backgroundColor: selected ? '#ffeeee' : '#ffffff',
@@ -45,8 +43,6 @@ const Item = observer(
     item: THagetterItem
     onClick: (item: THagetterItem) => boolean
   }) => {
-    const classes = useStyles({})
-
     if (item.type === 'status') {
       const status: Status = item.data as Status
       return (
@@ -57,7 +53,7 @@ const Item = observer(
             onClick={() => onClick(item)}
             selected={item.selected}
             status={status}
-            className={classes.toot}
+            sx={styles.toot}
           />
         </li>
       )

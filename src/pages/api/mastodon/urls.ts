@@ -1,8 +1,4 @@
-import {
-  globalizeAcct,
-  withApiMasto,
-  preprocessMastodonStatus,
-} from '../../../utils/api/server'
+import { withApiMasto, preprocessMastodonStatus } from '~/utils/api/server'
 
 export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
   if (req.method !== 'POST') {
@@ -24,7 +20,7 @@ export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
 
   const result = []
   for (const id of ids) {
-    const status = await masto.fetchStatus(id)
+    const status = await masto.statuses.fetch(id)
     result.push(status)
   }
 

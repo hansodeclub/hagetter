@@ -1,17 +1,21 @@
 import React from 'react'
 import Head from 'next/head'
+
 import { GetServerSideProps, NextPage } from 'next'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import Container from '@material-ui/core/Container'
-import getHost from '../utils/getHost'
-import Select from 'react-select'
-import Header from '../components/Header'
+
 import cookie from 'js-cookie'
+import Select from 'react-select'
+
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
+import Header from '~/components/Header'
+
 import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
 import { ListInstances } from '~/usecases/ListInstances'
-import Box from '@material-ui/core/Box'
 import { HagetterApiClient } from '~/utils/hage'
+import getHost from '~/utils/getHost'
 
 interface Props {
   code: number

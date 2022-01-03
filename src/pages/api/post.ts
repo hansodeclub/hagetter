@@ -5,9 +5,9 @@ import {
   withApiAuth,
   withApiMasto,
   secureStatus,
-} from '../../utils/api/server'
+} from '~/utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
-import head from '../../utils/head'
+import head from '~/utils/head'
 import { NotFound } from '~/entities/api/HttpResponse'
 import { verifyStatus } from '~/utils/api/server'
 import { IHagetterItemOut } from '~/stores/hagetterItem'
@@ -102,7 +102,7 @@ const verifyItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
 
 const createPost = withApiMasto(
   async ({ req, res, user, accessToken, masto }) => {
-    const profile = await masto.verifyCredentials()
+    const profile = await masto.accounts.verifyCredentials()
 
     if (req.body.hid) {
       // update post
@@ -146,7 +146,7 @@ const createPost = withApiMasto(
         description: req.body.description,
         image: null,
         username: user,
-        displayName: profile.display_name || profile.username,
+        display_name: profile.displayName || profile.username,
         avatar: profile.avatar,
         data: items,
         user: profile,

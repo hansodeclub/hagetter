@@ -3,9 +3,9 @@ import { GetServerSideProps, NextPage } from 'next'
 import fetch from 'isomorphic-unfetch'
 import jwt from 'jsonwebtoken'
 import Cookies from 'next-cookies'
-import { useSession } from '../stores'
-import { getUrlHost } from '../utils/api/utils'
-import head from '../utils/head'
+import { useSession } from '~/stores'
+import { getUrlHost } from '~/utils/api/utils'
+import head from '~/utils/head'
 
 interface Props {
   token?: string
@@ -17,26 +17,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   try {
-    console.log('hello')
     const { protocol, host } = getUrlHost(context.req, null)
     const instance = Cookies(context).instance
     const code = head(context.query.code)
-    console.log('instance')
-    console.log(instance)
-    console.log('code')
-    console.log(code)
-    console.log(`${protocol}//${host}/api/login?instance=${instance}&code=${code}`)
     const res = await fetch(
       `${protocol}//${host}/api/login?instance=${instance}&code=${code}`
     )
-    console.log(res.status)
     const json = await res.json()
-    console.log(json)
     if (json.status === 'error') {
       return {
         props: {
-          error: json.error.message
-        }
+          error: json.error.message,
+        },
       }
     } else {
       return { props: { token: json.data.token, profile: json.data.profile } }

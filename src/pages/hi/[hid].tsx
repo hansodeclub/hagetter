@@ -6,10 +6,10 @@ import NextError from 'next/error'
 import { observer } from 'mobx-react-lite'
 import moment from 'moment'
 
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import Avatar from '@material-ui/core/Avatar'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
+import { SxProps, Theme } from '@mui/material/styles'
 
 import Header from '~/components/Header'
 import { TextItem } from '~/components/matome/Item'
@@ -23,51 +23,50 @@ import { GetPost } from '~/usecases/GetPost'
 import { Convert, HagetterPost } from '@/entities/HagetterPost'
 import { JsonString, fromJson, toJson } from '@/utils/serialized'
 import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
+import Box from '@mui/material/Box'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    name: {
-      paddingTop: 5,
-      height: 30,
-      marginLeft: 5,
+const styles: { [key: string]: SxProps<Theme> } = {
+  name: {
+    paddingTop: 1,
+    height: '30px',
+    marginLeft: 1,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+  },
+  title: {
+    paddingTop: 1,
+    paddingBottom: 1,
+    paddingLeft: 5,
+  },
+  footer: {
+    paddingTop: 1,
+    paddingLeft: 1,
+    paddingRight: 1,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  container: (theme) => ({
+    [theme.breakpoints.down('sm')]: {
+      padding: '20px 5px',
+      width: '100%',
+      backgroundColor: '#fff',
     },
-    avatar: {
-      width: 32,
-      height: 32,
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 600,
+      marginTop: 1,
+      marginLeft: 1,
+      border: theme.app.border,
+      borderRadius: 1,
+      padding: '10px 5px',
+      backgroundColor: '#fff',
     },
-    title: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      paddingLeft: 5,
-    },
-    footer: {
-      paddingTop: theme.spacing(1),
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    container: {
-      [theme.breakpoints.down('sm')]: {
-        padding: '20px 5px',
-        width: '100%',
-        backgroundColor: '#fff',
-      },
-      [theme.breakpoints.up('sm')]: {
-        maxWidth: 600,
-        marginTop: 10,
-        marginLeft: 10,
-        border: '1px solid #ccc',
-        borderRadius: 10,
-        padding: '10px 5px',
-        backgroundColor: '#fff',
-      },
-    },
-    grow: {
-      flexGrow: 1,
-    },
-  })
-)
+  }),
+  grow: {
+    flexGrow: 1,
+  },
+}
 
 interface Props {
   code: number
@@ -103,7 +102,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 }
 
 const PostPage: NextPage<Props> = (props) => {
-  const classes = useStyles({})
   const post = props.post
     ? fromJson(props.post, Convert.toHagetterPost)
     : undefined
@@ -123,7 +121,7 @@ const PostPage: NextPage<Props> = (props) => {
       }
 
   return (
-    <div>
+    <Box>
       <Head>
         <title>{ogp.title} - Hagetter</title>
         <meta property="og:title" content={ogp.title} />
@@ -131,19 +129,18 @@ const PostPage: NextPage<Props> = (props) => {
         {ogp.image && <meta property="og:image" content={ogp.image} />}
       </Head>
       <Header />
-      <Container className={classes.container}>
+      <Container sx={styles.container}>
         {code === 404 && <NextError statusCode={404} />}
         {code === 200 && <Content post={post} />}
         {code !== 200 && code !== 404 && (
           <p>エラー：{error ?? '不明なエラー'}</p>
         )}
       </Container>
-    </div>
+    </Box>
   )
 }
 
 const Content = observer<{ post: HagetterPost }>(({ post }) => {
-  const classes = useStyles({})
   const session = useSession()
   const router = useRouter()
   const isOwner =
@@ -152,33 +149,33 @@ const Content = observer<{ post: HagetterPost }>(({ post }) => {
     session.account.acct === post.username
 
   return (
-    <div>
+    <Box>
       <Typography variant="h5">
         <b>{post['title']}</b>
       </Typography>
       <Typography variant="body2">{post['description']}</Typography>
-      <div className={classes.footer}>
-        <Avatar src={post.avatar} className={classes.avatar} />
-        <div className={classes.name}>{post.displayName}</div>
-        <div className={classes.grow} />
-        <div style={{ marginTop: 5 }}>
+      <Box sx={styles.footer}>
+        <Avatar src={post.avatar} sx={styles.avatar} />
+        <Box sx={styles.name}>{post.displayName}</Box>
+        <Box sx={styles.grow} />
+        <Box style={{ marginTop: 5 }}>
           {moment(post.created_at).format('YYYY-MM-DD HH:MM')}
-        </div>
+        </Box>
         {isOwner && (
-          <div style={{ paddingLeft: '5px' }}>
+          <Box style={{ paddingLeft: '5px' }}>
             <button onClick={() => router.push(`/edit/${post.id}`)}>
               編集
             </button>
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
       <hr />
-      <div>
+      <Box>
         {post.data.map((item) => (
           <Item key={item.id} item={item} />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 })
 

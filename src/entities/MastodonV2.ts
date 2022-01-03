@@ -11,32 +11,32 @@ export interface Status {
   id: string
   url: string | null
   account: Account
-  in_reply_to_id: string | null
-  in_reply_to_account_id: string | null
+  inReplyToId: string | null
+  inReplyToAccountId: string | null
   content: string
-  created_at: string
+  createdAt: string
   emojis: Emoji[]
   sensitive: boolean
-  spoiler_text: string
+  spoilerText: string
   visibility: 'public' | 'unlisted' | 'private' | 'direct'
-  media_attachments: Attachment[]
+  mediaAttachments: Attachment[]
 }
 
 export interface Account {
   id: string
   username: string
   acct: string
-  display_name: string
+  displayName: string
   avatar: string
-  avatar_static: string
+  avatarStatic: string
   header: string
-  header_static: string
+  headerStatic: string
   emojis: Emoji[]
 }
 
 export interface Emoji {
   shortcode: string
-  static_url: string
+  staticUrl: string
   url: string
 }
 
@@ -44,9 +44,9 @@ export interface Attachment {
   id: string
   type: 'image' | 'video' | 'gifv' | 'audio' | 'unknown'
   url: string
-  remote_url?: string | null
-  preview_url: string
-  text_url?: string | null
+  remoteUrl?: string | null
+  previewUrl: string
+  textUrl?: string | null
   description?: string | null
 }
 
@@ -55,19 +55,19 @@ export const fromMastoAccount = (account: MastoAccount): Account => {
     id: account.id,
     username: account.username,
     acct: account.acct,
-    display_name: account.displayName,
+    displayName: account.displayName,
     avatar: account.avatar,
-    avatar_static: account.avatarStatic,
+    avatarStatic: account.avatarStatic,
     header: account.header,
-    header_static: account.headerStatic,
-    emojis: account.emojis.map(fromMastoEmoji),
+    headerStatic: account.headerStatic,
+    emojis: account.emojis,
   }
 }
 
 export const fromMastoEmoji = (emoji: MastoEmoji): Emoji => {
   return {
     shortcode: emoji.shortcode,
-    static_url: emoji.staticUrl,
+    staticUrl: emoji.staticUrl,
     url: emoji.url,
   }
 }
@@ -79,9 +79,9 @@ export const fromMastoAttachment = (
     id: attachment.id,
     type: attachment.type,
     url: attachment.url,
-    remote_url: attachment.remoteUrl,
-    preview_url: attachment.previewUrl,
-    text_url: attachment.textUrl,
+    remoteUrl: attachment.remoteUrl,
+    previewUrl: attachment.previewUrl,
+    textUrl: attachment.textUrl,
     description: attachment.description,
   }
 }
@@ -89,16 +89,16 @@ export const fromMastoAttachment = (
 export const fromMastoStatus = (status: MastoStatus): Status => {
   return {
     id: status.id,
-    media_attachments: status.mediaAttachments.map(fromMastoAttachment),
+    mediaAttachments: status.mediaAttachments.map(fromMastoAttachment),
     url: status.url,
-    emojis: status.emojis.map(fromMastoEmoji),
-    created_at: status.createdAt,
+    emojis: status.emojis,
+    createdAt: status.createdAt,
     visibility: status.visibility,
     content: status.content,
     sensitive: status.sensitive,
-    spoiler_text: status.spoilerText,
-    in_reply_to_id: status.inReplyToId,
-    in_reply_to_account_id: status.inReplyToAccountId,
+    spoilerText: status.spoilerText,
+    inReplyToId: status.inReplyToId,
+    inReplyToAccountId: status.inReplyToAccountId,
     account: fromMastoAccount(status.account),
   }
 }
