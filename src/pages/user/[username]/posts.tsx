@@ -59,7 +59,7 @@ const UserPost = () => {
     <div>
       <Header />
       <Container>
-        {loading && <CircularProgress />}
+        {loading && <CircularProgress sx={{ margin: 3 }} />}
         {!loading && (
           <div>
             <h4>あなたのまとめ一覧</h4>

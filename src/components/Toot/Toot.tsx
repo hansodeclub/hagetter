@@ -91,6 +91,7 @@ const styles: any = {
   } as SxProps<Theme>,
   timestamp: {
     color: '#888',
+    typography: 'body2',
   },
 }
 

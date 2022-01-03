@@ -44,6 +44,9 @@ const styles: SxProps<Theme> = {
   a: {
     textDecoration: 'none',
     color: 'black',
+    fontSize: 24,
+    fontFamily: "'Roboto Condensed', sans-serif",
+    fontWeight: 700,
   },
 
   /* Right side of AppBar */
@@ -127,9 +130,17 @@ const Header: React.FC = observer(() => {
           <Toolbar sx={styles.toolbar}>
             <Box sx={styles.left}>
               <Link href="/">
-                <MaterialLink sx={styles.a}>
-                  <Box sx={styles.title}>Hagetter</Box>
-                </MaterialLink>
+                <a
+                  style={{
+                    textDecoration: 'none',
+                    color: 'black',
+                    fontSize: 24,
+                    fontFamily: "'Roboto Condensed', sans-serif",
+                    fontWeight: 700,
+                  }}
+                >
+                  Hagetter
+                </a>
               </Link>
             </Box>
             <Box sx={styles.right}>
@@ -143,8 +154,9 @@ const Header: React.FC = observer(() => {
                   <Link href="/create">
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="primary"
                       sx={styles.matomeButton}
+                      disableElevation
                     >
                       まとめを作る
                     </Button>

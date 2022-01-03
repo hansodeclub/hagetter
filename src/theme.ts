@@ -43,6 +43,9 @@ const theme = createTheme({
     },
   },
   palette: {
+    background: {
+      default: '#fafafa',
+    },
     /*primary: {
       //light: '#ffffff',
       main: '#a5a5a5',

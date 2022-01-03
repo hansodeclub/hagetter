@@ -5,7 +5,6 @@ import { SxProps, Theme } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import moment from 'moment'
-import clsx from 'clsx'
 import { ListPublicPosts } from '~/usecases/ListPublicPosts'
 import { HagetterPostInfo } from '~/entities/HagetterPost'
 import { PostClientRepository } from '~/infrastructure/PostClientRepository'
@@ -16,8 +15,9 @@ const styles: { [key: string]: SxProps<Theme> } = {
   },
   itemBox: {
     minHeight: 50,
-    borderTop: '1px solid gray',
+    borderTop: '1px solid grey',
     margin: 0,
+    typography: 'body2',
   },
   name: {
     paddingTop: 1,
@@ -111,7 +111,17 @@ const MatomeList = () => {
       <Typography variant="body1" sx={styles.matomeTitle}>
         <strong>新着まとめ</strong>
       </Typography>
-      {loading && <CircularProgress />}
+      {loading && (
+        <Box
+          sx={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress sx={{ margin: 2 }} />
+        </Box>
+      )}
       {!loading && !error && items && <Content items={items} />}
       {!loading && error && <p>{error}</p>}
     </Box>

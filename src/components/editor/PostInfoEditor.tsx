@@ -162,6 +162,7 @@ const PostInfoEditor = observer(() => {
           color="primary"
           style={{ float: 'right' }}
           onClick={onSubmit}
+          disableElevation
         >
           投稿する
         </Button>
