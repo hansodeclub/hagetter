@@ -21,6 +21,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
 import styles from './editorStyles'
+import Grid from '@mui/material/Grid'
 /*
 const styles: { [key: string]: SxProps<Theme> } = {
   gridContent: {
@@ -247,42 +248,63 @@ const PostEditor: React.FC = observer(() => {
   return (
     <>
       <Paper elevation={0} sx={styles.tabs}>
-        <IconButton
-          onClick={() => {
-            setTextEditMode(!isTextEditMode)
-            setFormatMode(false)
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            setFormatMode(!isFormatMode)
-            setTextEditMode(false)
-          }}
-        >
-          <FormatIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            editor.moveItem('up')
-          }}
-        >
-          <UpArrowIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            editor.moveItem('down')
-          }}
-        >
-          <DownArrowIcon />
-        </IconButton>
-        <IconButton onClick={() => editor.sort()}>
-          <SortIcon />
-        </IconButton>
-        <IconButton onClick={() => editor.removeSelectedItem()}>
-          <DeleteIcon />
-        </IconButton>
+        <Grid container>
+          <Grid xs={2}>
+            <IconButton
+              onClick={() => {
+                setTextEditMode(!isTextEditMode)
+                setFormatMode(false)
+              }}
+              sx={{ padding: '12px' }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={2}>
+            <IconButton
+              onClick={() => {
+                setFormatMode(!isFormatMode)
+                setTextEditMode(false)
+              }}
+              sx={{ padding: '12px' }}
+            >
+              <FormatIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={2}>
+            <IconButton
+              onClick={() => {
+                editor.moveItem('up')
+              }}
+              sx={{ padding: '12px' }}
+            >
+              <UpArrowIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={2}>
+            <IconButton
+              onClick={() => {
+                editor.moveItem('down')
+              }}
+              sx={{ padding: '12px' }}
+            >
+              <DownArrowIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={2}>
+            <IconButton onClick={() => editor.sort()} sx={{ padding: '12px' }}>
+              <SortIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={2}>
+            <IconButton
+              onClick={() => editor.removeSelectedItem()}
+              sx={{ padding: '12px' }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Paper>
       {isTextEditMode && (
         <Paper elevation={0} sx={styles.headerContent}>

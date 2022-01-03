@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Image from 'next/image'
 import { Attachment } from '~/entities/Mastodon'
 import { Lightbox } from 'react-modal-image'
 import ReactPlayer from 'react-player'
@@ -29,19 +28,21 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
       {images.map((attachment) => {
         const displayUrl = attachment['remote_url'] || attachment['url']
         return (
-          <div
-            key={attachment.id}
-            style={{ border: '1px solid #eee', borderRadius: '5px' }}
-          >
+          <div key={attachment.id}>
             <a
               onClick={(e) => {
                 setPreviewUrl(displayUrl)
                 e.stopPropagation()
               }}
             >
-              <Image
+              <img
                 src={attachment.preview_url}
                 alt="Click and show full size"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '600px',
+                  objectFit: 'contain',
+                }}
               />
             </a>
           </div>
