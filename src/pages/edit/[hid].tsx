@@ -1,34 +1,27 @@
 import React from 'react'
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
-import { makeStyles, createStyles } from '@mui/material/styles'
 import StatusSelector from '~/components/editor/StatusSelector'
 import PostEditor from '~/components/editor/PostEditor'
 import PostInfoEditor from '~/components/editor/PostInfoEditor'
 import head from '~/utils/head'
 import { HagetterApiClient } from '~/utils/hage'
 import { useRouter } from 'next/router'
-import Header from '~/components/Header'
 import CircularProgress from '@mui/material/CircularProgress'
 import NextError from 'next/error'
 import { useEditor, useSession, observer } from '~/stores'
 import { SxProps, Theme } from '@mui/material/styles'
 
-const styles: { [key: string]: SxProps<Theme> } = {
-  container: {
-    minWidth: 1000,
-  },
-  gridContainer: {
-    height: '100vh',
-    overflow: 'hidden',
-    paddingTop: 1,
-    boxSizing: 'border-box',
-  },
-  gridColumn: {
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-  },
+const gridStyle: SxProps<Theme> = {
+  height: '100vh',
+  paddingTop: 1,
+  paddingBottom: 1,
+}
+
+const columnStyle: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
 }
 
 const EditPage = observer(() => {
@@ -72,8 +65,7 @@ const EditPage = observer(() => {
 
   return (
     <div>
-      <Header />
-      <Container sx={styles.container}>
+      <Container sx={{ minWidth: 1000 }}>
         {error && <p>{error}</p>}
         {loading && !error && <CircularProgress />}
         {!loading && !error && code === 404 && <NextError statusCode={404} />}
@@ -85,11 +77,11 @@ const EditPage = observer(() => {
 
 const Content: React.FC = () => {
   return (
-    <Grid container spacing={2} sx={styles.gridContainer}>
-      <Grid item xs={4} sx={styles.gridColumn}>
+    <Grid container columnSpacing={2} sx={gridStyle}>
+      <Grid item xs={4} sx={columnStyle}>
         <StatusSelector />
       </Grid>
-      <Grid item xs={4} sx={styles.gridColumn}>
+      <Grid item xs={4} sx={columnStyle}>
         <PostEditor />
       </Grid>
       <Grid item xs={4}>
