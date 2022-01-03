@@ -1,7 +1,7 @@
 import { InstanceInfo } from '~/entities/Instance'
 import fetch from 'isomorphic-unfetch'
-import { Status } from '../entities/Mastodon'
-import { TextItem } from '../stores/editorStore'
+import { Status, Account } from '~/entities/Mastodon'
+import { TextItem } from '~/stores/editorStore'
 import { HagetterPost, HagetterPostInfo } from '~/entities/HagetterPost'
 import { ApiResponse } from '~/entities/api/ApiResponse'
 import { ErrorReport } from '~/entities/ErrorReport'
@@ -281,9 +281,9 @@ export class HagetterApiClient {
    * @param errorId エラーID
    */
   async getError(errorId: string): Promise<ErrorReport> {
-    const res = (await this.get('errors', { id: errorId })) as ApiResponse<
-      ErrorReport
-    >
+    const res = (await this.get('errors', {
+      id: errorId,
+    })) as ApiResponse<ErrorReport>
     if (res.status === 'ok') {
       return res.data
     } else {

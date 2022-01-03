@@ -1,42 +1,39 @@
-import React from 'react'
-import { Account } from '../../entities/Mastodon'
-import Typography from '@material-ui/core/Typography'
-import Avatar from '@material-ui/core/Avatar'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import * as React from 'react'
+import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import CircularProgress from '@mui/material/CircularProgress'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { SxProps, Theme } from '@mui/material/styles'
 import Link from 'next/link'
-import { useStore, useSession, useEditor, observer } from '../../stores'
+import { useStore, useSession, useEditor, observer } from '~/stores'
 import Router from 'next/router'
 import { HagetterApiClient } from '~/utils/hage'
+import Box from '@mui/material/Box'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    postButtonContainer: {
-      marginTop: 20,
-    },
-    title: {
-      display: 'flex',
-    },
-    titleText: {
-      margin: 'auto',
-      marginRight: theme.spacing(1),
-    },
-    titleLogo: {
-      color: 'black',
-      textDecoration: 'none',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-  })
-)
+const styles: { [key: string]: SxProps<Theme> } = {
+  postButtonContainer: {
+    marginTop: 2,
+  },
+  title: {
+    display: 'flex',
+  },
+  titleText: {
+    margin: 'auto',
+    marginRight: 1,
+  },
+  titleLogo: {
+    color: 'black',
+    textDecoration: 'none',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+}
 
-const PostInfo = observer(() => {
-  const classes = useStyles({})
+const PostInfoEditor = observer(() => {
   const session = useSession()
   const editor = useEditor()
   const app = useStore()
@@ -49,7 +46,7 @@ const PostInfo = observer(() => {
   React.useEffect(() => {
     session
       .getAccount()
-      .then((account) => {})
+      .then((_account) => {})
       .catch(app.notifyError)
   }, [])
 
@@ -66,8 +63,8 @@ const PostInfo = observer(() => {
     }
   }
 
-  const successPost = (key) => {
-    Router.push(`/hi/${key}`)
+  const successPost = async (key) => {
+    await Router.push(`/hi/${key}`)
   }
 
   const onSubmit = () => {
@@ -107,25 +104,25 @@ const PostInfo = observer(() => {
   }
 
   return (
-    <div>
-      <div className={classes.title}>
+    <Box>
+      <Box sx={styles.title}>
         <Link href="/">
-          <a className={classes.titleLogo}>
+          <a style={{ color: 'black', textDecoration: 'none' }}>
             <Typography variant="h6">Hagetter</Typography>
           </a>
         </Link>
-        <div className={classes.grow} />
+        <Box sx={styles.grow} />
         {session.account && (
           <>
-            <Typography variant="subtitle1" className={classes.titleText}>
+            <Typography variant="subtitle1" sx={styles.titleText}>
               {session.account.acct}
             </Typography>
             <Avatar src={session.account.avatar} />
           </>
         )}
-      </div>
+      </Box>
       <h3>タイトル</h3>
-      <div>
+      <Box>
         <TextField
           variant="outlined"
           fullWidth
@@ -133,9 +130,9 @@ const PostInfo = observer(() => {
           defaultValue={editor.title}
           onChange={(event) => editor.setTitle(event.target.value)}
         />
-      </div>
+      </Box>
       <h3>説明文</h3>
-      <div>
+      <Box>
         <TextField
           multiline
           variant="outlined"
@@ -145,8 +142,8 @@ const PostInfo = observer(() => {
           defaultValue={editor.description}
           onChange={(event) => editor.setDescription(event.target.value)}
         />
-      </div>
-      <div className={classes.postButtonContainer}>
+      </Box>
+      <Box sx={styles.postButtonContainer}>
         <FormControlLabel
           control={
             <Checkbox
@@ -168,8 +165,8 @@ const PostInfo = observer(() => {
         >
           投稿する
         </Button>
-      </div>
-      <div>
+      </Box>
+      <Box>
         {editor.hasPrivateStatus && (
           <p style={{ color: '#ff4040' }}>
             ※非公開のステータスを含むため未収載のみ選択可能です(URLの取り扱いには大いなる責任が伴います)
@@ -178,9 +175,9 @@ const PostInfo = observer(() => {
         <p>
           ※未収載を選択するとまとめ一覧に表示されません(URLを知っている人は誰でも見る事が出来ます)
         </p>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 })
 
-export default PostInfo
+export default PostInfoEditor

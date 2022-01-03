@@ -1,17 +1,20 @@
-import React from 'react';
-import Box, { BoxProps } from '@material-ui/core/Box';
+import React from 'react'
+import Box, { BoxProps } from '@mui/material/Box'
+import { Theme } from '@mui/material/styles'
 
 const boxProps = {
   bgcolor: '#ffffff',
-  borderColor: '#cccccc',
-  border: 1,
-  borderRadius: 10
-};
+  borderRadius: 1,
+}
 
-const MyBox: React.FC<BoxProps> = ({ children, ...props }) => (
-  <Box {...boxProps} {...props}>
+const BorderedBox: React.FC<BoxProps> = ({ children, ...props }) => (
+  <Box
+    {...boxProps}
+    {...props}
+    sx={{ border: (theme: Theme) => theme.app.border }}
+  >
     {children}
   </Box>
-);
+)
 
-export default MyBox;
+export default BorderedBox

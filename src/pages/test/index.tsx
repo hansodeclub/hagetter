@@ -1,9 +1,9 @@
 import React from 'react'
-import Container from '@material-ui/core/Container'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import Toot from '../../components/Toot/Toot'
-import { Status } from '../../entities/Mastodon'
+import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import Toot from '~/components/Toot/Toot'
+import { Status } from '~/entities/Mastodon'
 
 const TestPage = () => {
   const testStatus: Status = {
@@ -29,8 +29,7 @@ const TestPage = () => {
     account: {
       id: '12345',
       username: 'donmi',
-      acct:
-        'donmiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      acct: 'donmiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       display_name: 'どん美',
       locked: true,
       bot: false,
@@ -54,7 +53,7 @@ const TestPage = () => {
     emojis: [],
     card: null,
     // poll: null
-  }
+  } as any
 
   return (
     <Container>

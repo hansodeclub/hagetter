@@ -6,23 +6,23 @@ import {
   useSearchTimeline,
   useUrlSearchTimeline,
   useEditor,
-} from '../../stores'
+} from '~/stores'
 
 import Toot, { isPublic } from '../Toot/Toot'
-import Paper from '@material-ui/core/Paper'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import Paper from '@mui/material/Paper'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import HomeIcon from '@mui/icons-material/HomeRounded'
+import PeopleIcon from '@mui/icons-material/PeopleRounded'
+import PublicIcon from '@mui/icons-material/PublicRounded'
+import SearchIcon from '@mui/icons-material/SearchRounded'
+import StarIcon from '@mui/icons-material/StarRounded'
+import LinkIcon from '@mui/icons-material/LinkRounded'
 
-import HomeIcon from '@material-ui/icons/HomeRounded'
-import PeopleIcon from '@material-ui/icons/PeopleRounded'
-import PublicIcon from '@material-ui/icons/PublicRounded'
-import SearchIcon from '@material-ui/icons/SearchRounded'
-import StarIcon from '@material-ui/icons/StarRounded'
-import LinkIcon from '@material-ui/icons/LinkRounded'
-
-import LinearProgress from '@material-ui/core/LinearProgress'
+import LinearProgress from '@mui/material/LinearProgress'
 
 import {
   PullToRefresh,
@@ -31,106 +31,106 @@ import {
   PullDownContent,
 } from 'react-js-pull-to-refresh'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { Status } from '~/entities/Mastodon'
+import { SxProps, Theme } from '@mui/material/styles'
+import { Typography } from '@mui/material'
 
-import { Status } from '../../entities/Mastodon'
-import HowTo, { Tips } from './HowTo'
+import styles from './editorStyles'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    gridColumn: {
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      boxSizing: 'border-box',
-    },
-    gridContent: {
-      position: 'relative',
-      flexGrow: 1,
-      boxSizing: 'border-box',
-      marginTop: 5,
-      marginBottom: 2, // TODO: 微調整(消したい)
-      height: '100%',
-      backgroundColor: 'white',
-    },
-    searchArea: {
-      marginTop: 5,
-    },
-    tootSelector: {
-      flexGrow: 1,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      height: '100%',
-      width: '100%',
-      overflow: 'scroll',
-      '-webkit-overflow-scrolling': 'touch',
-      border: '1px solid #ccc',
-      borderRadius: 5,
-      boxSizing: 'border-box',
-    },
-    selectorButtom: {
-      textAlign: 'center',
-      justifyContent: 'center',
-      width: '100%',
-      padding: 30,
-    },
-    menu: {
-      border: '1px solid #ccc',
-    },
-    howToContainer: {
-      border: '1px solid #ccc',
-      borderRadius: 5,
-      boxSizing: 'border-box',
-      backgroundColor: '#fff',
-      flexGrow: 1,
-      marginTop: 5,
-      marginBottom: 2,
-    },
-    howTo: {
-      margin: theme.spacing(3),
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      backgroundColor: '#f1f1f1',
-    },
-    howToText: {
-      width: '100%',
-      textAlign: 'center',
-    },
-    progress: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      zIndex: 2,
-    },
-    toot: {
-      borderBottom: '1px solid #ccc',
-    },
-  })
-)
+/*
+const styles: { [key: string]: SxProps<Theme> } = {
+  gridColumn: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+  },
+  timeline: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    marginTop: 1,
+  },
+  searchArea: {
+    // marginTop: '5px',
+  },
+  timelineContent: {
+    position: 'relative',
+    flexGrow: 1,
+    boxSizing: 'border-box',
+    marginTop: 1,
+    height: '100%',
+    backgroundColor: 'white',
+  },
+  tootSelector: {
+    flexGrow: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: '100%',
+    overflow: 'scroll',
+    '-webkit-overflow-scrolling': 'touch',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    boxSizing: 'border-box',
+  } as SxProps<Theme>,
+  selectorButtom: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '30px',
+  },
+  menu: {
+    border: '1px solid #ccc',
+  },
+  howToContainer: {
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    boxSizing: 'border-box',
+    backgroundColor: '#fff',
+    flexGrow: 1,
+    marginTop: '5px',
+    marginBottom: '2px',
+  },
+  howTo: {
+    margin: 3,
+    paddingTop: 1,
+    paddingBottom: 1,
+    backgroundColor: '#f1f1f1',
+  },
+  howToText: {
+    width: '100%',
+    textAlign: 'center',
+  },
+  progress: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 2,
+  },
+  toot: {
+    borderBottom: '1px solid #ccc',
+  },
+} */
 
-const HowT: React.FC = () => {
-  const classes = useStyles({})
-
+const HowTo: React.FC = () => {
   return (
-    <div className={classes.howToContainer}>
-      <div className={classes.howTo}>
-        <p className={classes.howToText}>使い方</p>
-        <ul>
-          <li>タイムラインからまとめるやつを探しましょう</li>
-          <li>クリックで右に追加されます</li>
-          <li>まとめには大きな責任が伴います</li>
-        </ul>
-      </div>
-    </div>
+    <Box sx={styles.howTo}>
+      <Typography sx={styles.howToTitle}>使い方</Typography>
+      <ul>
+        <li>タイムラインからまとめるやつを探しましょう</li>
+        <li>クリックで右に追加されます</li>
+        <li>まとめには大きな責任が伴います</li>
+      </ul>
+    </Box>
   )
 }
 
 const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
   const store = useTimeline(name)
   const editor = useEditor()
-  const classes = useStyles({})
   React.useEffect(() => {
     if (store.init) {
       store.reload().catch(console.error)
@@ -155,8 +155,8 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
   }
 
   return (
-    <>
-      <div className={classes.searchArea}>
+    <Box sx={styles.outer}>
+      <Box sx={styles.header}>
         <TextField
           id="filter-input"
           label={'フィルタ'}
@@ -165,10 +165,10 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
           fullWidth
           style={{ backgroundColor: 'white' }}
         />
-      </div>
-      <div className={classes.gridContent}>
-        {store.loading && <LinearProgress className={classes.progress} />}
-        <div className={classes.tootSelector}>
+      </Box>
+      <Box sx={styles.content}>
+        {store.loading && <LinearProgress sx={styles.progress} />}
+        <Box sx={styles.tootSelector}>
           <PullToRefresh
             pullDownContent={<PullDownContent label="リロード" />}
             releaseContent={<ReleaseContent />}
@@ -180,28 +180,29 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
           >
             <div id="basic-container">
               {store.filteredStatuses.map((status) => (
-                <Toot
-                  onClick={onStatusSelect}
-                  key={status.id}
-                  status={status}
-                  disabled={!isPublic(status.visibility)}
-                  className={classes.toot}
-                />
+                <Box key={status.id} sx={styles.toot}>
+                  <Toot
+                    onClick={onStatusSelect}
+                    key={status.id}
+                    status={status}
+                    disabled={!isPublic(status.visibility)}
+                  />
+                </Box>
               ))}
               {!store.init &&
-              !store.loading &&
-              store.type !== 'favourites' && ( // favはmax_idをlinkヘッダから取得しないといけないので未対応
-                  <div className={classes.selectorButtom}>
+                !store.loading &&
+                store.type !== 'favourites' && ( // favはmax_idをlinkヘッダから取得しないといけないので未対応
+                  <Box sx={styles.selectorButtom}>
                     <button onClick={() => store.loadMore()}>
                       もっと読み込む
                     </button>
-                  </div>
+                  </Box>
                 )}
             </div>
           </PullToRefresh>
-        </div>
-      </div>
-    </>
+        </Box>
+      </Box>
+    </Box>
   )
 })
 
@@ -209,7 +210,6 @@ const SearchTimeline: React.FC = observer(() => {
   const store = useSearchTimeline()
   const editor = useEditor()
 
-  const classes = useStyles({})
   const [keyword, setKeyword] = React.useState('')
   const onSearch = async (keyword: string) => {
     await store.search(keyword)
@@ -227,8 +227,8 @@ const SearchTimeline: React.FC = observer(() => {
   const onRefresh = async () => {}
 
   return (
-    <>
-      <div className="queryArea">
+    <Box sx={styles.outer}>
+      <Box sx={styles.header}>
         <form
           onSubmit={(event) => {
             event.preventDefault()
@@ -242,23 +242,23 @@ const SearchTimeline: React.FC = observer(() => {
             variant="outlined"
             onChange={(event) => setKeyword(event.target.value)}
             fullWidth
-            style={{ backgroundColor: 'white', marginTop: 5 }}
+            sx={styles.textField}
           />
         </form>
-      </div>
-      <div className="searchArea">
+      </Box>
+      <Box sx={styles.header}>
         <TextField
           id="filter-input"
           label={'フィルタ'}
           variant="outlined"
           onChange={onChangeFilter}
           fullWidth
-          style={{ backgroundColor: 'white' }}
+          sx={styles.textField}
         />
-      </div>
-      <div className={classes.gridContent}>
-        {store.loading && <LinearProgress className={classes.progress} />}
-        <div className={classes.tootSelector}>
+      </Box>
+      <Box sx={styles.content}>
+        {store.loading && <LinearProgress sx={styles.progress} />}
+        <Box sx={styles.tootSelector}>
           <PullToRefresh
             pullDownContent={<PullDownContent label="リロード" />}
             releaseContent={<ReleaseContent />}
@@ -270,19 +270,20 @@ const SearchTimeline: React.FC = observer(() => {
           >
             <div id="basic-container">
               {store.filteredStatuses.map((status) => (
-                <Toot
-                  onClick={onStatusSelect}
-                  key={status.id}
-                  status={status}
-                  disabled={!isPublic(status.visibility)}
-                  className={classes.toot}
-                />
+                <Box key={status.id} sx={styles.toot}>
+                  <Toot
+                    onClick={onStatusSelect}
+                    key={status.id}
+                    status={status}
+                    disabled={!isPublic(status.visibility)}
+                  />
+                </Box>
               ))}
             </div>
           </PullToRefresh>
-        </div>
-      </div>
-    </>
+        </Box>
+      </Box>
+    </Box>
   )
 })
 
@@ -291,7 +292,6 @@ const UrlSearchTimeline: React.FC = observer(() => {
   const editor = useEditor()
   const app = useStore()
 
-  const classes = useStyles({})
   const [keyword, setKeyword] = React.useState('')
 
   const onStatusSelect = (status: Status) => {
@@ -311,7 +311,7 @@ const UrlSearchTimeline: React.FC = observer(() => {
 
   return (
     <>
-      <div className="queryArea">
+      <Box sx={styles.header}>
         <TextField
           id="filter-input"
           label={'URL'}
@@ -330,31 +330,29 @@ const UrlSearchTimeline: React.FC = observer(() => {
         >
           検索
         </Button>
-      </div>
-      <div className={classes.gridContent}>
-        {store.loading && <LinearProgress className={classes.progress} />}
-        <div className={classes.tootSelector}>
+      </Box>
+      <Box sx={styles.content}>
+        {store.loading && <LinearProgress sx={styles.progress} />}
+        <Box sx={styles.tootSelector}>
           <div id="basic-container">
             {store.statuses.map((status) => (
-              <Toot
-                onClick={onStatusSelect}
-                key={status.id}
-                status={status}
-                disabled={!isPublic(status.visibility)}
-                className={classes.toot}
-              />
+              <Box key={status.id} sx={styles.toot}>
+                <Toot
+                  onClick={onStatusSelect}
+                  key={status.id}
+                  status={status}
+                  disabled={!isPublic(status.visibility)}
+                />
+              </Box>
             ))}
           </div>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </>
   )
 })
 
 const StatusSelector: React.FC = observer(() => {
-  const classes = useStyles({})
-  const store = useStore()
-
   const [viewType, setViewType] = React.useState<number | false>(false)
 
   const onChangeType = React.useCallback(
@@ -366,7 +364,7 @@ const StatusSelector: React.FC = observer(() => {
 
   return (
     <>
-      <Paper elevation={0} className={classes.menu}>
+      <Paper elevation={0} sx={styles.tabs}>
         <Tabs
           value={viewType}
           onChange={onChangeType}
@@ -399,13 +397,17 @@ const StatusSelector: React.FC = observer(() => {
           <Tab style={{ minWidth: 50 }} icon={<LinkIcon />} aria-label="url" />
         </Tabs>
       </Paper>
-      {viewType === false && <HowT />}
       {viewType === 0 && <Timeline name="home" />}
       {viewType === 1 && <Timeline name="local" />}
       {viewType === 2 && <Timeline name="public" />}
       {viewType === 3 && <Timeline name="favourites" />}
       {viewType === 4 && <SearchTimeline />}
       {viewType === 5 && <UrlSearchTimeline />}
+      {viewType === false && (
+        <Box sx={styles.content}>
+          <HowTo />
+        </Box>
+      )}
     </>
   )
 })

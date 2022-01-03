@@ -1,40 +1,34 @@
-import React from 'react'
+import * as React from 'react'
 import Head from 'next/head'
-import Header from '../components/Header'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Hidden from '@material-ui/core/Hidden'
-import { useStore } from '../stores'
-import MatomeList from '../components/matome/MatomeList'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import BorderedBox from '../components/BorderedBox'
+import Header from '~/components/Header'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Hidden from '@mui/material/Hidden'
+import MatomeList from '~/components/matome/MatomeList'
+import BorderedBox from '~/components/BorderedBox'
+import { SxProps, Theme } from '@mui/material/styles'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    container: {
-      paddingTop: 10,
-    },
-    gridContainer: {
-      height: '100vh',
-      overflow: 'hidden',
-      paddingTop: 10,
-      boxSizing: 'border-box',
-    },
-    gridColumn: {
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  })
-)
+const styles: { [key: string]: SxProps<Theme> } = {
+  container: {
+    paddingTop: 1,
+  },
+  gridContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+    paddingTop: 1,
+    boxSizing: 'border-box',
+  },
+  gridColumn: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}
 
 const PC = () => {
-  const classes = useStyles({})
-  const app = useStore()
-
   return (
-    <Container className={classes.container}>
+    <Container sx={styles.container}>
       <Grid container spacing={2}>
         <Hidden xsDown>
           <Grid item>
@@ -60,10 +54,8 @@ const Mobile = () => (
 )
 
 const Home = () => {
-  const classes = useStyles({})
   const wideMonitor = useMediaQuery('(min-width:667px)')
   //const wideMonitor = useMediaQuery(theme => theme.breakpoints.up('sm'));
-  const app = useStore()
 
   return (
     <div>

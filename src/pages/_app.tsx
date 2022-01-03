@@ -2,23 +2,33 @@
 
 import React from 'react'
 import Head from 'next/head'
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '../utils/theme'
+import { AppProps } from 'next/app'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import { CacheProvider, EmotionCache } from '@emotion/react'
 import { StoreProvider, useSession } from '~/stores'
-import ErrorNotification from '../components/ErrorNotification'
-import '../styles.scss'
+import ErrorNotification from '~/components/ErrorNotification'
+import theme from '~/theme'
+import createEmotionCache from '~/utils/createEmotionCache'
+import '~/styles.scss'
 require('setimmediate')
 
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache()
+
+interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache
+}
+
 export default function MyApp(props) {
-  //const { Component, pageProps } = props
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   const fonts = [
     'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
   ]
 
   return (
-    <>
+    <CacheProvider value={emotionCache}>
       <Head>
         <title>Hagetter</title>
         <meta property="og:site_name" content="Hagetter" />
@@ -37,7 +47,7 @@ export default function MyApp(props) {
           <ErrorNotification />
         </ThemeProvider>
       </StoreProvider>
-    </>
+    </CacheProvider>
   )
 }
 

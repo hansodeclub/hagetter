@@ -2,8 +2,11 @@ import { ApiError, ApiResponse, ApiSuccess } from '~/entities/api/ApiResponse'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
 import { NotFound } from '~/entities/api/HttpResponse'
-import { Masto, Status } from 'masto'
+import { Status as MastoStatus, MastoClient, login as mastoLogin } from 'masto'
+import { Status, fromMastoStatus } from '~/entities/Mastodon'
 import { SecureStatus } from '~/entities/SecuredStatus'
+import { toSnake } from 'snake-camel'
+import { JsonString } from '~/utils/serialized'
 
 /*
  Subset of Google JSON Guide
@@ -89,16 +92,16 @@ export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
 }
 
 export interface WithMastoParams extends WithAuthParams {
-  masto: Masto
+  masto: MastoClient
 }
 
 export const withApiMasto = (
   proc: (params: WithMastoParams) => Promise<any>
 ) => {
   return withApiAuth(async ({ req, res, user, accessToken }) => {
-    const [_, server] = user.split('@')
-    const masto = await Masto.login({
-      uri: `https://${server}`,
+    const [_, instance] = user.split('@')
+    const masto = await mastoLogin({
+      url: `https://${instance}`,
       accessToken: accessToken,
     })
 
@@ -106,28 +109,8 @@ export const withApiMasto = (
   })
 }
 
-export const filterStatus = (status: Status): Status => {
-  const res: any = {
-    id: status.id,
-    media_attachments: status.media_attachments,
-    url: status.url,
-    emojis: status.emojis,
-    created_at: status.created_at,
-    visibility: status.visibility,
-    content: status.content,
-    sensitive: status.sensitive,
-    spoiler_text: status.spoiler_text,
-    in_reply_to_id: status.in_reply_to_id,
-    in_reply_to_account_id: status.in_reply_to_account_id,
-    account: {
-      display_name: status.account.display_name,
-      username: status.account.username,
-      acct: status.account.acct,
-      avatar: status.account.avatar,
-    }
-  }
-
-  return res
+export const filterStatus = (status: MastoStatus): Status => {
+  return fromMastoStatus(status)
 }
 
 export const globalizeAcct = (status: Status, server: string): Status => {
@@ -163,18 +146,19 @@ export const verifyStatus = (secureStatus: SecureStatus): Status => {
 }
 
 /**
- * Mastodonからの応答ステータスを返す前に初期化する
+ * Mastodonからの応答ステータスを返す前に前処理する
  * @param statuses
  * @param server
  */
 export const preprocessMastodonStatus = (
-  statuses: Status[],
+  statuses: MastoStatus[],
   server: string
 ): SecureStatus[] => {
   return statuses.map((status) => {
     const filteredStatus = filterStatus(status)
     const globalAcct = globalizeAcct(filteredStatus, server)
-    const secure = secureStatus(globalAcct)
+    const snaked = toSnake(globalAcct) as Status
+    const secure = secureStatus(snaked)
 
     return secure
   })
