@@ -21,7 +21,7 @@
     "clsx": "^1.0.4",
     "crypto": "^1.0.1",
     "dotenv-webpack": "^1.7.0",
-    "emoji-mart": "2.8.1",
+    "emoji-mart": "^3.0.1",
     "googleapis": "^42.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "js-cookie": "^2.2.1",
