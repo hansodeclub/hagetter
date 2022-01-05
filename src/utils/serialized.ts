@@ -1,5 +1,6 @@
 // JSONでシリアライズした型を分かりやすくする
 export type JsonString<T> = string
+export type JsonObject<T> = any
 
 export function toJson<T>(t: T): JsonString<T> {
   return JSON.stringify(t)

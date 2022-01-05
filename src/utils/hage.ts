@@ -222,6 +222,14 @@ export class HagetterApiClient {
   }
 
   /**
+   * Get OAuth login URL
+   */
+  getOAuthUrl(instanceInfo: InstanceInfo, callbackUri: string) {
+    const { server, clientId, clientSecret } = instanceInfo
+    return `${server}/oauth/authorize?response_type=code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${callbackUri}`
+  }
+
+  /**
    * タイムラインを取得する
    * @param timeline タイムライン種別(home, local, public)
    * @param token セッショントークン

@@ -28,3 +28,4 @@ yarn-error.log*
 testdata.json
 /.idea/
 key.json
+firebase-key.json

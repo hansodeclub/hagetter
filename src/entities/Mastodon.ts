@@ -4,6 +4,7 @@ import {
   Account as MastoAccount,
   Emoji as MastoEmoji,
 } from 'masto'
+import { JsonString } from '~/utils/serialized'
 
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
@@ -32,6 +33,8 @@ export interface Account {
   header: string
   header_static: string
   emojis: Emoji[]
+  url: string
+  note: string
 }
 
 export interface Emoji {
@@ -61,6 +64,8 @@ export const fromMastoAccount = (account: MastoAccount): Account => {
     header: account.header,
     header_static: account.headerStatic,
     emojis: account.emojis.map(fromMastoEmoji),
+    url: account.url,
+    note: account.note,
   }
 }
 
@@ -101,4 +106,14 @@ export const fromMastoStatus = (status: MastoStatus): Status => {
     in_reply_to_account_id: status.inReplyToAccountId,
     account: fromMastoAccount(status.account),
   }
+}
+
+// TODO: Add validator
+export const toJson = (status: Status): JsonString<Status> => {
+  return JSON.stringify(status)
+}
+
+// TODO: Add validator
+export const fromJson = (json: JsonString<Status>) => {
+  return JSON.parse(json) as Status
 }
