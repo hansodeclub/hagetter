@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { GetServerSideProps, NextPage } from 'next'
 
 import cookie from 'js-cookie'
+import nookies from 'nookies'
 import Select from 'react-select'
 
 import Typography from '@mui/material/Typography'
@@ -12,7 +13,7 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Header from '~/components/Header'
 
-import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
+import { InstanceFirestoreRepository } from '~/infrastructure/firestore/InstanceFirestoreRepository'
 import { ListInstances } from '~/usecases/ListInstances'
 import { HagetterApiClient } from '~/utils/hage'
 import getHost from '~/utils/getHost'
@@ -20,23 +21,24 @@ import getHost from '~/utils/getHost'
 interface Props {
   code: number
   instances: string[]
+  lastInstance?: string
   error?: Error
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
-) => {
-  const action = new ListInstances(new InstanceDatastoreRepository())
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  const action = new ListInstances(new InstanceFirestoreRepository())
 
   try {
     const instances = await action.execute()
 
+    const lastInstance = nookies.get(ctx)?.instance
+    const res:any = {code:200, instances, error:null}
+    if  (lastInstance) {
+      res.lastInstance = lastInstance
+    }
+
     return {
-      props: {
-        code: 200,
-        instances,
-        error: null,
-      },
+      props: res,
     }
   } catch (err) {
     return {
@@ -49,25 +51,23 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-const LoginPage: NextPage<Props> = ({ instances, error }) => {
-  const [instance, setInstance] = React.useState<{ label: string }>()
-
-  React.useEffect(() => {
-    const server = cookie.get('instance')
-    if (server) {
-      setInstance({ label: server })
-    }
-  }, [])
+const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
+  const [instance, setInstance] = React.useState<string | undefined>(
+    lastInstance
+  )
 
   const handleInstanceChange = (value) => {
-    setInstance(value)
+    setInstance(value.label)
   }
 
   if (error) {
     return <p>{error}</p>
   }
 
-  const servers = instances.map((instance) => ({ label: instance }))
+  const servers = instances.map((instance) => ({
+    label: instance,
+    value: instance,
+  }))
 
   return (
     <div>
@@ -84,7 +84,7 @@ const LoginPage: NextPage<Props> = ({ instances, error }) => {
           <div style={{ maxWidth: 500 }}>
             <Select
               options={servers}
-              value={instance}
+              value={{ label: instance }}
               onChange={handleInstanceChange}
             />
           </div>
@@ -92,7 +92,7 @@ const LoginPage: NextPage<Props> = ({ instances, error }) => {
             variant="contained"
             color="primary"
             style={{ marginTop: 20 }}
-            onClick={() => onClickButton(instance.label)}
+            onClick={() => onClickButton(instance)}
           >
             認証
           </Button>
@@ -103,30 +103,12 @@ const LoginPage: NextPage<Props> = ({ instances, error }) => {
 }
 
 const onClickButton = async (instanceName: string) => {
-  const redirect_uri = encodeURIComponent(`${getHost(window)}/callback`)
   cookie.set('instance', instanceName)
 
   const client = new HagetterApiClient()
-
-  const { server, client_id, client_secret } = await client.getInstanceInfo(
-    instanceName
-  )
-
-  //await getInstanceInfo(
-  //instanceName
-  //)
-  location.href = `${server}/oauth/authorize?response_type=code&client_id=${client_id}&client_secret=${client_secret}&redirect_uri=${redirect_uri}`
+  const instanceInfo = await client.getInstanceInfo(instanceName)
+  const callbackUri = encodeURIComponent(`${getHost(window)}/callback`)
+  location.href = client.getOAuthUrl(instanceInfo, callbackUri)
 }
-
-/*
-Login.getInitialProps = async (ctx) => {
-    try {
-        const { protocol, host } = getUrlHost(ctx.req, null);
-        return await getInstanceList(protocol, host);
-    } catch (err) {
-        console.error(err);
-        return { error: err as Error, instances: [] as string[] } as Props;
-    }
-}*/
 
 export default LoginPage

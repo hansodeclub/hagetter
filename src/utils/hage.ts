@@ -114,8 +114,8 @@ export class HagetterApiClient {
   /**
    * ポスト一覧を取得する(publicのみ)
    */
-  async getPosts(): Promise<QueryResult<HagetterPostInfo>> {
-    const result = await this.get('posts')
+  async getPosts(options?: object): Promise<QueryResult<HagetterPostInfo>> {
+    const result = await this.get('posts', options)
     return result.data as QueryResult<HagetterPostInfo>
   }
 
@@ -217,7 +217,6 @@ export class HagetterApiClient {
    */
   async getInstanceInfo(name: string): Promise<InstanceInfo> {
     const res = await this.get('instances', { name })
-    console.log(res)
     return res.data as InstanceInfo
   }
 
