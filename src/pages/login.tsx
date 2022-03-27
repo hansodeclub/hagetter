@@ -32,14 +32,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     const instances = await action.execute()
 
     const lastInstance = nookies.get(ctx)?.instance
+    const res:any = {code:200, instances, error:null}
+    if  (lastInstance) {
+      res.lastInstance = lastInstance
+    }
 
     return {
-      props: {
-        code: 200,
-        instances,
-        lastInstance,
-        error: null,
-      },
+      props: res,
     }
   } catch (err) {
     return {
@@ -108,7 +107,8 @@ const onClickButton = async (instanceName: string) => {
 
   const client = new HagetterApiClient()
   const instanceInfo = await client.getInstanceInfo(instanceName)
-  const callbackUri = encodeURIComponent(`${getHost(window)}/callback`)
+  console.log(instanceInfo)
+  const callbackUri = `${getHost(window)}/callback`
   location.href = client.getOAuthUrl(instanceInfo, callbackUri)
 }
 

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { respondError, respondSuccess } from '../../utils/api/server'
-import getHost from '../../utils/getHost'
-import { login } from '../../utils/auth/server'
-import head from '../../utils/head'
+import { respondError, respondSuccess } from '~/utils/api/server'
+import getHost from '~/utils/getHost'
+import { login } from '~/utils/auth/server'
+import head from '~/utils/head'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {

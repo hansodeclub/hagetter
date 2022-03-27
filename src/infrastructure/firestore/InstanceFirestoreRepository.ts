@@ -1,9 +1,9 @@
+import { toCamel } from 'snake-camel'
 import { IInstanceRepository } from '~/interfaces/InstanceRepository'
 import {
   InstanceInfo,
-  fromObject as instanceInfoFromObject,
 } from '~/entities/Instance'
-import { firestore } from '~/utils/firebaseAdmin'
+import { firestore } from '~/utils/firebase/admin'
 
 /**
  * サーバーサイド(FireStore)でインスタンス情報を直接取得する
@@ -12,10 +12,10 @@ export class InstanceFirestoreRepository implements IInstanceRepository {
   async getInstance(name: string): Promise<InstanceInfo | null> {
     const doc = await firestore.collection('instances').doc(name).get()
     if (doc.exists) {
-      return instanceInfoFromObject({
+      return toCamel({
         name: doc.id,
         ...doc.data(),
-      })
+      }) as InstanceInfo
     } else {
       return null
     }

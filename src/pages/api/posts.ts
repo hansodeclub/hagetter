@@ -1,41 +1,28 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApi, respondError, withApiAuth } from '~/utils/api/server'
-import { Datastore } from '@google-cloud/datastore'
-
 import head from '~/utils/head'
-import { ListPublicPosts } from '~/usecases/ListPublicPosts'
-import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
+import { ListPosts, ListPostsOptions } from '~/usecases/ListPosts'
+import { PostFirestoreRepository} from '~/infrastructure/firestore/PostFirestoreRepository'
 
 const getUserPosts = withApiAuth(async ({ req, res, user }) => {
   const username = head(req.query.user)
-  const datastore = new Datastore()
-
   if (user !== username) {
     throw Error('不正なユーザーID')
   }
 
-  const query = datastore
-    .createQuery('Hagetter')
-    .filter('username', '=', username)
-    .order('created_at', {
-      descending: true,
-    })
-
-  const [tasks] = await datastore.runQuery(query)
-  const results = tasks.map((task) => ({
-    id: task[datastore.KEY].id,
-    ...task,
-  }))
-
-  return {
-    count: results.length,
-    items: results,
-  }
+  const action = new ListPosts(new PostFirestoreRepository())
+  const items = await action.execute({username})
+  return items
 })
 
 const getPosts = withApi(async ({ req, res }) => {
-  const action = new ListPublicPosts(PostRepositoryFactory.createServer())
-  return await action.execute()
+  const options: ListPostsOptions = {
+    visibility: 'public',
+    limit: Number.parseInt(head(req.query.limit ?? ['100']))
+  }
+  const action = new ListPosts(new PostFirestoreRepository())
+  const items = await action.execute(options)
+  return items
 })
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

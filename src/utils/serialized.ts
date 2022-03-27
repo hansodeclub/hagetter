@@ -18,3 +18,10 @@ export function getFieldNames(converter: { typeMap: any }, ref: string) {
   const typeMap = converter.typeMap
   return typeMap[ref].props.map((field) => field.js)
 }
+
+export class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}

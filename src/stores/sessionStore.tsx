@@ -1,5 +1,5 @@
 import { types, flow } from 'mobx-state-tree'
-import { Account } from '~/entities/Mastodon'
+import { Account } from '~/entities/Status'
 
 import {
   initSession,

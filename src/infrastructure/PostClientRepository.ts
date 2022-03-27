@@ -13,6 +13,6 @@ export class PostClientRepository implements IPostRepository {
 
   async queryPosts(options?: QueryPostsOptions) {
     const hagetterClient = new HagetterApiClient()
-    return await hagetterClient.getPosts()
+    return await hagetterClient.getPosts(options)
   }
 }

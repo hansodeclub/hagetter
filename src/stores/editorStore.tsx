@@ -1,5 +1,5 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Mastodon'
+import { Status } from '~/entities/Status'
 import moment from 'moment'
 import stable from 'stable'
 import HagetterItem from './hagetterItem'
@@ -71,7 +71,7 @@ const EditorStore = types
 
       self.items.splice(index === -1 ? 0 : index, 0, {
         id: status2.id,
-        sortKey: moment(status2.created_at).valueOf(),
+        sortKey: moment(status2.createdAt).valueOf(),
         selected: false,
         type: 'status',
         data: status2,

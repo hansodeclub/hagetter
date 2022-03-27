@@ -1,5 +1,5 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Mastodon'
+import { Status } from '~/entities/Status'
 import SessionStore from './sessionStore'
 import { HagetterApiClient } from '~/utils/hage'
 
