@@ -4,6 +4,7 @@ import {
   Account as MastoAccount,
   Emoji as MastoEmoji,
 } from 'masto'
+import { toCamel } from 'snake-camel'
 
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
@@ -101,4 +102,8 @@ export const fromMastoStatus = (status: MastoStatus): Status => {
     in_reply_to_account_id: status.inReplyToAccountId,
     account: fromMastoAccount(status.account),
   }
+}
+
+export const fromObject = (object: any): Status => {
+  return toCamel(object) as Status
 }

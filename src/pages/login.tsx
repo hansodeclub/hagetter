@@ -107,7 +107,8 @@ const onClickButton = async (instanceName: string) => {
 
   const client = new HagetterApiClient()
   const instanceInfo = await client.getInstanceInfo(instanceName)
-  const callbackUri = encodeURIComponent(`${getHost(window)}/callback`)
+  console.log(instanceInfo)
+  const callbackUri = `${getHost(window)}/callback`
   location.href = client.getOAuthUrl(instanceInfo, callbackUri)
 }
 

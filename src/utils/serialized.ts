@@ -1,5 +1,6 @@
 // JSONでシリアライズした型を分かりやすくする
 export type JsonString<T> = string
+export type JsonObject<T> = any
 
 export function toJson<T>(t: T): JsonString<T> {
   return JSON.stringify(t)
@@ -16,4 +17,11 @@ export function fromJson<T>(
 export function getFieldNames(converter: { typeMap: any }, ref: string) {
   const typeMap = converter.typeMap
   return typeMap[ref].props.map((field) => field.js)
+}
+
+export class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
 }

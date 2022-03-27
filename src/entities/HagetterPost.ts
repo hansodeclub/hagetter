@@ -1,12 +1,10 @@
 import {
   Status,
   Account,
-  toObject as statusToObject,
-  fromObject as statusFromObject,
+  fromObject as statusFromObject
 } from './Status'
 
-import { ValidationError } from '~/utils/parser'
-import { JsonObject } from '~/utils/serialized'
+import { ValidationError, JsonObject } from '~/utils/serialized'
 import { toCamel, toSnake } from 'snake-camel'
 
 export type PostVisibility = 'public' | 'unlisted' | 'draft'
@@ -40,15 +38,15 @@ export interface HagetterPostInfo {
  * はげったーのポストの中身
  */
 export interface HagetterPostContents {
-  contents: ContentItemType[]
+  contents: HagetterItem[]
 }
 
-type ContentItemType = StatusItem | TextItem
+export type HagetterItem = StatusItem | TextItem
 
 /**
  * responsive text size
  */
-type TextSize = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body2' | 'inherit'
+export type TextSize = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body2' | 'inherit'
 
 export interface StatusItem {
   type: 'status'
@@ -73,7 +71,7 @@ export const isTextSize = (size: any): size is TextSize => {
   return validSize.includes(size)
 }
 
-export const parseContentItem = (content: any): ContentItemType => {
+export const parseContentItem = (content: any): HagetterItem => {
   if (content.type === 'status') {
     if (isTextSize(content.size)) {
       return {
@@ -95,7 +93,7 @@ export const parseContentItem = (content: any): ContentItemType => {
 }
 
 export const fromObject = (
-  hagetterPost: JsonObject<HagetterPost>
+  hagetterPost: any
 ): HagetterPost => {
   const camel: any = toCamel(hagetterPost)
   return {
@@ -111,7 +109,7 @@ export const toObject = (
 }
 
 export const hagetterPostInfoFromObject = (
-  hagetterPostInfo: JsonObject<HagetterPostInfo>
+  hagetterPostInfo: any
 ): HagetterPostInfo => {
   return toCamel(hagetterPostInfo) as HagetterPostInfo
 }

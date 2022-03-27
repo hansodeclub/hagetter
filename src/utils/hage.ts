@@ -1,11 +1,13 @@
+import { toCamel } from 'snake-camel'
 import { InstanceInfo } from '~/entities/Instance'
 import fetch from 'isomorphic-unfetch'
-import { Status, Account } from '~/entities/Mastodon'
+import { Status, Account } from '~/entities/Status'
 import { TextItem } from '~/stores/editorStore'
 import { HagetterPost, HagetterPostInfo } from '~/entities/HagetterPost'
 import { ApiResponse } from '~/entities/api/ApiResponse'
 import { ErrorReport } from '~/entities/ErrorReport'
 import { QueryResult } from '~/entities/api/QueryResult'
+import getHost from '~/utils/getHost'
 
 export class HagetterApiClient {
   readonly apiRoot: string
@@ -22,17 +24,19 @@ export class HagetterApiClient {
     return `${this.apiRoot}${path}${q}${qs}`
   }
 
-  private async get<T>(path, query: object = {}) {
+  private async get<T>(path, query: object = {}, asCamel=true) {
     const res = await fetch(this._getUrl(path, query))
-    return res.json()
+    const data = res.json()
+    return (asCamel ? toCamel(data) : data) as ApiResponse<T>
   }
 
-  async getAuth(path: string, token: string, query: object = {}) {
+  async authGet<T>(path: string, token: string, query: object = {}, asCamel = true) {
     const res = await fetch(this._getUrl(path, query), {
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    return res.json()
+    const data = res.json()
+    return (asCamel ? toCamel(data) : data) as ApiResponse<T>
   }
 
   private async post(path, body: object) {
@@ -98,8 +102,10 @@ export class HagetterApiClient {
    * 自身のアカウント情報を取得
    */
   async getAccount(token: string): Promise<Account> {
-    const res = await this.getAuth('mastodon/profile', token)
-    return res.data as Account
+    const res = await this.authGet<Account>('mastodon/profile', token)
+    if (res.status === 'ok')
+      return res.data as Account
+    else throw Error('Unable to get account')
   }
 
   /**
@@ -107,8 +113,10 @@ export class HagetterApiClient {
    * @param id まとめID
    */
   async getPost(id: string): Promise<HagetterPost> {
-    const result = await this.get(`post`, { id })
-    return result.data as HagetterPost
+    const res = await this.get<HagetterPost>(`post`, { id })
+    if (res.status === 'ok')
+      return res.data
+    else throw Error(res.error.message)
   }
 
   /**
@@ -126,7 +134,7 @@ export class HagetterApiClient {
     user: string,
     token: string
   ): Promise<QueryResult<HagetterPostInfo>> {
-    const result = (await this.getAuth('posts', token, {
+    const result = (await this.authGet('posts', token, {
       user,
     })) as ApiResponse<QueryResult<HagetterPostInfo>>
     if (result.status === 'ok') {
@@ -142,7 +150,7 @@ export class HagetterApiClient {
    * @param token セッショントークン
    */
   async getPostSecure(id: string, token: string): Promise<HagetterPost> {
-    const result = (await this.getAuth(`post`, token, {
+    const result = (await this.authGet(`post`, token, {
       id,
       action: 'edit',
     })) as ApiResponse<HagetterPost>
@@ -220,6 +228,11 @@ export class HagetterApiClient {
     return res.data as InstanceInfo
   }
 
+  getOAuthUrl(instanceInfo: InstanceInfo, callbackUrl) {
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl)
+    return `${instanceInfo.server}/oauth/authorize?response_type=code&client_id=${instanceInfo.clientId}&redirect_uri=${encodedCallbackUrl}`
+  }
+
   /**
    * タイムラインを取得する
    * @param timeline タイムライン種別(home, local, public)
@@ -228,8 +241,11 @@ export class HagetterApiClient {
    */
   async getTimeline(timeline: string, token: string, max_id?: string) {
     const query = max_id ? { max_id } : {}
-    const res = await this.getAuth(`mastodon/${timeline}`, token, query)
-    return res.data as Status[]
+    const res = await this.authGet<Status[]>(`mastodon/${timeline}`, token, query, true)
+    if (res.status === 'ok') {
+      return res.data.map(toCamel)
+    }
+    else throw Error('Unable to get timeline')
   }
 
   /**
@@ -238,8 +254,13 @@ export class HagetterApiClient {
    * @param keyword 検索キーワード
    */
   async getSearchTimeline(token: string, keyword: string) {
-    const res = await this.getAuth('mastodon/search', token, { keyword })
-    return res.data.statuses as Status[]
+    const res = await this.authGet('mastodon/search', token, { keyword })
+    if (res.status === 'ok') {
+      const searchResult: any = res.data
+      return searchResult as Status[]
+    } else {
+      throw Error('Unable to get search timeline')
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Status } from './Mastodon'
+import { Status } from './Status'
 
 /**
  * 捏造防止Status

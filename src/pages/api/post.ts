@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { toSnake } from 'snake-camel'
 import {
   respondError,
   withApi,
@@ -10,9 +11,9 @@ import { Datastore } from '@google-cloud/datastore'
 import head from '~/utils/head'
 import { NotFound } from '~/entities/api/HttpResponse'
 import { verifyStatus } from '~/utils/api/server'
-import { IHagetterItemOut } from '~/stores/hagetterItem'
 import { SecureStatus } from '~/entities/SecuredStatus'
-import { HagetterPost } from '~/entities/HagetterPost'
+import { HagetterPost, HagetterItem } from '~/entities/HagetterPost'
+import { PostFirestoreRepository} from '~/infrastructure/firestore/PostFirestoreRepository'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.id)
@@ -20,16 +21,13 @@ const getPost = withApi(async ({ req, res }) => {
     throw Error('No ID')
   }
 
-  const datastore = new Datastore()
-  const result = await datastore.get(
-    datastore.key(['Hagetter', Number.parseInt(id)])
-  )
-
-  if (result[0]) {
-    return { ...result[0], id }
-  } else {
-    throw new NotFound('Item not found')
+  const postRepository = new PostFirestoreRepository()
+  const post = await postRepository.getPost(id)
+  if (!post) {
+    throw new NotFound('Item not found!')
   }
+
+  return toSnake(post)
 })
 
 const getMyPost = withApiAuth(async ({ req, user }) => {
@@ -44,13 +42,13 @@ const getMyPost = withApiAuth(async ({ req, user }) => {
   )
 
   if (post) {
-    if (post.username !== user) {
+    if (post.owner.username !== user) {
       throw Error("It's not your post, fuck you")
     }
 
     const securePost = {
       ...post,
-      data: secureItems(post.data),
+      data: secureItems(post.contents),
       id,
     }
 
@@ -73,7 +71,7 @@ const getRecordAndVerifyOwner = async (id: string, username: string) => {
   return false
 }
 
-const secureItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
+const secureItems = (items: HagetterItem[]): HagetterItem[] => {
   return items.map((item) => {
     if (item.type === 'status') {
       return {
@@ -84,7 +82,7 @@ const secureItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
   })
 }
 
-const verifyItems = (items: IHagetterItemOut[]): IHagetterItemOut[] => {
+const verifyItems = (items: HagetterItem[]): HagetterItem[] => {
   try {
     return items.map((item) => {
       if (item.type === 'status') {
