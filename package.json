@@ -28,7 +28,7 @@
     "mobx-devtools-mst": "^0.9.22",
     "mobx-react-lite": "^1.4.1",
     "mobx-state-tree": "^3.16.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "next": "^9.4.0",
     "next-cookies": "^1.1.2",
     "react": "16.9.0",
