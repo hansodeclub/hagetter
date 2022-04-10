@@ -1,5 +1,5 @@
-import head from '~/utils/head'
-import { withApiMasto, transformStatus } from '~/utils/api/server'
+import head from '@/utils/head'
+import { withApiMasto, transformStatus } from '@/utils/api/server'
 
 export default withApiMasto(async ({ req, user, client }) => {
   const timeline = await client.getFavourites({
