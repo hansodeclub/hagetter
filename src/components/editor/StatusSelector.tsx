@@ -6,7 +6,7 @@ import {
   useSearchTimeline,
   useUrlSearchTimeline,
   useEditor,
-} from '~/stores'
+} from '@/stores'
 
 import Toot, { isPublic } from '../Toot/Toot'
 import Paper from '@mui/material/Paper'
@@ -31,7 +31,7 @@ import {
   PullDownContent,
 } from 'react-js-pull-to-refresh'
 
-import { Status } from '~/entities/Status'
+import { Status } from '@/entities/Status'
 import { SxProps, Theme } from '@mui/material/styles'
 import { Typography } from '@mui/material'
 

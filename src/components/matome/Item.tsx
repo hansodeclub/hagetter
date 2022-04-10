@@ -21,7 +21,13 @@ interface TextItemProps {
   onClick?: () => any
 }
 
-export const TextItem: React.FC<TextItemProps> = ({ text, variant, color, selected, onClick }) => (
+export const TextItem: React.FC<TextItemProps> = ({
+  text,
+  variant,
+  color,
+  selected,
+  onClick,
+}) => (
   <li style={{ display: 'inline', padding: 0, margin: 0 }}>
     <Typography
       variant={variant}

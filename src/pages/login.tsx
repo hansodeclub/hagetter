@@ -13,10 +13,10 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Header from '~/components/Header'
 
-import { InstanceFirestoreRepository } from '~/infrastructure/firestore/InstanceFirestoreRepository'
-import { ListInstances } from '~/usecases/ListInstances'
-import { HagetterApiClient } from '~/utils/hage'
-import getHost from '~/utils/getHost'
+import { InstanceFirestoreRepository } from '@/infrastructure/firestore/InstanceFirestoreRepository'
+import { ListInstances } from '@/usecases/ListInstances'
+import { HagetterClient } from '~/utils/hagetter_client'
+import getHost from '@/utils/getHost'
 
 interface Props {
   code: number
@@ -32,8 +32,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     const instances = await action.execute()
 
     const lastInstance = nookies.get(ctx)?.instance
-    const res:any = {code:200, instances, error:null}
-    if  (lastInstance) {
+    const res: any = { code: 200, instances, error: null }
+    if (lastInstance) {
       res.lastInstance = lastInstance
     }
 
@@ -58,10 +58,6 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
 
   const handleInstanceChange = (value) => {
     setInstance(value.label)
-  }
-
-  if (error) {
-    return <p>{error}</p>
   }
 
   const servers = instances.map((instance) => ({
@@ -96,6 +92,7 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
           >
             認証
           </Button>
+          {error && <p>{error}</p>}
         </Box>
       </Container>
     </div>
@@ -105,9 +102,8 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
 const onClickButton = async (instanceName: string) => {
   cookie.set('instance', instanceName)
 
-  const client = new HagetterApiClient()
+  const client = new HagetterClient()
   const instanceInfo = await client.getInstanceInfo(instanceName)
-  console.log(instanceInfo)
   const callbackUri = `${getHost(window)}/callback`
   location.href = client.getOAuthUrl(instanceInfo, callbackUri)
 }

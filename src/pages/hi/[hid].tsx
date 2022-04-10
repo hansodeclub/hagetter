@@ -7,13 +7,13 @@ import Container from '@mui/material/Container'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
-import Header from '~/components/Header'
-import PostContent from '~/components/post/PostContent'
+import Header from '@/components/Header'
+import PostContent from '@/components/post/PostContent'
 
-import { HagetterPost, fromObject as hagetterPostFromObject } from '~/entities/HagetterPost'
-import { PostFirestoreRepository } from '~/infrastructure/firestore/PostFirestoreRepository'
-import { JsonString, fromJson, toJson } from '~/utils/serialized'
-import head from '~/utils/head'
+import { HagetterPost, parseHagetterPost } from '@/entities/HagetterPost'
+import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { JsonString, toJson, fromJson } from '@/utils/serializer'
+import head from '@/utils/head'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: (theme) => ({
@@ -67,7 +67,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 }
 
 const PostPage: NextPage<Props> = (props) => {
-  const post = hagetterPostFromObject(JSON.parse(props.post))
+  const post = fromJson<HagetterPost>(props.post)
 
   const { code, error } = props
 

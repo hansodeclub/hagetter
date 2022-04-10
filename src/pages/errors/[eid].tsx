@@ -5,7 +5,7 @@ import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
 import { ErrorReport } from '~/entities/ErrorReport'
 import head from '~/utils/head'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 
 const Post = () => {
   const router = useRouter()
@@ -17,7 +17,7 @@ const Post = () => {
   React.useEffect(() => {
     let unmounted = false
     if (!eid) return
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient.getError(eid).then((report) => {
       setItem(report)
       setLoading(false)

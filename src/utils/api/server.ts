@@ -1,43 +1,18 @@
-import { ApiError, ApiResponse, ApiSuccess } from '~/entities/api/ApiResponse'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { verifyAuthorization, encrypt, decrypt } from '../auth/server'
-import { NotFound } from '~/entities/api/HttpResponse'
-import { Status as MastoStatus, MastoClient, login as mastoLogin } from 'masto'
-import { Status, fromMastoStatus } from '~/entities/Status'
-import { SecureStatus } from '~/entities/SecuredStatus'
-import { toSnake } from 'snake-camel'
-import { JsonString } from '~/utils/serialized'
+import { login as mastoLogin, MastoClient } from 'masto'
+import generator, { MegalodonInterface } from 'megalodon'
+import { ApiResponse, failure, success } from '@/entities/api/ApiResponse'
+import { NotFound } from '@/entities/api/HttpResponse'
+import { fromMastoAccount, fromMastoStatus, Status } from '@/entities/Status'
+import { VerifiableStatus } from '@/entities/SecuredStatus'
 
-/*
- Subset of Google JSON Guide
- https://google.github.io/styleguide/jsoncstyleguide.xml
-*/
+import { decrypt, encrypt, verifyAuthorization } from '@/utils/auth/server'
+import { fromJson, toJson } from '@/utils/serializer'
+import { HagetterItem, VerifiableHagetterItem } from '@/entities/HagetterPost'
 
-export const success = <Data>(data?: Data): ApiSuccess<Data> => {
-  if (!data) return { status: 'ok', data: null }
-
-  return {
-    status: 'ok',
-    data,
-  }
-}
-
-export const failure = (message: string, code?: number): ApiError => {
-  if (!code)
-    return {
-      status: 'error',
-      error: { message },
-    }
-
-  return {
-    status: 'error',
-    error: { message, code },
-  }
-}
-
-export const respondSuccess = <Data>(
+export const respondSuccess = <T>(
   res: NextApiResponse,
-  data?: Data,
+  data?: T,
   code: number = 200
 ) => {
   res.status(code).json(success(data))
@@ -66,7 +41,6 @@ export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
       const response = await proc({ req, res })
       if (response) {
         respondSuccess(res, response)
-        //res.status(200).json(response);
       }
     } catch (err) {
       if (err instanceof NotFound) {
@@ -93,6 +67,7 @@ export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
 
 export interface WithMastoParams extends WithAuthParams {
   masto: MastoClient
+  client: MegalodonInterface
 }
 
 export const withApiMasto = (
@@ -105,61 +80,71 @@ export const withApiMasto = (
       accessToken: accessToken,
     })
 
-    return proc({ req, res, user, accessToken, masto })
+    const client = generator('mastodon', `https://${instance}`, accessToken)
+
+    return proc({ req, res, user, accessToken, masto, client })
   })
 }
 
-export const filterStatus = (status: MastoStatus): Status => {
-  return fromMastoStatus(status)
+export const getMyAccount = async (
+  client: MegalodonInterface,
+  server: string
+) => {
+  const res = await client.verifyAccountCredentials()
+  return fromMastoAccount(res.data, server)
 }
 
-export const globalizeAcct = (status: Status, server: string): Status => {
-  const account = {
-    ...status.account,
-    acct: status.account.acct.includes('@')
-      ? status.account.acct
-      : `${status.account.acct}@${server}`,
-  }
-
+/**
+ * ステータスの捏造防止のために暗号化情報を付与する(TODO: JWSに置き換え)
+ * @param status
+ */
+export const secureStatus = (status: Status): VerifiableStatus => {
   return {
     ...status,
-    account,
+    secure: encrypt(toJson(status)),
   }
 }
 
 /**
- * ステータスの捏造防止のために暗号化情報を付与する
- * @param status
+ * 入力されたステータスが本物か確認する(TODO: JWSに置き換え)
+ * @param secureStatus
  */
-export const secureStatus = (status: Status): SecureStatus => {
-  return {
-    ...status,
-    secure: encrypt(JSON.stringify(status)),
-  }
-}
-
-export const verifyStatus = (secureStatus: SecureStatus): Status => {
-  const status = JSON.parse(decrypt(secureStatus.secure)) as Status
+export const verifyStatus = (secureStatus: VerifiableStatus): Status => {
+  const status = fromJson<Status>(decrypt(secureStatus.secure))
   if (secureStatus.id !== status.id) throw Error('Invalid Status')
 
   return status
 }
 
+export const verifyItems = (
+  items: VerifiableHagetterItem[]
+): HagetterItem[] => {
+  try {
+    return items.map((item) => {
+      if (item.type === 'status') {
+        return {
+          ...item,
+          data: verifyStatus(item.data),
+        }
+      } else return item
+    })
+  } catch (err) {
+    console.error(err)
+    throw Error('Invalid Status')
+  }
+}
+
 /**
- * Mastodonからの応答ステータスを返す前に前処理する
+ * Mastodon APIのStatusを内部形式のStatusに変換する
  * @param statuses
  * @param server
  */
-export const preprocessMastodonStatus = (
-  statuses: MastoStatus[],
-  server: string
-): SecureStatus[] => {
-  return statuses.map((status) => {
-    const filteredStatus = filterStatus(status)
-    const globalAcct = globalizeAcct(filteredStatus, server)
-    const snaked = toSnake(globalAcct) as Status
-    const secure = secureStatus(snaked)
-
-    return secure
+export const transformStatus = (
+  statuses: Entity.Status[],
+  instance: string
+): VerifiableStatus[] => {
+  return statuses.map((mastoStatus) => {
+    const status = fromMastoStatus(mastoStatus, instance)
+    return secureStatus(status)
   })
 }

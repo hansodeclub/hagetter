@@ -7,7 +7,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import { amber } from '@mui/material/colors'
 import { SxProps, Theme } from '@mui/material/styles'
 import { useStore, observer } from '~/stores'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   warning: {
@@ -29,7 +29,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
 const sendError = async (error: Error) => {
   let url
   try {
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     const errorId = hagetterClient.postError(
       window.location.href,
       error.message,

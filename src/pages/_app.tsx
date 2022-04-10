@@ -9,7 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import theme from '~/theme'
 import { StoreProvider, useSession } from '~/stores'
-import { analytics, logEvent} from '~/utils/firebase/client'
+import { analytics, logEvent } from '~/utils/firebase/client'
 import ErrorNotification from '~/components/ErrorNotification'
 import createEmotionCache from '~/utils/createEmotionCache'
 import '~/styles.scss'
@@ -28,7 +28,7 @@ export default function MyApp(props) {
   useEffect(() => {
     const handleRouteChange = (url) => {
       logEvent(analytics, 'pageview', {
-        url: url
+        url: url,
       })
     }
     router.events.on('routeChangeComplete', handleRouteChange)

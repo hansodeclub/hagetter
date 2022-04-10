@@ -1,15 +1,15 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import NextError from 'next/error'
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
-import StatusSelector from '~/components/editor/StatusSelector'
-import PostEditor from '~/components/editor/PostEditor'
-import PostInfoEditor from '~/components/editor/PostInfoEditor'
-import head from '~/utils/head'
-import { HagetterApiClient } from '~/utils/hage'
-import { useRouter } from 'next/router'
+import StatusSelector from '@/components/editor/StatusSelector'
+import PostEditor from '@/components/editor/PostEditor'
+import PostInfoEditor from '@/components/editor/PostInfoEditor'
+import head from '@/utils/head'
+import { HagetterClient } from '@/utils/hagetter_client'
 import CircularProgress from '@mui/material/CircularProgress'
-import NextError from 'next/error'
-import { useEditor, useSession, observer } from '~/stores'
+import { useEditor, useSession, observer } from '@/stores'
 import { SxProps, Theme } from '@mui/material/styles'
 
 const gridStyle: SxProps<Theme> = {
@@ -40,15 +40,15 @@ const EditPage = observer(() => {
       setError('ログインしていません')
     }
 
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient
-      .getPostSecure(hid, session.token)
+      .getVerifiablePost(hid, session.token)
       .then((data) => {
         if (!unmounted) {
           editor.setId(hid)
           editor.setTitle(data.title)
           editor.setDescription(data.description)
-          editor.bulkAdd(data.data)
+          editor.bulkAdd(data.contents)
           editor.setVisibility(data.visibility as any)
           setCode(200)
           setLoading(false)

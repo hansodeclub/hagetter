@@ -1,15 +1,14 @@
-import { toCamel } from 'snake-camel'
-import { InstanceInfo } from '~/entities/Instance'
 import fetch from 'isomorphic-unfetch'
-import { Status, Account } from '~/entities/Status'
-import { TextItem } from '~/stores/editorStore'
-import { HagetterPost, HagetterPostInfo } from '~/entities/HagetterPost'
-import { ApiResponse } from '~/entities/api/ApiResponse'
-import { ErrorReport } from '~/entities/ErrorReport'
-import { QueryResult } from '~/entities/api/QueryResult'
-import getHost from '~/utils/getHost'
+import { InstanceInfo } from '@/entities/Instance'
+import { Status, Account } from '@/entities/Status'
+import { TextItem } from '@/stores/editorStore'
+import { HagetterPost, HagetterPostInfo } from '@/entities/HagetterPost'
+import { ApiResponse } from '@/entities/api/ApiResponse'
+import { ErrorReport } from '@/entities/ErrorReport'
+import { QueryResult } from '@/entities/api/QueryResult'
+import { fromJsonObject, toJson } from '@/utils/serializer'
 
-export class HagetterApiClient {
+export class HagetterClient {
   readonly apiRoot: string
 
   constructor(apiRoot: string = '/api/') {
@@ -24,22 +23,27 @@ export class HagetterApiClient {
     return `${this.apiRoot}${path}${q}${qs}`
   }
 
-  private async get<T>(path, query: object = {}, asCamel=true) {
+  private async get<T>(path, query: object = {}, asCamel = true) {
     const res = await fetch(this._getUrl(path, query))
-    const data = res.json()
-    return (asCamel ? toCamel(data) : data) as ApiResponse<T>
+    const data = await res.json()
+    return (asCamel ? fromJsonObject(data) : data) as ApiResponse<T>
   }
 
-  async authGet<T>(path: string, token: string, query: object = {}, asCamel = true) {
+  async authGet<T>(
+    path: string,
+    token: string,
+    query: object = {},
+    asCamel = true
+  ) {
     const res = await fetch(this._getUrl(path, query), {
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    const data = res.json()
-    return (asCamel ? toCamel(data) : data) as ApiResponse<T>
+    const data = await res.json()
+    return (asCamel ? fromJsonObject(data) : data) as ApiResponse<T>
   }
 
-  private async post(path, body: object) {
+  private async post<T>(path, body: object) {
     const options = {
       method: 'POST',
       headers: {
@@ -50,10 +54,10 @@ export class HagetterApiClient {
     }
 
     const res = await fetch(this._getUrl(path), options)
-    return res.json()
+    return fromJsonObject<ApiResponse<T>>(await res.json())
   }
 
-  private async postAuth(path, token: string, body: object) {
+  private async postAuth<T>(path, token: string, body: object) {
     const options = {
       method: 'POST',
       headers: {
@@ -61,14 +65,14 @@ export class HagetterApiClient {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: toJson(body),
     }
 
     const res = await fetch(this._getUrl(path), options)
-    return res.json()
+    return fromJsonObject<ApiResponse<T>>(await res.json())
   }
 
-  private async deleteAuth(path, token: string, query = {}) {
+  private async deleteAuth<T>(path, token: string, query = {}) {
     const options = {
       method: 'DELETE',
       headers: {
@@ -79,7 +83,15 @@ export class HagetterApiClient {
     }
 
     const res = await fetch(this._getUrl(path, query), options)
-    return res.json()
+    return fromJsonObject<ApiResponse<T>>(await res.json())
+  }
+
+  /**
+   * APIの戻り値が成功なら値を返して、エラーならErrorをthrowする
+   */
+  getData<T>(res: ApiResponse<unknown>, overrideErrorMessage?: string): T {
+    if (res.status === 'ok') return res.data as T
+    else throw Error(overrideErrorMessage || res.error.message)
   }
 
   /**
@@ -87,7 +99,7 @@ export class HagetterApiClient {
    * @param instance インスタンス名
    * @param code OAuthコールバックのcode
    */
-  async login(
+  /*async login(
     instance: string,
     code: string
   ): Promise<{ token: string; profile: Account }> {
@@ -96,15 +108,14 @@ export class HagetterApiClient {
       token: res.data.token as string,
       profile: res.data.profile as Account,
     }
-  }
+  }*/
 
   /**
    * 自身のアカウント情報を取得
    */
   async getAccount(token: string): Promise<Account> {
     const res = await this.authGet<Account>('mastodon/profile', token)
-    if (res.status === 'ok')
-      return res.data as Account
+    if (res.status === 'ok') return res.data
     else throw Error('Unable to get account')
   }
 
@@ -114,8 +125,7 @@ export class HagetterApiClient {
    */
   async getPost(id: string): Promise<HagetterPost> {
     const res = await this.get<HagetterPost>(`post`, { id })
-    if (res.status === 'ok')
-      return res.data
+    if (res.status === 'ok') return res.data as HagetterPost
     else throw Error(res.error.message)
   }
 
@@ -123,8 +133,8 @@ export class HagetterApiClient {
    * ポスト一覧を取得する(publicのみ)
    */
   async getPosts(options?: object): Promise<QueryResult<HagetterPostInfo>> {
-    const result = await this.get('posts', options)
-    return result.data as QueryResult<HagetterPostInfo>
+    const res = await this.get('posts', options)
+    return this.getData<QueryResult<HagetterPost>>(res)
   }
 
   /**
@@ -134,14 +144,10 @@ export class HagetterApiClient {
     user: string,
     token: string
   ): Promise<QueryResult<HagetterPostInfo>> {
-    const result = (await this.authGet('posts', token, {
+    const res = await this.authGet('posts', token, {
       user,
-    })) as ApiResponse<QueryResult<HagetterPostInfo>>
-    if (result.status === 'ok') {
-      return result.data as QueryResult<HagetterPostInfo>
-    } else {
-      throw Error(result.error.message)
-    }
+    })
+    return this.getData<QueryResult<HagetterPostInfo>>(res)
   }
 
   /**
@@ -149,16 +155,12 @@ export class HagetterApiClient {
    * @param id まとめID
    * @param token セッショントークン
    */
-  async getPostSecure(id: string, token: string): Promise<HagetterPost> {
-    const result = (await this.authGet(`post`, token, {
+  async getVerifiablePost(id: string, token: string): Promise<HagetterPost> {
+    const res = await this.authGet(`post`, token, {
       id,
       action: 'edit',
-    })) as ApiResponse<HagetterPost>
-    if (result.status === 'ok') {
-      return result.data
-    } else {
-      throw new Error(result.error.message)
-    }
+    })
+    return this.getData<HagetterPost>(res)
   }
 
   /**
@@ -189,14 +191,9 @@ export class HagetterApiClient {
       body.hid = hid
     }
 
-    const res = (await this.postAuth(`post`, token, body)) as ApiResponse<{
-      key: string
-    }>
-    if (res.status === 'ok') {
-      return res.data.key
-    } else {
-      throw Error(res.error.message)
-    }
+    const res = await this.postAuth(`post`, token, body)
+    const data = this.getData<{ key: string }>(res)
+    return data.key
   }
 
   /**
@@ -206,7 +203,7 @@ export class HagetterApiClient {
    */
   async deletePost(id: string, token: string) {
     const res = await this.deleteAuth('post', token, { id })
-    return res.data
+    return this.getData<any>(res)
   }
 
   /**
@@ -216,7 +213,8 @@ export class HagetterApiClient {
    */
   async getInstanceList(): Promise<any> {
     const res = await this.get('instances')
-    return { instances: res.data as string[] }
+    const instances = this.getData<string[]>(res)
+    return { instances }
   }
 
   /**
@@ -225,12 +223,7 @@ export class HagetterApiClient {
    */
   async getInstanceInfo(name: string): Promise<InstanceInfo> {
     const res = await this.get('instances', { name })
-    return res.data as InstanceInfo
-  }
-
-  getOAuthUrl(instanceInfo: InstanceInfo, callbackUrl) {
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl)
-    return `${instanceInfo.server}/oauth/authorize?response_type=code&client_id=${instanceInfo.clientId}&redirect_uri=${encodedCallbackUrl}`
+    return this.getData<InstanceInfo>(res)
   }
 
   /**
@@ -249,11 +242,14 @@ export class HagetterApiClient {
    */
   async getTimeline(timeline: string, token: string, max_id?: string) {
     const query = max_id ? { max_id } : {}
-    const res = await this.authGet<Status[]>(`mastodon/${timeline}`, token, query, true)
-    if (res.status === 'ok') {
-      return res.data.map(toCamel)
-    }
-    else throw Error('Unable to get timeline')
+    const res = await this.authGet<Status[]>(
+      `mastodon/${timeline}`,
+      token,
+      query,
+      true
+    )
+
+    return this.getData<Status[]>(res)
   }
 
   /**
@@ -262,13 +258,10 @@ export class HagetterApiClient {
    * @param keyword 検索キーワード
    */
   async getSearchTimeline(token: string, keyword: string) {
-    const res = await this.authGet('mastodon/search', token, { keyword })
-    if (res.status === 'ok') {
-      const searchResult: any = res.data
-      return searchResult as Status[]
-    } else {
-      throw Error('Unable to get search timeline')
-    }
+    const res = await this.authGet<Status[]>('mastodon/search', token, {
+      keyword,
+    })
+    return this.getData(res)
   }
 
   /**
@@ -277,8 +270,8 @@ export class HagetterApiClient {
    * @param urls ステータスのURL
    */
   async getUrlTimeline(token: string, urls: string[]) {
-    const res = await this.postAuth('mastodon/urls', token, { urls })
-    return res.data.statuses as Status[]
+    const res = await this.postAuth<Status[]>('mastodon/urls', token, { urls })
+    return this.getData(res)
   }
 
   /**
@@ -301,7 +294,8 @@ export class HagetterApiClient {
     }
 
     const res = await this.post('errors', body)
-    return res.data.id
+    const data = this.getData<{ id: string }>(res)
+    return data.id
   }
 
   /**
@@ -309,13 +303,10 @@ export class HagetterApiClient {
    * @param errorId エラーID
    */
   async getError(errorId: string): Promise<ErrorReport> {
-    const res = (await this.get('errors', {
+    const res = await this.get('errors', {
       id: errorId,
-    })) as ApiResponse<ErrorReport>
-    if (res.status === 'ok') {
-      return res.data
-    } else {
-      throw Error('Error on getError')
-    }
+    })
+
+    return this.getData<ErrorReport>(res)
   }
 }

@@ -10,7 +10,7 @@ import { SxProps, Theme } from '@mui/material/styles'
 import Link from 'next/link'
 import { useStore, useSession, useEditor, observer } from '~/stores'
 import Router from 'next/router'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 import Box from '@mui/material/Box'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -83,7 +83,7 @@ const PostInfoEditor = observer(() => {
 
     setPostLoading(true)
 
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient
       .createPost(
         session.token,

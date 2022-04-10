@@ -90,7 +90,7 @@ const MatomeList = () => {
     const action = new ListPosts(new PostClientRepository())
 
     action
-      .execute({visibility: 'public', limit: 10})
+      .execute({ visibility: 'public', limit: 10 })
       .then((result) => {
         if (!unmounted) {
           setItems(result.items)

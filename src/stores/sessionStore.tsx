@@ -7,7 +7,7 @@ import {
   getToken,
   getProfile,
 } from '../utils/auth/client'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 
 const SessionStore = types
   .model('SessionModel', {
@@ -53,7 +53,7 @@ const SessionStore = types
 
       // fetch profile via Mastodon API
       self.loading = true
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       const account = yield hagetterClient.getAccount(jwtToken) //fetchProfile(jwtToken)
       setAccount(account)
       self.loading = false

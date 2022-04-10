@@ -5,7 +5,7 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import head from '~/utils/head'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 import { useStore, useSession } from '~/stores'
 import moment from 'moment'
 import { useObserver } from 'mobx-react-lite'
@@ -25,7 +25,7 @@ const UserPost = () => {
     if (!username) return
     setLoading(true)
 
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient
       .getMyPosts(username, session.token)
       .then((result) => {
@@ -45,7 +45,7 @@ const UserPost = () => {
 
   const onDeletePost = (id: string) => {
     if (window.confirm('削除しますか?')) {
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       hagetterClient
         .deletePost(id, session.token)
         .then((_) => {

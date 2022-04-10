@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { respondSuccess, respondError } from '../../utils/api/server'
+import { respondSuccess, respondError } from '@/utils/api/server'
 import { Datastore } from '@google-cloud/datastore'
-import head from '../../utils/head'
+import head from '@/utils/head'
 
 export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = head(req.query.id)

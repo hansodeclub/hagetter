@@ -1,10 +1,4 @@
-import {
-  Status as MastoStatus,
-  Attachment as MastoAttachment,
-  Account as MastoAccount,
-  Emoji as MastoEmoji,
-} from 'masto'
-import { toCamel } from 'snake-camel'
+import { Entity } from 'megalodon'
 
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
@@ -33,6 +27,8 @@ export interface Account {
   header: string
   headerStatic: string
   emojis: Emoji[]
+  url: string
+  note?: string
 }
 
 export interface Emoji {
@@ -51,59 +47,66 @@ export interface Attachment {
   description?: string | null
 }
 
-export const fromMastoAccount = (account: MastoAccount): Account => {
+export const fromMastoAccount = (
+  account: Entity.Account,
+  server: string
+): Account => {
+  const acct = account.acct.includes('@')
+    ? account.acct
+    : `${account.acct}@${server}`
+
   return {
     id: account.id,
     username: account.username,
-    acct: account.acct,
-    displayName: account.displayName,
+    acct,
+    displayName: account.display_name,
     avatar: account.avatar,
-    avatarStatic: account.avatarStatic,
+    avatarStatic: account.avatar_static,
     header: account.header,
-    headerStatic: account.headerStatic,
-    emojis: account.emojis,
+    headerStatic: account.header_static,
+    emojis: account.emojis.map(fromMastoEmoji),
+    url: account.url,
   }
 }
 
-export const fromMastoEmoji = (emoji: MastoEmoji): Emoji => {
+export const fromMastoEmoji = (emoji: Entity.Emoji): Emoji => {
   return {
     shortcode: emoji.shortcode,
-    staticUrl: emoji.staticUrl,
+    staticUrl: emoji.static_url,
     url: emoji.url,
   }
 }
 
 export const fromMastoAttachment = (
-  attachment: MastoAttachment
+  attachment: Entity.Attachment
 ): Attachment => {
   return {
     id: attachment.id,
     type: attachment.type,
     url: attachment.url,
-    remoteUrl: attachment.remoteUrl,
-    previewUrl: attachment.previewUrl,
-    textUrl: attachment.textUrl,
+    remoteUrl: attachment.remote_url,
+    previewUrl: attachment.preview_url,
+    textUrl: attachment.text_url,
     description: attachment.description,
   }
 }
 
-export const fromMastoStatus = (status: MastoStatus): Status => {
+export const fromMastoStatus = (
+  status: Entity.Status,
+  server: string
+): Status => {
   return {
     id: status.id,
-    mediaAttachments: status.mediaAttachments.map(fromMastoAttachment),
+    mediaAttachments: status.media_attachments.map(fromMastoAttachment),
     url: status.url,
-    emojis: status.emojis,
-    createdAt: status.createdAt,
+    emojis: status.emojis.map(fromMastoEmoji),
+    createdAt: status.created_at,
     visibility: status.visibility,
     content: status.content,
     sensitive: status.sensitive,
-    spoilerText: status.spoilerText,
-    inReplyToId: status.inReplyToId,
-    inReplyToAccountId: status.inReplyToAccountId,
-    account: fromMastoAccount(status.account),
+    spoilerText: status.spoiler_text,
+    inReplyToId: status.in_reply_to_id,
+    inReplyToAccountId: status.in_reply_to_account_id,
+    account: fromMastoAccount(status.account, server),
   }
-}
-
-export const fromObject = (object: any): Status => {
-  return toCamel(object) as Status
 }

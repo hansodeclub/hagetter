@@ -41,7 +41,6 @@ const getAccessToken = async (
   access_token: string
 ): Promise<OAuthToken> => {
   const formData = new FormData()
-  console.log({code, client_id, client_secret, redirect_uri, instance, access_token})
   formData.append('grant_type', 'authorization_code')
   formData.append('code', code)
   formData.append('client_id', client_id)
@@ -74,7 +73,7 @@ const getAccessToken = async (
 
 export const login = async (code: string, instance: string, redirect_uri) => {
   const instanceRepository = new InstanceFirestoreRepository()
-  const instanceInfo = await instanceRepository.getInstance(instance) //getInstanceInfo(instance)
+  const instanceInfo = await instanceRepository.getInstance(instance)
   if (!instanceInfo) {
     throw Error(`Unable to find instance: ${instance}`)
   }

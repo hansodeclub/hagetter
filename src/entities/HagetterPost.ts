@@ -1,11 +1,8 @@
-import {
-  Status,
-  Account,
-  fromObject as statusFromObject
-} from './Status'
+import { Status, Account } from './Status'
 
-import { ValidationError, JsonObject } from '~/utils/serialized'
-import { toCamel, toSnake } from 'snake-camel'
+import { fromJsonObject, JsonObject } from '@/utils/serializer'
+import { ValidationError } from '@/utils/errors'
+import { VerifiableStatus } from '@/entities/SecuredStatus'
 
 export type PostVisibility = 'public' | 'unlisted' | 'draft'
 
@@ -23,9 +20,6 @@ export interface HagetterPostInfo {
   title: string
   description: string
   image: string | null
-  // username: string
-  // display_name: string
-  //avatar: string
   visibility: PostVisibility
   owner: Account
 
@@ -41,14 +35,23 @@ export interface HagetterPostContents {
   contents: HagetterItem[]
 }
 
-export type HagetterItem = StatusItem | TextItem
+export type HagetterItem = StatusItem<Status> | TextItem
+export type VerifiableHagetterItem = StatusItem<VerifiableStatus> | TextItem
 
 /**
  * responsive text size
  */
-export type TextSize = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body2' | 'inherit'
+export type TextSize =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body2'
+  | 'inherit'
 
-export interface StatusItem {
+export interface StatusItem<Status> {
   type: 'status'
   id: string
   color: string
@@ -76,8 +79,8 @@ export const parseContentItem = (content: any): HagetterItem => {
     if (isTextSize(content.size)) {
       return {
         ...content,
-        data: statusFromObject(content.data),
-      } as StatusItem
+        data: content.data,
+      } as StatusItem<Status>
     } else {
       throw new ValidationError(`Invalid text size: ${content.size}`)
     }
@@ -92,24 +95,18 @@ export const parseContentItem = (content: any): HagetterItem => {
   }
 }
 
-export const fromObject = (
-  hagetterPost: any
+export const parseHagetterPost = (
+  obj: JsonObject<HagetterPost>
 ): HagetterPost => {
-  const camel: any = toCamel(hagetterPost)
+  const camel: any = fromJsonObject(obj)
   return {
     ...camel,
     contents: camel.contents.map(parseContentItem),
   } as HagetterPost
 }
 
-export const toObject = (
-  hagetterPost: HagetterPost
-): JsonObject<HagetterPost> => {
-  return toSnake(hagetterPost)
-}
-
-export const hagetterPostInfoFromObject = (
-  hagetterPostInfo: any
+export const parseHagetterPostInfo = (
+  obj: JsonObject<HagetterPostInfo>
 ): HagetterPostInfo => {
-  return toCamel(hagetterPostInfo) as HagetterPostInfo
+  return fromJsonObject<HagetterPost>(obj)
 }

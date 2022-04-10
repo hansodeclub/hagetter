@@ -1,7 +1,7 @@
 import { cast, types } from 'mobx-state-tree'
 import { Status } from '~/entities/Status'
 import SessionStore from './sessionStore'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '~/utils/hagetter_client'
 
 const filterStatus = (statuses: Status[], filter: string) => {
   return statuses.filter(
@@ -45,7 +45,7 @@ const TimelineStore = types
 
       this.setLoading(true)
 
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       const statuses = await hagetterClient.getTimeline(
         self.type,
         self.session.token
@@ -56,7 +56,7 @@ const TimelineStore = types
     async loadMore() {
       this.setLoading(true)
       const minId = self.statuses.slice(-1)
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       const statuses = await hagetterClient.getTimeline(
         self.type,
         self.session.token,
