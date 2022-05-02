@@ -20,7 +20,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import { SxProps } from '@mui/material'
 
-const styles: SxProps<Theme> = {
+const styles: { [key: string]: SxProps<Theme> } = {
   appbar: {
     color: '#000000',
     backgroundColor: (theme: Theme) => theme.header.light,
