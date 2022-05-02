@@ -9,7 +9,7 @@ import {
 } from '@/utils/api/server'
 import head from '@/utils/head'
 import { NotFound } from '@/entities/api/HttpResponse'
-import { VerifiableStatus } from '@/entities/SecuredStatus'
+import { VerifiableStatus } from '~/entities/VerifiableStatus'
 import { HagetterItem, PostVisibility } from '@/entities/HagetterPost'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { fromJsonObject, toJsonObject } from '@/utils/serializer'

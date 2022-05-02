@@ -2,7 +2,7 @@ import { Status, Account } from './Status'
 
 import { fromJsonObject, JsonObject } from '@/utils/serializer'
 import { ValidationError } from '@/utils/errors'
-import { VerifiableStatus } from '@/entities/SecuredStatus'
+import { VerifiableStatus } from '@/entities/VerifiableStatus'
 
 export type PostVisibility = 'public' | 'unlisted' | 'draft'
 

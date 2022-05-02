@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { respondSuccess, respondError } from '@/utils/api/server'
-import { Datastore } from '@google-cloud/datastore'
 import head from '@/utils/head'
+import { ErrorFirestoreRepository } from '@/infrastructure/firestore/ErrorFirestoreRepository'
 
 export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = head(req.query.id)
@@ -10,18 +10,15 @@ export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const datastore = new Datastore()
-  const result = await datastore.get(
-    datastore.key(['HagetterError', Number.parseInt(id)])
-  )
-  if (result[0]) {
-    respondSuccess(res, {
-      ...result[0],
-      id,
-    })
-  } else {
+  const errorRepository = new ErrorFirestoreRepository()
+  const doc = await errorRepository.getError(id)
+  if (!doc) {
     respondError(res, 'Item not found', 404)
   }
+
+  respondSuccess(res, {
+    ...doc,
+  })
 }
 
 export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -29,17 +26,13 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
     page: req.body.page,
     message: req.body.message,
     stack: req.body.stack,
-    time: new Date(),
+    time: new Date().toISOString(),
   }
 
-  // 記事のURL返す
-  const datastore = new Datastore()
-  const result = await datastore.insert({
-    key: datastore.key(['HagetterError']),
-    data: data,
-  })
+  const errorRepository = new ErrorFirestoreRepository()
+  const result = await errorRepository.createError(data)
 
-  respondSuccess(res, { id: result[0].mutationResults[0].key.path[0].id })
+  respondSuccess(res, result)
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

@@ -2,11 +2,12 @@ import React from 'react'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import Toot from '~/components/Toot/Toot'
-import { Status } from '~/entities/Test'
+import Toot from '@/components/Toot/Toot'
+import { Status } from '@/entities/Status'
+import { fromJsonObject } from '~/utils/serializer'
 
 const TestPage = () => {
-  const testStatus: Status = {
+  const testStatus: Status = fromJsonObject<Status>({
     id: '102660375024130051',
     created_at: '2019-08-22T11:23:27.586Z',
     in_reply_to_id: null,
@@ -53,7 +54,7 @@ const TestPage = () => {
     emojis: [],
     card: null,
     // poll: null
-  } as any
+  })
 
   return (
     <Container>
@@ -62,7 +63,7 @@ const TestPage = () => {
         <Toot
           selected={false}
           color={'black'}
-          size="body2"
+          variant="body2"
           status={testStatus}
           onClick={(status) => alert(`Click status: ${status.id}`)}
         />
@@ -71,7 +72,7 @@ const TestPage = () => {
         <Toot
           selected={true}
           color={'black'}
-          size="body2"
+          variant="body2"
           status={testStatus}
           onClick={(status) => alert(`Click status: ${status.id}`)}
         />
@@ -81,7 +82,7 @@ const TestPage = () => {
           selected={false}
           disabled={true}
           color={'black'}
-          size="body2"
+          variant="body2"
           status={{ ...testStatus, visibility: 'private' }}
           onClick={(status) => alert(`Click status: ${status.id}`)}
         />

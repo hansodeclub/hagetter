@@ -15,7 +15,7 @@ export class GetInstance {
 
     return {
       ...instanceInfo,
-      access_token: undefined,
+      accessToken: undefined,
     }
   }
 }

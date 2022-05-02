@@ -3,6 +3,7 @@ import { Status } from '~/entities/Status'
 import moment from 'moment'
 import stable from 'stable'
 import HagetterItem from './hagetterItem'
+import { isTextSize } from '~/entities/HagetterPost'
 
 /*
 export interface HagetterItem {
@@ -59,6 +60,8 @@ const EditorStore = types
       self.visibility = visibility
     },
     addStatus(status: Status, anchor?: string, size?: string, color?: string) {
+      if (!isTextSize(size)) throw Error('Invalid text size')
+
       if (self.items.find((item) => item.id === status.id)) {
         return // duplicated item
       }
@@ -75,11 +78,13 @@ const EditorStore = types
         selected: false,
         type: 'status',
         data: status2,
-        size,
+        size: size,
         color,
       })
     },
     addText(text: string, size: string, color: string, anchor?: string) {
+      if (!isTextSize(size)) throw Error('Invalid text size')
+
       const anchorIndex = anchor
         ? self.items.findIndex((item) => item.id === anchor)
         : -1
@@ -93,7 +98,7 @@ const EditorStore = types
           sortKey: sortKey,
           selected: false,
           type: 'text',
-          size: size,
+          size,
           color: color,
           data: {
             text: text,
@@ -102,6 +107,8 @@ const EditorStore = types
       )
     },
     setSelectedFormat(size?: string, color?: string) {
+      if (!isTextSize(size)) throw Error('Invalid text size')
+
       self.items.forEach((item) => {
         if (item.selected) {
           if (size) item.size = size

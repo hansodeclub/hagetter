@@ -8,17 +8,13 @@ import Avatar from '@mui/material/Avatar'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
-import { TextItem } from '~/components/matome/Item'
-import Toot from '~/components/Toot/Toot'
+import { TextItem } from '@/components/matome/Item'
+import Toot from '@/components/Toot/Toot'
 
-import { useSession } from '~/stores'
-import { Status } from '~/entities/Status'
+import { useSession } from '@/stores'
+import { Status } from '@/entities/Status'
 
-import {
-  HagetterPost,
-  fromObject as hagetterPostFromObject,
-  HagetterItem,
-} from '@/entities/HagetterPost'
+import { HagetterPost } from '@/entities/HagetterPost'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   name: {
