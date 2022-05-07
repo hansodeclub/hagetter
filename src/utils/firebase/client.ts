@@ -20,4 +20,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export const analytics = getAnalytics(app)
+let analytics
+if (typeof window !== 'undefined') {
+  analytics = getAnalytics(app)
+}
+
+export { analytics }
