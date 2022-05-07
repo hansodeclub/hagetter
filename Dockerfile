@@ -4,7 +4,7 @@ FROM node
 WORKDIR /usr/src/app
 
 # Installing dependencies
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN yarn
 
 # Copying source files
