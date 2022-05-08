@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   try {
     const instances = await action.execute()
 
-    const lastInstance = nookies.get(ctx)?.instance
+    const lastInstance = nookies.get(ctx)?.__session
     const res: any = { code: 200, instances, error: null }
     if (lastInstance) {
       res.lastInstance = lastInstance
@@ -100,7 +100,7 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
 }
 
 const onClickButton = async (instanceName: string) => {
-  cookie.set('instance', instanceName)
+  cookie.set('__session', instanceName)
 
   const client = new HagetterClient()
   const instanceInfo = await client.getInstanceInfo(instanceName)

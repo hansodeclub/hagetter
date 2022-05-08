@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => {
   try {
     const { protocol, host } = getUrlHost(context.req, null)
-    const instance = Cookies(context).instance
+    const instance = Cookies(context).__session
     const code = head(context.query.code)
     const res = await fetch(
       `${protocol}//${host}/api/login?instance=${instance}&code=${code}`
