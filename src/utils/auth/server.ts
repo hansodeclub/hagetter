@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import * as Masto from 'masto'
-import { InstanceFirestoreRepository } from '~/infrastructure/firestore/InstanceFirestoreRepository'
+import fetch from 'node-fetch'
+import { FormData } from 'formdata-node'
+import { InstanceFirestoreRepository } from '@/infrastructure/firestore/InstanceFirestoreRepository'
 
 export const encrypt = (token: string) => {
   const iv = crypto.randomBytes(16)
@@ -47,13 +49,16 @@ const getAccessToken = async (
   formData.append('client_secret', client_secret)
   formData.append('redirect_uri', redirect_uri)
 
-  const res = await fetch(`https://${instance}/oauth/token`, {
+  console.log(`https://${instance}/oauth/token`)
+  console.log(formData)
+
+  const res = (await fetch(`https://${instance}/oauth/token`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-    body: formData,
-  })
+    body: formData as any,
+  })) as any
 
   if (res.status === 200) {
     const body = await res.json()
