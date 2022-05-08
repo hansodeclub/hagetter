@@ -16,6 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // validate access token
+    console.log(getHost(req))
     const redirectUri = `${getHost(req)}/callback`
     const { token, profile } = await login(code, instance, redirectUri)
 
