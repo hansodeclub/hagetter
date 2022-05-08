@@ -9,6 +9,7 @@ function getHost(req) {
   let host
   if (req.headers) {
     // server side
+    console.log(req.headers)
     if (req.headers['x-forwarded-host']) host = req.headers['x-forwarded-host']
     else host = req.headers.host
   } else if (req.location) {
