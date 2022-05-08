@@ -29,3 +29,5 @@ testdata.json
 /.idea/
 key.json
 firebase-key.json
+**/.firebaserc
+.firebase/
