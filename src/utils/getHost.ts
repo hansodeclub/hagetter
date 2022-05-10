@@ -8,8 +8,8 @@ function getHost(req) {
 
   let host
   if (process.env.HOSTNAME) {
-    console.log(`Host ${process.env.HOSTNAME}`)
-    host = process.env.HOSTNAME
+    console.log(`Host ${process.env.API_HOSTNAME}`)
+    host = process.env.API_HOSTNAME
   } else if (req.headers) {
     // server side
     console.log(req.headers)
