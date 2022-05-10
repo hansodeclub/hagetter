@@ -7,7 +7,7 @@ function getHost(req) {
   if (!req) return ''
 
   let host
-  if (process.env.HOSTNAME) {
+  if (process.env.API_HOSTNAME) {
     console.log(`Host ${process.env.API_HOSTNAME}`)
     host = process.env.API_HOSTNAME
   } else if (req.headers) {
