@@ -6,6 +6,7 @@ import {
   withApiMasto,
   secureStatus,
   getMyAccount,
+  respondSuccess,
 } from '@/utils/api/server'
 import head from '@/utils/head'
 import { NotFound } from '@/entities/api/HttpResponse'
@@ -13,6 +14,7 @@ import { VerifiableStatus } from '~/entities/VerifiableStatus'
 import { HagetterItem, PostVisibility } from '@/entities/HagetterPost'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { fromJsonObject, toJsonObject } from '@/utils/serializer'
+import getHost from '@/utils/getHost'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.id)
@@ -109,8 +111,18 @@ const deletePost = withApiAuth(async ({ req, user }) => {
   const postRepository = new PostFirestoreRepository()
   await postRepository.deletePost(id, user)
 
-  return {}
+  return { key: id }
 })
+
+const purgeCache = async (req: NextApiRequest, hid: string) => {
+  const url = `${getHost(req)}/hi/${hid}`
+  try {
+    console.log(`Purge Cache ${url}`)
+    await fetch(url, { method: 'PURGE' })
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -120,9 +132,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await getMyPost(req, res)
       } else await getPost(req, res)
     } else if (req.method === 'POST') {
-      await createPost(req, res)
+      const key = (await createPost(req, res)) as any
+      if (key) await purgeCache(req, key.key)
     } else if (req.method === 'DELETE') {
-      await deletePost(req, res)
+      const key = (await deletePost(req, res)) as any
+      if (key) await purgeCache(req, key.key)
+    } else if (req.method === 'PURGE') {
+      respondSuccess(res)
     } else {
       respondError(res, `Unknown method: ${req.method}`)
     }

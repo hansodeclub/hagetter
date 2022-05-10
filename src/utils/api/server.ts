@@ -42,6 +42,8 @@ export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
       if (response) {
         respondSuccess(res, response)
       }
+
+      return response
     } catch (err) {
       if (err instanceof NotFound) {
         respondError(res, err.message, 404)

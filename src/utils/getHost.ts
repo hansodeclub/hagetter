@@ -8,11 +8,9 @@ function getHost(req) {
 
   let host
   if (process.env.API_HOSTNAME) {
-    console.log(`Host ${process.env.API_HOSTNAME}`)
     host = process.env.API_HOSTNAME
   } else if (req.headers) {
     // server side
-    console.log(req.headers)
     if (req.headers['x-forwarded-host']) host = req.headers['x-forwarded-host']
     else host = req.headers.host
   } else if (req.location) {

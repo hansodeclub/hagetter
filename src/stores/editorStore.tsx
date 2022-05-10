@@ -1,9 +1,9 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Status'
 import moment from 'moment'
 import stable from 'stable'
 import HagetterItem from './hagetterItem'
-import { isTextSize } from '~/entities/HagetterPost'
+import { isTextSize, TextSize } from '@/entities/HagetterPost'
+import { Status } from '@/entities/Status'
 
 /*
 export interface HagetterItem {
@@ -60,7 +60,7 @@ const EditorStore = types
       self.visibility = visibility
     },
     addStatus(status: Status, anchor?: string, size?: string, color?: string) {
-      if (!isTextSize(size)) throw Error('Invalid text size')
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
 
       if (self.items.find((item) => item.id === status.id)) {
         return // duplicated item
@@ -78,12 +78,12 @@ const EditorStore = types
         selected: false,
         type: 'status',
         data: status2,
-        size: size,
+        size: size as TextSize | undefined,
         color,
       })
     },
     addText(text: string, size: string, color: string, anchor?: string) {
-      if (!isTextSize(size)) throw Error('Invalid text size')
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
 
       const anchorIndex = anchor
         ? self.items.findIndex((item) => item.id === anchor)
@@ -98,7 +98,7 @@ const EditorStore = types
           sortKey: sortKey,
           selected: false,
           type: 'text',
-          size,
+          size: size as TextSize | undefined,
           color: color,
           data: {
             text: text,
@@ -107,11 +107,11 @@ const EditorStore = types
       )
     },
     setSelectedFormat(size?: string, color?: string) {
-      if (!isTextSize(size)) throw Error('Invalid text size')
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
 
       self.items.forEach((item) => {
         if (item.selected) {
-          if (size) item.size = size
+          if (size) item.size = size as TextSize
           if (color) item.color = color
         }
       })
