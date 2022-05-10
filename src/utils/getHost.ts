@@ -7,7 +7,10 @@ function getHost(req) {
   if (!req) return ''
 
   let host
-  if (req.headers) {
+  if (process.env.HOSTNAME) {
+    console.log(`Host ${process.env.HOSTNAME}`)
+    host = process.env.HOSTNAME
+  } else if (req.headers) {
     // server side
     console.log(req.headers)
     if (req.headers['x-forwarded-host']) host = req.headers['x-forwarded-host']
