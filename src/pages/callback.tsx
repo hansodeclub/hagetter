@@ -25,6 +25,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       `${protocol}//${host}/api/login?instance=${instance}&code=${code}`
     )
 
+    context.res.setHeader(
+      'Set-Cookie',
+      '__session=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    )
+
     const json = await res.json()
     if (json.status === 'error') {
       return {
