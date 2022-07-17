@@ -87,7 +87,7 @@ const PostPage: NextPage<Props> = (props) => {
   return (
     <Box>
       <Head>
-        <title>{ogp.title} - Hagetter</title>
+        <title>{`${ogp.title} - Hagetter`}</title>
         <meta property="og:title" content={ogp.title} />
         <meta property="og:description" content={ogp.description} />
         {ogp.image && <meta property="og:image" content={ogp.image} />}
