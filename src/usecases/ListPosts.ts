@@ -1,5 +1,5 @@
-import { PostVisibility } from '~/entities/HagetterPost'
-import { IPostRepository } from '~/interfaces/PostRepository'
+import { PostVisibility } from '@/entities/HagetterPost'
+import { IPostRepository } from '@/interfaces/PostRepository'
 
 export interface ListPostsOptions {
   limit?: number
@@ -16,7 +16,7 @@ export class ListPosts {
       limit: options.limit ?? 100,
       visibility: options.visibility,
       username: options.username,
-      cursor: options.cursor
+      cursor: options.cursor,
     })
   }
 }

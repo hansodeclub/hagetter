@@ -1,5 +1,5 @@
 import { IPostRepository, QueryPostsOptions } from '@/interfaces/PostRepository'
-import { HagetterClient } from '@/utils/hagetter_client'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 /**
  * クライアントサイドからAPI経由でポストを取得する

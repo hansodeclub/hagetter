@@ -310,3 +310,6 @@ export class HagetterClient {
     return this.getData<ErrorReport>(res)
   }
 }
+
+// Create Default Client
+export const hagetterClient = new HagetterClient()

@@ -3,7 +3,7 @@
  https://google.github.io/styleguide/jsoncstyleguide.xml
 */
 
-import { JsonObject, toJsonObject } from '~/utils/serializer'
+import { JsonObject, toJsonObject } from '@/utils/serializer'
 
 export interface ApiResponseBase {
   apiVersion?: string

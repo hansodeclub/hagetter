@@ -1,5 +1,5 @@
 import React from 'react'
-import { THagetterItem } from '~/stores/hagetterItem'
+import { THagetterItem } from '@/stores/hagetterItem'
 import { observer } from 'mobx-react-lite'
 import Item from './Item'
 

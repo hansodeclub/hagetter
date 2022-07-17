@@ -2,9 +2,9 @@ import React from 'react'
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
 import { SxProps, Theme } from '@mui/material/styles'
-import StatusSelector from '~/components/editor/StatusSelector'
-import PostEditor from '~/components/editor/PostEditor'
-import PostInfoEditor from '~/components/editor/PostInfoEditor'
+import StatusSelector from '@/components/editor/StatusSelector'
+import PostEditor from '@/components/editor/PostEditor'
+import PostInfoEditor from '@/components/editor/PostInfoEditor'
 
 const gridStyle: SxProps<Theme> = {
   height: '100vh',

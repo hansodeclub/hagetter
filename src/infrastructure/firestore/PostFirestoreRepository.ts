@@ -12,6 +12,7 @@ import { Account } from '@/entities/Status'
 import { verifyItems } from '@/utils/api/server'
 import { NotFound } from '@/entities/api/HttpResponse'
 import { fromJsonObject, toJsonObject } from '@/utils/serializer'
+import { QueryResult } from '@/entities/api/QueryResult'
 
 export interface HagetterPostInput {
   title: string
@@ -21,10 +22,32 @@ export interface HagetterPostInput {
   contents: VerifiableHagetterItem[]
 }
 
-export interface QueryResult<T> {
-  count: number
-  items: T[]
-  cursor: string
+type PickByValueType<T, U> = {
+  [K in keyof T as T[K] extends U ? K : never]: T[K]
+}
+
+const makeResult = <T>(
+  items: T[],
+  cursorKey: keyof PickByValueType<T, string>
+): QueryResult<T> => {
+  if (items.length <= 1)
+    return {
+      count: items.length,
+      items: items,
+      cursor: null,
+    }
+
+  // last item only used for checking that result has next page
+  const returnItems = items.slice(0, -1)
+  const cursorItem = returnItems[returnItems.length - 1]
+
+  const cursor = cursorItem[cursorKey] as never as string // fix later
+
+  return {
+    count: returnItems.length,
+    items: returnItems,
+    cursor,
+  }
 }
 
 /**
@@ -68,9 +91,11 @@ export class PostFirestoreRepository implements IPostRepository {
     else if (options?.username)
       query = query.where('owner.acct', '==', options.username)
 
-    if (options?.limit) query = query.limit(options.limit)
+    if (options?.limit) query = query.limit(options.limit + 1)
 
     query = query.orderBy('created_at', 'desc')
+
+    if (options?.cursor) query = query.startAfter(options.cursor)
 
     const result = await query.get()
     const items: HagetterPostInfo[] = result.docs.map((doc) => {
@@ -80,11 +105,7 @@ export class PostFirestoreRepository implements IPostRepository {
       })
     })
 
-    return {
-      count: items.length,
-      items: items,
-      cursor: '',
-    }
+    return makeResult(items, 'createdAt')
   }
 
   _randomDigit(non_zero: boolean = false) {
@@ -198,8 +219,7 @@ export class PostFirestoreRepository implements IPostRepository {
       throw new Error("You are trying to delete other owner's post, fuck you")
     }
 
-    postRef.delete()
-    contentsRef.delete()
+    await Promise.all([postRef.delete(), contentsRef.delete()])
   }
 
   /**

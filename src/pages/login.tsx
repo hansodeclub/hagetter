@@ -11,11 +11,11 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-import Header from '~/components/Header'
+import Header from '@/components/Header'
 
 import { InstanceFirestoreRepository } from '@/infrastructure/firestore/InstanceFirestoreRepository'
 import { ListInstances } from '@/usecases/ListInstances'
-import { HagetterClient } from '~/utils/hagetter_client'
+import { HagetterClient } from '@/utils/hagetterClient'
 import getHost from '@/utils/getHost'
 
 interface Props {

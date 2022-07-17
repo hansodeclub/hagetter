@@ -1,14 +1,16 @@
 import React from 'react'
-import { useLocalStore } from 'mobx-react-lite'
+import { useLocalStore, observer as _observer } from 'mobx-react-lite'
 import { types, Instance } from 'mobx-state-tree'
+import makeInspectable from 'mobx-devtools-mst'
+
 import TimelineStore from './timelineStore'
 import SearchTimelineStore from './searchTimelineStore'
 import SessionStore from './sessionStore'
 import EditorStore from './editorStore'
 import UrlSearchTimelineStore from './urlSearchTimelineStore'
-import makeInspectable from 'mobx-devtools-mst'
+import PostListStore from './postListStore'
 
-export { observer } from 'mobx-react-lite'
+export const observer = function () {}
 
 export const RootStore = types
   .model('RootStore', {
@@ -19,6 +21,7 @@ export const RootStore = types
     favouriteTimeline: TimelineStore,
     searchTimeline: SearchTimelineStore,
     urlSearchTimeline: UrlSearchTimelineStore,
+    postLists: PostListStore,
     editor: EditorStore,
     error: types.maybeNull(types.frozen<Error>()),
   })
@@ -37,13 +40,14 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
     const sessionStore = SessionStore.create({ id: 'defaultSession' })
     return RootStore.create({
       session: sessionStore,
+      postLists: PostListStore.create(),
+      editor: EditorStore.create({ title: '', description: '' }),
       localTimeline: { type: 'local', session: sessionStore.id },
       publicTimeline: { type: 'public', session: sessionStore.id },
       homeTimeline: { type: 'home', session: sessionStore.id },
       favouriteTimeline: { type: 'favourites', session: sessionStore.id },
       searchTimeline: { type: 'search', session: sessionStore.id },
       urlSearchTimeline: { type: 'urls', session: sessionStore.id },
-      editor: { title: '', description: '' },
     })
   })
   if (process.env.NODE_ENV === 'development') {
@@ -100,4 +104,9 @@ export const useEditor = () => {
 export const useSession = () => {
   const store = useStore()
   return store.session
+}
+
+export const usePostLists = () => {
+  const store = useStore()
+  return store.postLists
 }

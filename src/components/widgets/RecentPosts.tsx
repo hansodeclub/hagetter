@@ -80,52 +80,22 @@ const Content: React.FC<{ items: HagetterPostInfo[] }> = ({ items }) => {
   )
 }
 
-const MatomeList = () => {
-  const [loading, setLoading] = React.useState(true)
-  const [items, setItems] = React.useState<HagetterPostInfo[]>()
-  const [error, setError] = React.useState<string>()
+export interface Props {
+  posts: HagetterPostInfo[]
+  cursor?: string | null
+  error?: string
+}
 
-  React.useEffect(() => {
-    let unmounted = false
-    const action = new ListPosts(new PostClientRepository())
-
-    action
-      .execute({ visibility: 'public', limit: 10 })
-      .then((result) => {
-        if (!unmounted) {
-          setItems(result.items)
-          setLoading(false)
-        }
-      })
-      .catch((err) => {
-        setError('ポストを取得出来ませんでした')
-        setLoading(false)
-      })
-    return () => {
-      unmounted = true
-    }
-  }, [])
-
+const RecentPosts = ({ posts, error }: Props) => {
   return (
     <Box>
       <Typography variant="body1" sx={styles.matomeTitle}>
         <strong>新着まとめ</strong>
       </Typography>
-      {loading && (
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'center',
-          }}
-        >
-          <CircularProgress sx={{ margin: 2 }} />
-        </Box>
-      )}
-      {!loading && !error && items && <Content items={items} />}
-      {!loading && error && <p>{error}</p>}
+      {error && <p>{error}</p>}
+      {!error && <Content items={posts} />}
     </Box>
   )
 }
 
-export default MatomeList
+export default RecentPosts

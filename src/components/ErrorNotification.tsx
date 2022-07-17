@@ -6,8 +6,9 @@ import SnackbarContent from '@mui/material/SnackbarContent'
 import ErrorIcon from '@mui/icons-material/Error'
 import { amber } from '@mui/material/colors'
 import { SxProps, Theme } from '@mui/material/styles'
-import { useStore, observer } from '~/stores'
-import { HagetterClient } from '~/utils/hagetter_client'
+import { useStore } from '@/stores'
+import { observer } from 'mobx-react-lite'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   warning: {

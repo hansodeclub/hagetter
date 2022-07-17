@@ -1,4 +1,4 @@
-import { Emoji } from '~/entities/Status'
+import { Emoji } from '@/entities/Status'
 
 export type EmojiMap = any
 export default function emojify(str: string, customEmojis?: EmojiMap): string

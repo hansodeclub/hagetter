@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Attachment } from '~/entities/Status'
+import { Attachment } from '@/entities/Status'
 import { Lightbox } from 'react-modal-image'
 import ReactPlayer from 'react-player'
 

@@ -1,4 +1,4 @@
-import { IPostRepository } from '~/interfaces/PostRepository'
+import { IPostRepository } from '@/interfaces/PostRepository'
 
 export class GetPost {
   constructor(readonly postRepository: IPostRepository) {}

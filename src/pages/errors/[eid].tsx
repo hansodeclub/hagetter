@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import NextError from 'next/error'
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
-import { ErrorReport } from '~/entities/ErrorReport'
-import head from '~/utils/head'
-import { HagetterClient } from '~/utils/hagetter_client'
+import { ErrorReport } from '@/entities/ErrorReport'
+import head from '@/utils/head'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const Post = () => {
   const router = useRouter()

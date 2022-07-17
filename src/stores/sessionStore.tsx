@@ -1,13 +1,13 @@
 import { types, flow } from 'mobx-state-tree'
-import { Account } from '~/entities/Status'
+import { Account } from '@/entities/Status'
 
 import {
   initSession,
   clearSession,
   getToken,
   getProfile,
-} from '../utils/auth/client'
-import { HagetterClient } from '~/utils/hagetter_client'
+} from '@/utils/auth/client'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const SessionStore = types
   .model('SessionModel', {

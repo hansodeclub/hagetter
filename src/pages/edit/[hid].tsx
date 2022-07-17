@@ -7,9 +7,10 @@ import StatusSelector from '@/components/editor/StatusSelector'
 import PostEditor from '@/components/editor/PostEditor'
 import PostInfoEditor from '@/components/editor/PostInfoEditor'
 import head from '@/utils/head'
-import { HagetterClient } from '@/utils/hagetter_client'
+import { HagetterClient } from '@/utils/hagetterClient'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useEditor, useSession, observer } from '@/stores'
+import { useEditor, useSession } from '@/stores'
+import { observer } from 'mobx-react-lite'
 import { SxProps, Theme } from '@mui/material/styles'
 
 const gridStyle: SxProps<Theme> = {

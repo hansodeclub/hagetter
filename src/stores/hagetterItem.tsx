@@ -1,6 +1,6 @@
 import { types, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree'
-import { Status } from '~/entities/Status'
-import { HagetterItem } from '~/entities/HagetterPost'
+import { Status } from '@/entities/Status'
+import { HagetterItem } from '@/entities/HagetterPost'
 import { TextItem } from './editorStore'
 
 const sizeType = types.optional(

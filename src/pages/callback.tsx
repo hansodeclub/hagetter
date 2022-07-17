@@ -3,9 +3,9 @@ import { GetServerSideProps, NextPage } from 'next'
 import fetch from 'isomorphic-unfetch'
 import jwt from 'jsonwebtoken'
 import Cookies from 'next-cookies'
-import { useSession } from '~/stores'
-import { getUrlHost } from '~/utils/api/utils'
-import head from '~/utils/head'
+import { useSession } from '@/stores'
+import { getUrlHost } from '@/utils/api/utils'
+import head from '@/utils/head'
 
 interface Props {
   token?: string

@@ -1,7 +1,7 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Status'
+import { Status } from '@/entities/Status'
 import SessionStore from './sessionStore'
-import { HagetterClient } from '~/utils/hagetter_client'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const urlSearchTimelineStore = types
   .model('UrlSearchTimelineModel', {

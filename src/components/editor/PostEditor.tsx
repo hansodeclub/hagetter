@@ -8,20 +8,21 @@ import SortIcon from '@mui/icons-material/FormatLineSpacingRounded'
 import UpArrowIcon from '@mui/icons-material/ArrowUpwardRounded'
 import DownArrowIcon from '@mui/icons-material/ArrowDownwardRounded'
 import DeleteIcon from '@mui/icons-material/DeleteRounded'
-
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
+import styles from './editorStyles'
 
 import TextFormatSelector from './TextFormatSelector'
 
-import { observer, useEditor } from '~/stores'
-import { THagetterItem } from '~/stores/hagetterItem'
-import ItemList from '../matome/ItemList'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import { useEditor } from '@/stores'
+import { THagetterItem } from '@/stores/hagetterItem'
+import { observer } from 'mobx-react-lite'
 
-import styles from './editorStyles'
-import Grid from '@mui/material/Grid'
+import ItemList from '../matome/ItemList'
+
 /*
 const styles: { [key: string]: SxProps<Theme> } = {
   gridContent: {

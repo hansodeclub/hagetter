@@ -1,9 +1,9 @@
 import React from 'react'
-import { THagetterItem } from '~/stores/hagetterItem'
+import { THagetterItem } from '@/stores/hagetterItem'
 import { observer } from 'mobx-react-lite'
 import Toot from '../Toot/Toot'
-import { Status } from '~/entities/Status'
-import { TextSize } from '~/entities/HagetterPost'
+import { Status } from '@/entities/Status'
+import { TextSize } from '@/entities/HagetterPost'
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 

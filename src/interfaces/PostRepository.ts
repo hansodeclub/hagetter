@@ -1,5 +1,9 @@
-import { HagetterPost, HagetterPostInfo, PostVisibility } from '~/entities/HagetterPost'
-import { QueryResult } from '~/entities/api/QueryResult'
+import {
+  HagetterPost,
+  HagetterPostInfo,
+  PostVisibility,
+} from '@/entities/HagetterPost'
+import { QueryResult } from '@/entities/api/QueryResult'
 
 export interface QueryPostsOptions {
   limit?: number

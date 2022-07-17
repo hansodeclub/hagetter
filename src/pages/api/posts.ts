@@ -19,7 +19,9 @@ const getPosts = withApi(async ({ req, res }) => {
   const options: ListPostsOptions = {
     visibility: 'public',
     limit: Number.parseInt(head(req.query.limit ?? ['100'])),
+    cursor: head(req.query.cursor),
   }
+
   const action = new ListPosts(new PostFirestoreRepository())
   const items = await action.execute(options)
   return items

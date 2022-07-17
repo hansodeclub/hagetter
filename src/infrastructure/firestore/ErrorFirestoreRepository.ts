@@ -1,7 +1,7 @@
 import { IInstanceRepository } from '@/interfaces/InstanceRepository'
 import { firestore } from '@/utils/firebase/admin'
-import { fromJsonObject, Snaked, toJsonObject } from '~/utils/serializer'
-import { ErrorReport } from '~/entities/ErrorReport'
+import { fromJsonObject, Snaked, toJsonObject } from '@/utils/serializer'
+import { ErrorReport } from '@/entities/ErrorReport'
 
 /**
  * サーバーサイド(FireStore)でインスタンス情報を直接取得する

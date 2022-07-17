@@ -4,7 +4,7 @@ import generator, { MegalodonInterface } from 'megalodon'
 import { ApiResponse, failure, success } from '@/entities/api/ApiResponse'
 import { NotFound } from '@/entities/api/HttpResponse'
 import { fromMastoAccount, fromMastoStatus, Status } from '@/entities/Status'
-import { VerifiableStatus } from '~/entities/VerifiableStatus'
+import { VerifiableStatus } from '@/entities/VerifiableStatus'
 
 import { decrypt, encrypt, verifyAuthorization } from '@/utils/auth/server'
 import { fromJson, toJson } from '@/utils/serializer'

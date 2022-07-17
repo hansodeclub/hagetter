@@ -7,12 +7,12 @@ import { AppProps } from 'next/app'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import theme from '~/theme'
-import { StoreProvider, useSession } from '~/stores'
-import { analytics, logEvent } from '~/utils/firebase/client'
-import ErrorNotification from '~/components/ErrorNotification'
-import createEmotionCache from '~/utils/createEmotionCache'
-import '~/styles.scss'
+import theme from '@/theme'
+import { StoreProvider, useSession } from '@/stores'
+import { analytics, logEvent } from '@/utils/firebase/client'
+import ErrorNotification from '@/components/ErrorNotification'
+import createEmotionCache from '@/utils/createEmotionCache'
+import '@/styles.scss'
 require('setimmediate')
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -37,10 +37,6 @@ export default function MyApp(props) {
     }
   }, [router.events])
 
-  const fonts = [
-    'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
-  ]
-
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -50,9 +46,6 @@ export default function MyApp(props) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        {fonts.map((font) => (
-          <link rel="stylesheet" href={font} key={font} />
-        ))}
       </Head>
       <StoreProvider>
         <ThemeProvider theme={theme}>

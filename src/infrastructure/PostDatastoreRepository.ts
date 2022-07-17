@@ -1,9 +1,6 @@
-import {
-  HagetterPost,
-  HagetterPostInfo,
-} from '~/entities/HagetterPost'
-import { IPostRepository, QueryPostsOptions } from '~/interfaces/PostRepository'
-import { NotFound } from '~/entities/api/HttpResponse'
+import { HagetterPost, HagetterPostInfo } from '@/entities/HagetterPost'
+import { IPostRepository, QueryPostsOptions } from '@/interfaces/PostRepository'
+import { NotFound } from '@/entities/api/HttpResponse'
 import { Datastore } from '@google-cloud/datastore'
 
 /**
