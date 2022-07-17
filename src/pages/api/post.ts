@@ -114,13 +114,25 @@ const deletePost = withApiAuth(async ({ req, user }) => {
   return { key: id }
 })
 
-const purgeCache = async (req: NextApiRequest, hid: string) => {
+const purgeCache = async (
+  req: NextApiRequest,
+  hid: string,
+  purgeHome: boolean = true
+) => {
+  if (purgeHome) {
+    const baseUrl = `${getHost(req)}`
+    try {
+      await fetch(baseUrl, { method: 'PURGE' })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const url = `${getHost(req)}/hi/${hid}`
   try {
-    console.log(`Purge Cache ${url}`)
     await fetch(url, { method: 'PURGE' })
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
