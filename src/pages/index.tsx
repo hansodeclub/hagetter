@@ -44,7 +44,10 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 ) => {
   try {
     const postRepository = new PostFirestoreRepository()
-    const recentPosts = await postRepository.queryPosts({ limit: 300 })
+    const recentPosts = await postRepository.queryPosts({
+      limit: 300,
+      visibility: 'public',
+    })
     context.res.setHeader('Cache-control', 'public, s-maxage=2592000')
 
     return {
