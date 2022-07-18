@@ -123,6 +123,16 @@ const purgeCache = async (
     const baseUrl = `${getHost(req)}`
     try {
       await fetch(baseUrl, { method: 'PURGE' })
+      try {
+        console.log(
+          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`
+        )
+        await fetch(
+          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`
+        )
+      } catch (err) {
+        console.error(err)
+      }
     } catch (err) {
       console.error(err)
     }
