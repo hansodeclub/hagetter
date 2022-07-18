@@ -128,7 +128,8 @@ const purgeCache = async (
           `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`
         )
         await fetch(
-          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`
+          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`,
+          { method: 'PURGE' }
         )
       } catch (err) {
         console.error(err)
