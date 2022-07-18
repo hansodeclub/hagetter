@@ -119,8 +119,8 @@ const purgeCache = async (
   hid: string,
   purgeHome: boolean = true
 ) => {
+  const baseUrl = `${getHost(req)}`
   if (purgeHome) {
-    const baseUrl = `${getHost(req)}`
     try {
       await fetch(baseUrl, { method: 'PURGE' })
       try {
@@ -142,6 +142,10 @@ const purgeCache = async (
   const url = `${getHost(req)}/hi/${hid}`
   try {
     await fetch(url, { method: 'PURGE' })
+    await fetch(
+      `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/hi/${hid}.json`,
+      { method: 'PURGE' }
+    )
   } catch (err) {
     console.error(err)
   }
