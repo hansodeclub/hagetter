@@ -20,7 +20,36 @@
         "serviceId": "hagetter-firestore",
         "region": "asia-northeast1"
       }
-    }]
+    }],
+    "headers": [
+      {
+      "source": "/",
+      "headers": [
+        {
+        "key": "Cache-Control",
+        "value": "public, max-age=0, s-maxage=300"
+        }
+      ]
+      },
+      {
+        "source": "/hi/*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, s-maxage=300"
+          }
+        ]
+      },
+      {
+        "source": "/_next/data/**/*.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, s-maxage=300"
+          }
+        ]
+      }
+    ]
   },
   "emulators": {
     "functions": {
