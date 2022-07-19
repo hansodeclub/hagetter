@@ -1,16 +1,18 @@
 //https://github.com/mui-org/material-ui/blob/master/examples/nextjs
 
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { AppProps } from 'next/app'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import { StoreProvider, useSession } from '~/stores'
-import ErrorNotification from '~/components/ErrorNotification'
-import theme from '~/theme'
-import createEmotionCache from '~/utils/createEmotionCache'
-import '~/styles.scss'
+import theme from '@/theme'
+import { StoreProvider, useSession } from '@/stores'
+import { analytics, logEvent } from '@/utils/firebase/client'
+import ErrorNotification from '@/components/ErrorNotification'
+import createEmotionCache from '@/utils/createEmotionCache'
+import '@/styles.scss'
 require('setimmediate')
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -22,10 +24,18 @@ interface MyAppProps extends AppProps {
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-
-  const fonts = [
-    'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
-  ]
+  const router = useRouter()
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      logEvent(analytics, 'pageview', {
+        url: url,
+      })
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
 
   return (
     <CacheProvider value={emotionCache}>
@@ -36,9 +46,6 @@ export default function MyApp(props) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        {fonts.map((font) => (
-          <link rel="stylesheet" href={font} key={font} />
-        ))}
       </Head>
       <StoreProvider>
         <ThemeProvider theme={theme}>

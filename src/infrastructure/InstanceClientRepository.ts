@@ -1,5 +1,5 @@
-import { IInstanceRepository } from '~/interfaces/InstanceRepository'
-import { InstanceInfo } from '~/entities/Instance'
+import { IInstanceRepository } from '@/interfaces/InstanceRepository'
+import { InstanceInfo } from '@/entities/Instance'
 import { ApiHandler } from './handler/ApiHandler'
 
 /**

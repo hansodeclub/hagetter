@@ -1,4 +1,4 @@
-import { InstanceInfo } from '~/entities/Instance'
+import { InstanceInfo } from '@/entities/Instance'
 
 /**
  * はげったーが対応しているマストドンインスタンス情報を取得する

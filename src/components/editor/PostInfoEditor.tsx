@@ -1,4 +1,8 @@
 import * as React from 'react'
+
+import Router from 'next/router'
+import Link from 'next/link'
+
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import TextField from '@mui/material/TextField'
@@ -7,11 +11,12 @@ import Checkbox from '@mui/material/Checkbox'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { SxProps, Theme } from '@mui/material/styles'
-import Link from 'next/link'
-import { useStore, useSession, useEditor, observer } from '~/stores'
-import Router from 'next/router'
-import { HagetterApiClient } from '~/utils/hage'
 import Box from '@mui/material/Box'
+
+import { useStore, useSession, useEditor } from '@/stores'
+import { observer } from 'mobx-react-lite'
+
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   postButtonContainer: {
@@ -83,7 +88,7 @@ const PostInfoEditor = observer(() => {
 
     setPostLoading(true)
 
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient
       .createPost(
         session.token,

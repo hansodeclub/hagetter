@@ -1,14 +1,14 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Mastodon'
+import { Status } from '@/entities/Status'
 import SessionStore from './sessionStore'
-import { HagetterApiClient } from '~/utils/hage'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const filterStatus = (statuses: Status[], filter: string) => {
   return statuses.filter(
     (status) =>
       status.content.includes(filter) ||
       status.account.acct.includes(filter) ||
-      status.account.display_name.includes(filter)
+      status.account.displayName.includes(filter)
   )
 }
 
@@ -45,7 +45,7 @@ const SearchTimelineStore = types
       }
       self.keyword = keyword
 
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       const statuses = await hagetterClient.getSearchTimeline(
         self.session.token,
         self.keyword

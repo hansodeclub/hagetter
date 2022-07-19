@@ -1,8 +1,9 @@
 import React from 'react'
-import { THagetterItem } from '~/stores/hagetterItem'
+import { THagetterItem } from '@/stores/hagetterItem'
 import { observer } from 'mobx-react-lite'
-import Toot, { isPublic } from '../Toot/Toot'
-import { Status } from '~/entities/Mastodon'
+import Toot from '../Toot/Toot'
+import { Status } from '@/entities/Status'
+import { TextSize } from '@/entities/HagetterPost'
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
@@ -12,16 +13,24 @@ const styles: { [key: string]: SxProps<Theme> } = {
   },
 }
 
-export const TextItem: React.FC<{
+interface TextItemProps {
   text: string
-  variant: string
+  variant: TextSize
   color: string
-  selected: boolean
-  onClick: () => any
-}> = ({ text, variant, color, selected, onClick }) => (
+  selected?: boolean
+  onClick?: () => any
+}
+
+export const TextItem: React.FC<TextItemProps> = ({
+  text,
+  variant,
+  color,
+  selected,
+  onClick,
+}) => (
   <li style={{ display: 'inline', padding: 0, margin: 0 }}>
     <Typography
-      variant={variant as any}
+      variant={variant}
       onClick={() => onClick()}
       sx={{
         margin: 0,
@@ -48,7 +57,7 @@ const Item = observer(
       return (
         <li style={{ display: 'inline' }}>
           <Toot
-            size={item.size}
+            variant={item.size}
             color={item.color}
             onClick={() => onClick(item)}
             selected={item.selected}

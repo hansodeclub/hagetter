@@ -5,8 +5,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
-import MaterialLink from '@mui/material/Link'
-import { useSession } from '~/stores'
+import { useSession } from '@/stores'
 import Avatar from '@mui/material/Avatar'
 import { observer } from 'mobx-react-lite'
 import Slide from '@mui/material/Slide'
@@ -21,7 +20,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import { SxProps } from '@mui/material'
 
-const styles: SxProps<Theme> = {
+const styles: { [key: string]: SxProps<Theme> } = {
   appbar: {
     color: '#000000',
     backgroundColor: (theme: Theme) => theme.header.light,

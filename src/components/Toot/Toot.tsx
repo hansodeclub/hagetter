@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { TextSize } from '@/entities/HagetterPost'
 import Media from './Media'
 import Typography from '@mui/material/Typography'
 import LockIcon from '@mui/icons-material/Lock'
 import Avatar from '@mui/material/Avatar'
-import { Status } from '~/entities/Mastodon'
-import emojify, { buildCustomEmojis } from '~/utils/mastodon/emoji'
+import { Status } from '@/entities/Status'
+import emojify, { buildCustomEmojis } from '@/utils/mastodon/emoji'
 import Timestamp from './Timestamp'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -100,7 +101,7 @@ export interface StatusProps {
   selected?: boolean
   disabled?: boolean
   color?: string
-  size?: string
+  variant?: TextSize
   onClick?: (status: Status) => any
   className?: string
   missingAvatar?: string
@@ -113,7 +114,7 @@ export const isPublic = (visibility) => {
 
 const Toot: React.FC<StatusProps> = ({
   status,
-  size,
+  variant,
   color,
   selected,
   onClick,
@@ -136,7 +137,7 @@ const Toot: React.FC<StatusProps> = ({
       <Box sx={styles.left}>
         <div>
           <Avatar
-            alt={status.account.display_name || status.account.username}
+            alt={status.account.displayName || status.account.username}
             src={status.account.avatar}
             sx={styles.avatar}
           />
@@ -145,14 +146,14 @@ const Toot: React.FC<StatusProps> = ({
       <Box sx={styles.right}>
         <Box sx={styles.header}>
           <Box sx={styles.displayName}>
-            {status.account.display_name || status.account.username}
+            {status.account.displayName || status.account.username}
           </Box>
           <Box sx={styles.acct}>{status.account.acct}</Box>
         </Box>
         <Box sx={styles.body}>
-          {size && (
+          {variant && (
             <Typography
-              variant={size as any}
+              variant={variant}
               style={{ color: color }}
               component="div"
             >
@@ -166,7 +167,7 @@ const Toot: React.FC<StatusProps> = ({
               />
             </Typography>
           )}
-          {!size && (
+          {!variant && (
             <span
               dangerouslySetInnerHTML={{
                 __html: emojify(
@@ -178,11 +179,11 @@ const Toot: React.FC<StatusProps> = ({
           )}
         </Box>
         <Box sx={styles.attachments}>
-          <Media attachments={status.media_attachments} />
+          <Media attachments={status.mediaAttachments} />
         </Box>
         <Box sx={styles.footer}>
           <a href={status.url} target="_blank" rel="noreferrer">
-            <Timestamp value={status.created_at} sx={styles.timestamp} />
+            <Timestamp value={status.createdAt} sx={styles.timestamp} />
           </a>
 
           <Box sx={styles.displayName}>

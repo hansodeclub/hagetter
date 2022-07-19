@@ -1,27 +1,18 @@
-import { withApi, respondError, withApiAuth } from '../../../../../utils/api/server'
-import { Datastore } from '@google-cloud/datastore'
+import { withApi } from '@/utils/api/server'
+import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 
-const getPosts = withApi(async ({ req, res }) => {
-  const datastore = new Datastore()
-
-  const query = datastore
-    .createQuery('Hagetter')
-    .filter('visibility', '=', 'public')
-    .limit(50)
-    .order('created_at', {
-      descending: true
-    })
-
-  const [tasks] = await datastore.runQuery(query)
-  const results = tasks.map((task) => ({
-    id: task[datastore.KEY].id,
-    title: task.title,
-    username: task.username
+const getPosts = withApi(async ({ res }) => {
+  const postRepository = new PostFirestoreRepository()
+  const posts = await postRepository.queryPosts({ limit: 50 })
+  const tasks = posts.items.map((post) => ({
+    id: post.id,
+    title: post.title,
+    username: post.owner.acct,
   }))
 
-  res.json({
-    count: results.length,
-    items: results
+  res.status(200).json({
+    count: posts.count,
+    items: tasks,
   })
 })
 

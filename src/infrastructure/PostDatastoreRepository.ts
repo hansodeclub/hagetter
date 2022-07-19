@@ -1,10 +1,6 @@
-import {
-  HagetterPost,
-  HagetterPostInfo,
-  Convert,
-} from '~/entities/HagetterPost'
-import { IPostRepository, QueryPostsOptions } from '~/interfaces/PostRepository'
-import { NotFound } from '~/entities/api/HttpResponse'
+import { HagetterPost, HagetterPostInfo } from '@/entities/HagetterPost'
+import { IPostRepository, QueryPostsOptions } from '@/interfaces/PostRepository'
+import { NotFound } from '@/entities/api/HttpResponse'
 import { Datastore } from '@google-cloud/datastore'
 
 /**
@@ -59,7 +55,7 @@ export class PostDatastoreRepository implements IPostRepository {
           stars: item.stars,
           title: item.title,
           updated_at: item.updated_at,
-        } as HagetterPostInfo)
+        } as any as HagetterPostInfo)
     )
 
     return {

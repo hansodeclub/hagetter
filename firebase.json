@@ -1,0 +1,68 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+      "source": "**",
+      "run": {
+        "serviceId": "hagetter-firestore",
+        "region": "asia-northeast1"
+      }
+    }],
+    "headers": [
+      {
+      "source": "/",
+      "headers": [
+        {
+        "key": "Cache-Control",
+        "value": "public, max-age=0, s-maxage=300"
+        }
+      ]
+      },
+      {
+        "source": "/hi/*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, s-maxage=300"
+          }
+        ]
+      },
+      {
+        "source": "/_next/data/**/*.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, s-maxage=300"
+          }
+        ]
+      }
+    ]
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
+}

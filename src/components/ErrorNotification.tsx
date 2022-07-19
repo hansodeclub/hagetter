@@ -6,8 +6,9 @@ import SnackbarContent from '@mui/material/SnackbarContent'
 import ErrorIcon from '@mui/icons-material/Error'
 import { amber } from '@mui/material/colors'
 import { SxProps, Theme } from '@mui/material/styles'
-import { useStore, observer } from '~/stores'
-import { HagetterApiClient } from '~/utils/hage'
+import { useStore } from '@/stores'
+import { observer } from 'mobx-react-lite'
+import { HagetterClient } from '@/utils/hagetterClient'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   warning: {
@@ -29,7 +30,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
 const sendError = async (error: Error) => {
   let url
   try {
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     const errorId = hagetterClient.postError(
       window.location.href,
       error.message,

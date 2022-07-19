@@ -4,7 +4,7 @@ import { Component } from 'react'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
-import { Account } from '../../entities/Mastodon'
+import { Account } from '@/entities/Status'
 import jwt from 'jsonwebtoken'
 
 export const initSession = (user: string, token: string) => {

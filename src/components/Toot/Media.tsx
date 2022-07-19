@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Attachment } from '~/entities/Mastodon'
+import { Attachment } from '@/entities/Status'
 import { Lightbox } from 'react-modal-image'
 import ReactPlayer from 'react-player'
 
@@ -36,7 +36,7 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
               }}
             >
               <img
-                src={attachment.preview_url}
+                src={attachment.previewUrl}
                 alt="Click and show full size"
                 style={{
                   maxWidth: '100%',
