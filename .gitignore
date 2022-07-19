@@ -27,4 +27,11 @@ yarn-error.log*
 # private data
 testdata.json
 /.idea/
+/.vscode/
 key.json
+firebase-key.json
+
+# firebase
+**/.firebaserc
+.firebase/
+/functions/

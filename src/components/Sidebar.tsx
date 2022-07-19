@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import * as React from 'react'
+import Drawer from '@mui/material/Drawer'
 
 const Sidebar: React.FC = () => {
-    return (
-        <Drawer variant="permanent" anchor="right">
-            This is sidebar!
-        </Drawer>
-    )
+  return (
+    <Drawer variant="permanent" anchor="right">
+      This is sidebar!
+    </Drawer>
+  )
 }
 
-export default Sidebar;
+export default Sidebar

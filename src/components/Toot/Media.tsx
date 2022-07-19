@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Attachment } from '../../entities/Mastodon'
+import { Attachment } from '@/entities/Status'
 import { Lightbox } from 'react-modal-image'
 import ReactPlayer from 'react-player'
 
@@ -12,14 +12,16 @@ const filterMedia = (attachments: Attachment[], mediaType) => {
 }
 
 const filterVideo = (attachments: Attachment[]) => {
-  return attachments.filter((attachment) => attachment['type'] === 'video' || attachment['type'] === 'gifv')
+  return attachments.filter(
+    (attachment) =>
+      attachment['type'] === 'video' || attachment['type'] === 'gifv'
+  )
 }
 
 const Media: React.FC<MediaProps> = ({ attachments }) => {
   const [previewUrl, setPreviewUrl] = React.useState<string>()
   const images: Attachment[] = filterMedia(attachments, 'image')
   const videos: Attachment[] = filterVideo(attachments)
-  console.log('videos', attachments)
 
   return (
     <div>
@@ -34,12 +36,12 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
               }}
             >
               <img
-                src={attachment.preview_url}
+                src={attachment.previewUrl}
                 alt="Click and show full size"
                 style={{
                   maxWidth: '100%',
-                  border: '1px solid #eee',
-                  borderRadius: 5,
+                  maxHeight: '600px',
+                  objectFit: 'contain',
                 }}
               />
             </a>
@@ -56,12 +58,20 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
       {videos.map((attachment) => {
         const displayUrl = attachment['remote_url'] || attachment['url']
         return (
-          <div key={attachment.id} style={{position: 'relative', paddingTop: '56.25%'}}>
-            <ReactPlayer url={displayUrl} controls={true} width='100%' height='100%' style={{position: 'absolute', top: 0, left:0}} />
+          <div
+            key={attachment.id}
+            style={{ position: 'relative', paddingTop: '56.25%' }}
+          >
+            <ReactPlayer
+              url={displayUrl}
+              controls={true}
+              width="100%"
+              height="100%"
+              style={{ position: 'absolute', top: 0, left: 0 }}
+            />
           </div>
         )
-      })
-      }
+      })}
     </div>
   )
 }

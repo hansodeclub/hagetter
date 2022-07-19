@@ -1,49 +1,39 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import StatusSelector from '../components/editor/StatusSelector';
-import EditStatus from '../components/editor/EditStatus';
-import PostInfo from '../components/editor/PostInfo';
+import React from 'react'
+import Grid from '@mui/material/Grid'
+import Container from '@mui/material/Container'
+import { SxProps, Theme } from '@mui/material/styles'
+import StatusSelector from '@/components/editor/StatusSelector'
+import PostEditor from '@/components/editor/PostEditor'
+import PostInfoEditor from '@/components/editor/PostInfoEditor'
 
+const gridStyle: SxProps<Theme> = {
+  height: '100vh',
+  paddingTop: 1,
+  paddingBottom: 1,
+}
 
-const useStyles = makeStyles(theme =>
-  createStyles({
-    container: {
-      minWidth: 1000
-    },
-    gridContainer: {
-      height: '100vh',
-      overflow: 'hidden',
-      paddingTop: 10,
-      boxSizing: 'border-box'
-    },
-    gridColumn: {
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column'
-    },
-  })
-);
+const columnStyle: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+}
 
 const Create = () => {
-  const classes = useStyles({});
-
   return (
-    <Container className={classes.container}>
-      <Grid container spacing={2} className={classes.gridContainer}>
-        <Grid item xs={4} className={classes.gridColumn}>
+    <Container sx={{ minWidth: 1000 }}>
+      <Grid container columnSpacing={2} sx={gridStyle}>
+        <Grid item xs={4} sx={columnStyle}>
           <StatusSelector />
         </Grid>
-        <Grid item xs={4} className={classes.gridColumn}>
-          <EditStatus />
+        <Grid item xs={4} sx={columnStyle}>
+          <PostEditor />
         </Grid>
         <Grid item xs={4}>
-          <PostInfo />
+          <PostInfoEditor />
         </Grid>
       </Grid>
     </Container>
-  );
-};
+  )
+}
 
-export default Create;
+export default Create

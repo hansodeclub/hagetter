@@ -1,5 +1,5 @@
-import { IInstanceRepository } from '~/interfaces/InstanceRepository'
-import { InstanceInfo } from '~/entities/Instance'
+import { IInstanceRepository } from '@/interfaces/InstanceRepository'
+import { InstanceInfo } from '@/entities/Instance'
 
 export class GetInstance {
   constructor(readonly instanceRepository: IInstanceRepository) {}
@@ -15,7 +15,7 @@ export class GetInstance {
 
     return {
       ...instanceInfo,
-      access_token: undefined,
+      accessToken: undefined,
     }
   }
 }

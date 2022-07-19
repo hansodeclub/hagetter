@@ -1,82 +1,83 @@
 import * as React from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
+import { Theme } from '@mui/material/styles'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 import Link from 'next/link'
-import { useSession } from '../stores'
-import Avatar from '@material-ui/core/Avatar'
+import { useSession } from '@/stores'
+import Avatar from '@mui/material/Avatar'
 import { observer } from 'mobx-react-lite'
-import { Slide } from '@material-ui/core'
-import useScrollTrigger from '@material-ui/core/useScrollTrigger'
-import Box from '@material-ui/core/Box'
-import Popover from '@material-ui/core/Popover'
-import IconButton from '@material-ui/core/IconButton'
+import Slide from '@mui/material/Slide'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
+import Box from '@mui/material/Box'
+import Popover from '@mui/material/Popover'
+import IconButton from '@mui/material/IconButton'
 
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Divider from '@mui/material/Divider'
+import { SxProps } from '@mui/material'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appbar: {
-      color: '#000000',
-      backgroundColor: theme.header.light,
-      borderBottom: '1px solid #aaa',
-    },
-    toolbar: {
-      justifyContent: 'space-between',
-    },
+const styles: { [key: string]: SxProps<Theme> } = {
+  appbar: {
+    color: '#000000',
+    backgroundColor: (theme: Theme) => theme.header.light,
+    borderBottom: '1px solid #aaa',
+  },
+  toolbar: {
+    justifyContent: 'space-between',
+  },
 
-    /* Left side of AppBar */
-    left: {
-      flex: 1,
-    },
-    title: {
-      fontSize: 24,
-      fontFamily: "'Roboto Condensed', sans-serif",
-      fontWeight: 700,
-      //textTransform: 'uppercase',
-    },
-    a: {
-      textDecoration: 'none',
-      color: 'black',
-    },
+  /* Left side of AppBar */
+  left: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: "'Roboto Condensed', sans-serif",
+    fontWeight: 700,
+    //textTransform: 'uppercase',
+  },
+  a: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 24,
+    fontFamily: "'Roboto Condensed', sans-serif",
+    fontWeight: 700,
+  },
 
-    /* Right side of AppBar */
-    right: {
-      //flex: 1,
-      //display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-    },
-    username: {
-      marginRight: 5,
-    },
-    matomeButton: {
-      marginRight: theme.spacing(2),
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-  })
-)
+  /* Right side of AppBar */
+  right: {
+    //flex: 1,
+    //display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  username: {
+    marginRight: 5,
+  },
+  matomeButton: {
+    marginRight: 2,
+  },
+  menuButton: {
+    marginRight: 2,
+  },
+}
 
 interface UserMenuProps {
   acct: string
 }
 
 const UserMenu: React.FC<UserMenuProps> = observer(({ acct }) => {
-  const classes = useStyles({})
   const session = useSession()
 
   return (
     <List>
       <Box m={1}>
         <Typography
-          className={classes.username}
+          sx={styles.username}
           color="textSecondary"
           variant="subtitle2"
           noWrap
@@ -84,7 +85,7 @@ const UserMenu: React.FC<UserMenuProps> = observer(({ acct }) => {
           ユーザー名
         </Typography>
         <Typography
-          className={classes.username}
+          sx={styles.username}
           color="textSecondary"
           variant="subtitle1"
           noWrap
@@ -107,7 +108,6 @@ const UserMenu: React.FC<UserMenuProps> = observer(({ acct }) => {
 })
 
 const Header: React.FC = observer(() => {
-  const classes = useStyles({})
   const trigger = useScrollTrigger({})
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -125,16 +125,24 @@ const Header: React.FC = observer(() => {
   return (
     <>
       <Slide appear={false} in={!trigger}>
-        <AppBar className={classes.appbar} elevation={0}>
-          <Toolbar className={classes.toolbar}>
-            <Box className={classes.left}>
-              <Typography variant="h6" className={classes.title}>
-                <Link href="/">
-                  <a className={classes.a}>Hagetter</a>
-                </Link>
-              </Typography>
+        <AppBar sx={styles.appbar} elevation={0}>
+          <Toolbar sx={styles.toolbar}>
+            <Box sx={styles.left}>
+              <Link href="/">
+                <a
+                  style={{
+                    textDecoration: 'none',
+                    color: 'black',
+                    fontSize: 24,
+                    fontFamily: "'Roboto Condensed', sans-serif",
+                    fontWeight: 700,
+                  }}
+                >
+                  Hagetter
+                </a>
+              </Link>
             </Box>
-            <Box className={classes.right}>
+            <Box sx={styles.right}>
               {!session.loading && !session.account && (
                 <Link href="/login">
                   <Button>ログイン</Button>
@@ -145,8 +153,9 @@ const Header: React.FC = observer(() => {
                   <Link href="/create">
                     <Button
                       variant="contained"
-                      color="secondary"
-                      className={classes.matomeButton}
+                      color="primary"
+                      sx={styles.matomeButton}
+                      disableElevation
                     >
                       まとめを作る
                     </Button>

@@ -1,4 +1,4 @@
-import { IInstanceRepository } from '~/interfaces/InstanceRepository'
+import { IInstanceRepository } from '@/interfaces/InstanceRepository'
 
 export class ListInstances {
   constructor(readonly instanceRepository: IInstanceRepository) {}

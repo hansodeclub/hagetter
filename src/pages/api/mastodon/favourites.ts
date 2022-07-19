@@ -1,17 +1,11 @@
-import head from '../../../utils/head'
-import {
-  globalizeAcct,
-  withApiMasto,
-  preprocessMastodonStatus,
-} from '../../../utils/api/server'
+import head from '@/utils/head'
+import { withApiMasto, transformStatus } from '@/utils/api/server'
 
-export default withApiMasto(async ({ req, user, masto }) => {
-  const timeline = await masto.fetchFavourites({
+export default withApiMasto(async ({ req, user, client }) => {
+  const timeline = await client.getFavourites({
     max_id: head(req.query.max_id),
   })
 
   const [_, instance] = user.split('@')
-  for await (const statuses of timeline) {
-    return preprocessMastodonStatus(statuses, instance)
-  }
+  return transformStatus(timeline.data as any, instance)
 })

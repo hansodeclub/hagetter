@@ -1,106 +1,109 @@
+import {
+  Status as MastoStatus,
+  Attachment as MastoAttachment,
+  Account as MastoAccount,
+  Emoji as MastoEmoji,
+} from 'masto'
+import { toCamel } from 'snake-camel'
+
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
-export type { Status, Attachment } from 'masto'
+export interface Status {
+  id: string
+  url: string | null
+  account: Account
+  in_reply_to_id: string | null
+  in_reply_to_account_id: string | null
+  content: string
+  created_at: string
+  emojis: Emoji[]
+  sensitive: boolean
+  spoiler_text: string
+  visibility: 'public' | 'unlisted' | 'private' | 'direct'
+  media_attachments: Attachment[]
+}
 
 export interface Account {
   id: string
   username: string
   acct: string
   display_name: string
-  locked: boolean
-  created_at: string // TODO: to Date
-  followers_count: number
-  following_count: number
-  statuses_count: number
-  note: string
-  url: string
   avatar: string
   avatar_static: string
   header: string
   header_static: string
   emojis: Emoji[]
-  moved?: Account
-  fields: { name: string; value: string; verified_at: any | null }[]
-  bot: boolean
-}
-
-/*export interface Status {
-    id: string
-    uri: string
-    url: string | null
-    account: Account
-    in_reply_to_id: string | null
-    in_reply_to_account_id: string | null
-    reblog: Status | null
-    content: string
-    created_at: string // TODO: to Date
-    emojis: Emoji[]
-    replies_count: number
-    reblogs_count: number
-    favourites_count: number
-    reblogged: boolean | null
-    favourited: boolean | null
-    muted: boolean | null
-    sensitive: boolean
-    spoiler_text: string
-    visibility: 'public' | 'unlisted' | 'private' | 'direct'
-    media_attachments: Attachment[]
-    mentions: Mention[]
-    tags: Tag[]
-    application: Application[] | null
-    language: string | null
-    pinned?: string
-    card: Card | null
-}*/
-
-export interface Application {
-  name: string
-  website: string | null
-}
-
-export interface Card {
-  url: string
-  title: string
-  description: string
-  image: string | null
-  type: 'link' | 'photo' | 'video' | 'rich'
-  author_name: string | null
-  author_url: string | null
-  embed_url: string | null
-  provider_name: string | null
-  provider_url: string | null
-  html: string | null
-  width: number | null
-  height: number | null
-}
-
-export interface Mention {
-  url: string
-  username: string
-  acct: string
-  id: string
 }
 
 export interface Emoji {
   shortcode: string
   static_url: string
   url: string
-  visible_in_picker: boolean
 }
 
-/*export interface Attachment {
+export interface Attachment {
   id: string
-  type: 'image' | 'video' | 'gifv' | 'unknown'
+  type: 'image' | 'video' | 'gifv' | 'audio' | 'unknown'
   url: string
-  remote_url?: string
+  remote_url?: string | null
   preview_url: string
-  text_url?: string
-  meta?: string
-  description?: string
-}*/
+  text_url?: string | null
+  description?: string | null
+}
 
-export interface Tag {
-  name: string
-  url: string
-  history: string | null
+export const fromMastoAccount = (account: MastoAccount): Account => {
+  return {
+    id: account.id,
+    username: account.username,
+    acct: account.acct,
+    display_name: account.displayName,
+    avatar: account.avatar,
+    avatar_static: account.avatarStatic,
+    header: account.header,
+    header_static: account.headerStatic,
+    emojis: account.emojis.map(fromMastoEmoji),
+  }
+}
+
+export const fromMastoEmoji = (emoji: MastoEmoji): Emoji => {
+  return {
+    shortcode: emoji.shortcode,
+    static_url: emoji.staticUrl,
+    url: emoji.url,
+  }
+}
+
+export const fromMastoAttachment = (
+  attachment: MastoAttachment
+): Attachment => {
+  return {
+    id: attachment.id,
+    type: attachment.type,
+    url: attachment.url,
+    remote_url: attachment.remoteUrl,
+    preview_url: attachment.previewUrl,
+    text_url: attachment.textUrl,
+    description: attachment.description,
+  }
+}
+
+export const fromMastoStatus = (status: MastoStatus): Status => {
+  return {
+    id: status.id,
+    media_attachments: status.mediaAttachments.map(fromMastoAttachment),
+    url: status.url,
+    emojis: status.emojis.map(fromMastoEmoji),
+    created_at: status.createdAt,
+    visibility: status.visibility,
+    content: status.content,
+    sensitive: status.sensitive,
+    spoiler_text: status.spoilerText,
+    in_reply_to_id: status.inReplyToId,
+    in_reply_to_account_id: status.inReplyToAccountId,
+    account: fromMastoAccount(status.account),
+  }
+}
+
+export const fromObject = (object: any): Status => {
+  return toCamel(object) as Status
 }

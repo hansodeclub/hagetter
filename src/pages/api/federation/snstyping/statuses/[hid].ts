@@ -1,7 +1,7 @@
-import { withApi } from '~/utils/api/server'
-import { Datastore } from '@google-cloud/datastore'
-import head from '~/utils/head'
-import { NotFound } from '~/entities/api/HttpResponse'
+import { withApi } from '@/utils/api/server'
+import head from '@/utils/head'
+import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { toJsonObject } from '@/utils/serializer'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.hid)
@@ -9,19 +9,18 @@ const getPost = withApi(async ({ req, res }) => {
     res.status(403).json({ message: 'ID not specified' })
   }
 
-  const datastore = new Datastore()
-  const result = await datastore.get(
-    datastore.key(['Hagetter', Number.parseInt(id)])
-  )
-
-  if (result[0]) {
+  const postRepository = new PostFirestoreRepository()
+  try {
+    const post = await postRepository.getPost(id)
     res.json(
-      result[0].data.reduce(
-        (acc, item) => (item.type !== 'status' ? acc : acc.concat(item.data)),
-        []
+      toJsonObject(
+        post.contents.reduce(
+          (acc, item) => (item.type === 'status' ? [...acc, item.data] : acc),
+          []
+        )
       )
     )
-  } else {
+  } catch (err) {
     res.status(404).json({ message: 'Item not found' })
   }
 })

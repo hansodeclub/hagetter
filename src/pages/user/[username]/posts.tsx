@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import Header from '../../../components/Header'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import head from '../../../utils/head'
-import { HagetterApiClient } from '../../../utils/hage'
-import { useStore, useSession } from '../../../stores'
+import Header from '@/components/Header'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
+import head from '@/utils/head'
+import { HagetterClient } from '@/utils/hagetterClient'
+import { useStore, useSession } from '@/stores'
 import moment from 'moment'
 import { useObserver } from 'mobx-react-lite'
 
@@ -25,7 +25,7 @@ const UserPost = () => {
     if (!username) return
     setLoading(true)
 
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     hagetterClient
       .getMyPosts(username, session.token)
       .then((result) => {
@@ -45,7 +45,7 @@ const UserPost = () => {
 
   const onDeletePost = (id: string) => {
     if (window.confirm('削除しますか?')) {
-      const hagetterClient = new HagetterApiClient()
+      const hagetterClient = new HagetterClient()
       hagetterClient
         .deletePost(id, session.token)
         .then((_) => {
@@ -59,7 +59,7 @@ const UserPost = () => {
     <div>
       <Header />
       <Container>
-        {loading && <CircularProgress />}
+        {loading && <CircularProgress sx={{ margin: 3 }} />}
         {!loading && (
           <div>
             <h4>あなたのまとめ一覧</h4>

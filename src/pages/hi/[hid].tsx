@@ -1,73 +1,37 @@
 import * as React from 'react'
 import { GetServerSideProps, NextPage } from 'next'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import NextError from 'next/error'
-import { observer } from 'mobx-react-lite'
-import moment from 'moment'
 
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import Avatar from '@material-ui/core/Avatar'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Container from '@mui/material/Container'
+import { SxProps, Theme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 
-import Header from '~/components/Header'
-import { TextItem } from '~/components/matome/Item'
-import Toot from '~/components/Toot/Toot'
+import Header from '@/components/Header'
+import PostContent from '@/components/post/PostContent'
 
-import { useSession } from '~/stores'
-import head from '~/utils/head'
-import { Status } from '~/entities/Mastodon'
+import { HagetterPost, parseHagetterPost } from '@/entities/HagetterPost'
+import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { JsonString, toJson, fromJson } from '@/utils/serializer'
+import head from '@/utils/head'
 
-import { GetPost } from '~/usecases/GetPost'
-import { Convert, HagetterPost } from '@/entities/HagetterPost'
-import { JsonString, fromJson, toJson } from '@/utils/serialized'
-import { PostRepositoryFactory } from '~/interfaces/RepositoryFactory'
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    name: {
-      paddingTop: 5,
-      height: 30,
-      marginLeft: 5,
+const styles: { [key: string]: SxProps<Theme> } = {
+  container: (theme) => ({
+    [theme.breakpoints.down('sm')]: {
+      padding: '20px 5px',
+      width: '100%',
+      backgroundColor: '#fff',
     },
-    avatar: {
-      width: 32,
-      height: 32,
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 600,
+      margin: 1,
+      border: theme.app.border,
+      borderRadius: 1,
+      padding: '10px 5px',
+      backgroundColor: '#fff',
     },
-    title: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      paddingLeft: 5,
-    },
-    footer: {
-      paddingTop: theme.spacing(1),
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    container: {
-      [theme.breakpoints.down('sm')]: {
-        padding: '20px 5px',
-        width: '100%',
-        backgroundColor: '#fff',
-      },
-      [theme.breakpoints.up('sm')]: {
-        maxWidth: 600,
-        marginTop: 10,
-        marginLeft: 10,
-        border: '1px solid #ccc',
-        borderRadius: 10,
-        padding: '10px 5px',
-        backgroundColor: '#fff',
-      },
-    },
-    grow: {
-      flexGrow: 1,
-    },
-  })
-)
+  }),
+}
 
 interface Props {
   code: number
@@ -79,10 +43,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   const hid: string = head(context.query.hid)
-  const action = new GetPost(PostRepositoryFactory.createServer())
 
   try {
-    const post = await action.execute(hid)
+    const postRepository = new PostFirestoreRepository()
+    const post = await postRepository.getPost(hid)
+    context.res.setHeader(
+      'Cache-control',
+      'public, max-age=0, s-maxage=2592000'
+    )
 
     return {
       props: {
@@ -103,10 +71,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 }
 
 const PostPage: NextPage<Props> = (props) => {
-  const classes = useStyles({})
-  const post = props.post
-    ? fromJson(props.post, Convert.toHagetterPost)
-    : undefined
+  const post = fromJson<HagetterPost>(props.post)
 
   const { code, error } = props
 
@@ -114,7 +79,7 @@ const PostPage: NextPage<Props> = (props) => {
     ? {
         title: post.title,
         description: post.description,
-        image: post.avatar,
+        image: post.owner.avatar,
       }
     : {
         title: 'エラー',
@@ -123,99 +88,23 @@ const PostPage: NextPage<Props> = (props) => {
       }
 
   return (
-    <div>
+    <Box>
       <Head>
-        <title>{ogp.title} - Hagetter</title>
+        <title>{`${ogp.title} - Hagetter`}</title>
         <meta property="og:title" content={ogp.title} />
         <meta property="og:description" content={ogp.description} />
         {ogp.image && <meta property="og:image" content={ogp.image} />}
       </Head>
       <Header />
-      <Container className={classes.container}>
+      <Container sx={styles.container}>
         {code === 404 && <NextError statusCode={404} />}
-        {code === 200 && <Content post={post} />}
+        {code === 200 && <PostContent post={post} />}
         {code !== 200 && code !== 404 && (
           <p>エラー：{error ?? '不明なエラー'}</p>
         )}
       </Container>
-    </div>
+    </Box>
   )
-}
-
-const Content = observer<{ post: HagetterPost }>(({ post }) => {
-  const classes = useStyles({})
-  const session = useSession()
-  const router = useRouter()
-  const isOwner =
-    session.loggedIn &&
-    session.account &&
-    session.account.acct === post.username
-
-  return (
-    <div>
-      <Typography variant="h5">
-        <b>{post['title']}</b>
-      </Typography>
-      <Typography variant="body2">{post['description']}</Typography>
-      <div className={classes.footer}>
-        <Avatar src={post.avatar} className={classes.avatar} />
-        <div className={classes.name}>{post.displayName}</div>
-        <div className={classes.grow} />
-        <div style={{ marginTop: 5 }}>
-          {moment(post.created_at).format('YYYY-MM-DD HH:MM')}
-        </div>
-        {isOwner && (
-          <div style={{ paddingLeft: '5px' }}>
-            <button onClick={() => router.push(`/edit/${post.id}`)}>
-              編集
-            </button>
-          </div>
-        )}
-      </div>
-      <hr />
-      <div>
-        {post.data.map((item) => (
-          <Item key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
-  )
-})
-
-const Item = ({
-  item,
-  onClick,
-}: {
-  item: any
-  onClick?: (item: any) => any
-}) => {
-  if (item.type === 'status') {
-    return (
-      <li style={{ display: 'inline' }}>
-        <Toot
-          size={item.size}
-          color={item.color}
-          onClick={() => onClick && onClick(item)}
-          selected={item.selected}
-          status={item.data as Status}
-        />
-      </li>
-    )
-  } else if (item.type === 'text') {
-    const textItem: any = item.data // TODO: Add type checking
-
-    return (
-      <TextItem
-        text={textItem.text}
-        variant={item.size}
-        color={item.color}
-        selected={item.selected}
-        onClick={() => onClick && onClick(item)}
-      />
-    )
-  } else {
-    throw Error(`Unknown item type: ${item.type}`)
-  }
 }
 
 export default PostPage

@@ -1,40 +1,81 @@
-import React from 'react'
+import * as React from 'react'
 import Head from 'next/head'
-import Header from '../components/Header'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Hidden from '@material-ui/core/Hidden'
-import { useStore } from '../stores'
-import MatomeList from '../components/matome/MatomeList'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import BorderedBox from '../components/BorderedBox'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Hidden from '@mui/material/Hidden'
+import Header from '@/components/Header'
+import BorderedBox from '@/components/BorderedBox'
+import { SxProps, Theme } from '@mui/material/styles'
+import { fromJson, JsonString, toJson } from '@/utils/serializer'
+import { HagetterPostInfo } from '@/entities/HagetterPost'
+import { GetServerSideProps, NextPage } from 'next'
+import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { QueryResult } from '@/entities/api/QueryResult'
+import RecentPosts from '@/components/widgets/RecentPosts'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    container: {
-      paddingTop: 10,
-    },
-    gridContainer: {
-      height: '100vh',
-      overflow: 'hidden',
-      paddingTop: 10,
-      boxSizing: 'border-box',
-    },
-    gridColumn: {
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  })
-)
+const styles: { [key: string]: SxProps<Theme> } = {
+  container: {
+    paddingTop: 1,
+  },
+  gridContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+    paddingTop: 1,
+    boxSizing: 'border-box',
+  },
+  gridColumn: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}
 
-const PC = () => {
-  const classes = useStyles({})
-  const app = useStore()
+interface PageProps {
+  code: number
+  recentPosts: JsonString<QueryResult<HagetterPostInfo>> | null
+  error: string | null
+}
 
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
+  try {
+    const postRepository = new PostFirestoreRepository()
+    const recentPosts = await postRepository.queryPosts({
+      limit: 300,
+      visibility: 'public',
+    })
+    context.res.setHeader(
+      'Cache-control',
+      'public, max-age=0, s-maxage=2592000'
+    )
+
+    return {
+      props: {
+        code: 200,
+        recentPosts: toJson(recentPosts),
+        error: null,
+      },
+    }
+  } catch (err) {
+    return {
+      props: {
+        code: err.code ?? 500,
+        recentPosts: null,
+        error: err.message,
+      },
+    }
+  }
+}
+
+interface Props {
+  recentPosts: HagetterPostInfo[]
+}
+
+const PC = ({ recentPosts }: Props) => {
   return (
-    <Container className={classes.container}>
+    <Container sx={styles.container}>
       <Grid container spacing={2}>
         <Hidden xsDown>
           <Grid item>
@@ -45,7 +86,7 @@ const PC = () => {
         </Hidden>
         <Grid item>
           <BorderedBox style={{ minWidth: 300, flexShrink: 0 }}>
-            <MatomeList />
+            <RecentPosts posts={recentPosts} />
           </BorderedBox>
         </Grid>
       </Grid>
@@ -53,17 +94,17 @@ const PC = () => {
   )
 }
 
-const Mobile = () => (
+const Mobile = ({ recentPosts }: Props) => (
   <div style={{ borderBottom: '1px solid #888' }}>
-    <MatomeList />
+    <RecentPosts posts={recentPosts} />
   </div>
 )
 
-const Home = () => {
-  const classes = useStyles({})
+const Home: NextPage<PageProps> = (props) => {
   const wideMonitor = useMediaQuery('(min-width:667px)')
   //const wideMonitor = useMediaQuery(theme => theme.breakpoints.up('sm'));
-  const app = useStore()
+
+  const recentPosts = fromJson<QueryResult<HagetterPostInfo>>(props.recentPosts)
 
   return (
     <div>
@@ -72,8 +113,8 @@ const Home = () => {
       </Head>
       <Header />
 
-      {wideMonitor && <PC />}
-      {!wideMonitor && <Mobile />}
+      {wideMonitor && <PC recentPosts={recentPosts.items} />}
+      {!wideMonitor && <Mobile recentPosts={recentPosts.items} />}
     </div>
   )
 }

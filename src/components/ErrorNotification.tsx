@@ -1,14 +1,16 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
-import Snackbar from '@material-ui/core/Snackbar'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
-import ErrorIcon from '@material-ui/icons/Error'
-import { amber } from '@material-ui/core/colors'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { useStore, observer } from '../stores'
-import { HagetterApiClient } from '../utils/hage'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Snackbar from '@mui/material/Snackbar'
+import SnackbarContent from '@mui/material/SnackbarContent'
+import ErrorIcon from '@mui/icons-material/Error'
+import { amber } from '@mui/material/colors'
+import { SxProps, Theme } from '@mui/material/styles'
+import { useStore } from '@/stores'
+import { observer } from 'mobx-react-lite'
+import { HagetterClient } from '@/utils/hagetterClient'
 
-const useStyle = makeStyles((theme: Theme) => ({
+const styles: { [key: string]: SxProps<Theme> } = {
   warning: {
     backgroundColor: amber[700],
   },
@@ -17,18 +19,18 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing(1),
+    marginRight: 1,
   },
   message: {
     display: 'flex',
     alignItems: 'center',
   },
-}))
+}
 
 const sendError = async (error: Error) => {
   let url
   try {
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     const errorId = hagetterClient.postError(
       window.location.href,
       error.message,
@@ -53,7 +55,6 @@ const Action: React.FC<{ error?: Error }> = ({ error }) => (
 const ErrorNotification = observer(() => {
   const rootStore = useStore()
   const [open, setOpen] = React.useState(false)
-  const classes = useStyle({})
   React.useEffect(() => {
     if (rootStore.error) {
       setOpen(true)
@@ -71,12 +72,12 @@ const ErrorNotification = observer(() => {
       }}
     >
       <SnackbarContent
-        className={classes.warning}
+        sx={styles.warning}
         message={
-          <span id="message-id" className={classes.message}>
+          <Box id="message-id" sx={styles.message}>
             <ErrorIcon />
             {rootStore.error.message}
-          </span>
+          </Box>
         }
         action={<Action error={rootStore.error} />}
       />

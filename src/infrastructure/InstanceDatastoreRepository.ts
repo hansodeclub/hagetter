@@ -1,6 +1,6 @@
-import { IInstanceRepository } from '~/interfaces/InstanceRepository'
+import { IInstanceRepository } from '@/interfaces/InstanceRepository'
 import { Datastore } from '@google-cloud/datastore'
-import { InstanceInfo } from '~/entities/Instance'
+import { InstanceInfo } from '@/entities/Instance'
 
 /**
  * サーバーサイド(DataStore)でインスタンス情報を直接取得する

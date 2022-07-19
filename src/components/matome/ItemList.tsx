@@ -1,10 +1,13 @@
-import React from 'react';
-import { THagetterItem } from '../../stores/hagetterItem';
-import { observer } from 'mobx-react-lite';
-import Item from './Item';
+import React from 'react'
+import { THagetterItem } from '@/stores/hagetterItem'
+import { observer } from 'mobx-react-lite'
+import Item from './Item'
 
 // TODO: make draggable
-const ItemList: React.FC<{ items: THagetterItem[], onSelect: (item: THagetterItem) => boolean }> = observer(({ items, onSelect }) => {
+const ItemList: React.FC<{
+  items: THagetterItem[]
+  onSelect: (item: THagetterItem) => boolean
+}> = observer(({ items, onSelect }) => {
   /*const [list, setList] = React.useState<HagetterItem[]>(items);
 
   const onSortEnd = ({ oldIndex, newIndex }: any) => {
@@ -13,13 +16,13 @@ const ItemList: React.FC<{ items: THagetterItem[], onSelect: (item: THagetterIte
 
   return <SortableList onSelect={onSelect} items={items} onSortEnd={onSortEnd} />;*/
 
-  return (<div>
-    {
-      items.map((value, index) => (
-        <Item key={value.id} onClick={onSelect} item={value}/>
-      ))
-    }
-  </div>);
+  return (
+    <div>
+      {items.map((value, index) => (
+        <Item key={value.id} onClick={onSelect} item={value} />
+      ))}
+    </div>
+  )
 
   /*
     const handleMouseDown = () => {
@@ -63,6 +66,6 @@ const ItemList: React.FC<{ items: THagetterItem[], onSelect: (item: THagetterIte
         </Droppable>
       </DragDropContext >
     )*/
-});
+})
 
-export default ItemList;
+export default ItemList

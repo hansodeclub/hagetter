@@ -3,13 +3,13 @@
  */
 
 // PostRepository
-import { IPostRepository } from '~/interfaces/PostRepository'
-import { PostDatastoreRepository } from '~/infrastructure/PostDatastoreRepository'
-import { PostClientRepository } from '~/infrastructure/PostClientRepository'
+import { IPostRepository } from '@/interfaces/PostRepository'
+import { PostDatastoreRepository } from '@/infrastructure/PostDatastoreRepository'
+import { PostClientRepository } from '@/infrastructure/PostClientRepository'
 
 // InstanceRepository
 import { IInstanceRepository } from './InstanceRepository'
-import { InstanceDatastoreRepository } from '~/infrastructure/InstanceDatastoreRepository'
+import { InstanceDatastoreRepository } from '@/infrastructure/InstanceDatastoreRepository'
 
 // AuthRepository
 

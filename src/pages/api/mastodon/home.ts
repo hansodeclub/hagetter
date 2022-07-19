@@ -1,16 +1,11 @@
-import head from '../../../utils/head'
-import {
-  withApiMasto,
-  preprocessMastodonStatus,
-} from '../../../utils/api/server'
+import head from '@/utils/head'
+import { withApiMasto, transformStatus } from '@/utils/api/server'
 
-export default withApiMasto(async ({ req, res, user, accessToken, masto }) => {
-  const timeline = await masto.fetchHomeTimeline({
+export default withApiMasto(async ({ req, res, user, accessToken, client }) => {
+  const timeline = await client.getHomeTimeline({
     max_id: head(req.query.max_id),
   })
 
   const [_, instance] = user.split('@')
-  for await (const statuses of timeline) {
-    return preprocessMastodonStatus(statuses, instance)
-  }
+  return transformStatus(timeline.data as any, instance)
 })

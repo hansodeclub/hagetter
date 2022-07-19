@@ -1,8 +1,9 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '~/entities/Mastodon'
 import moment from 'moment'
 import stable from 'stable'
 import HagetterItem from './hagetterItem'
+import { isTextSize, TextSize } from '@/entities/HagetterPost'
+import { Status } from '@/entities/Status'
 
 /*
 export interface HagetterItem {
@@ -59,6 +60,8 @@ const EditorStore = types
       self.visibility = visibility
     },
     addStatus(status: Status, anchor?: string, size?: string, color?: string) {
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
+
       if (self.items.find((item) => item.id === status.id)) {
         return // duplicated item
       }
@@ -71,15 +74,17 @@ const EditorStore = types
 
       self.items.splice(index === -1 ? 0 : index, 0, {
         id: status2.id,
-        sortKey: moment(status2.created_at).valueOf(),
+        sortKey: moment(status2.createdAt).valueOf(),
         selected: false,
         type: 'status',
         data: status2,
-        size,
+        size: size as TextSize | undefined,
         color,
       })
     },
     addText(text: string, size: string, color: string, anchor?: string) {
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
+
       const anchorIndex = anchor
         ? self.items.findIndex((item) => item.id === anchor)
         : -1
@@ -93,7 +98,7 @@ const EditorStore = types
           sortKey: sortKey,
           selected: false,
           type: 'text',
-          size: size,
+          size: size as TextSize | undefined,
           color: color,
           data: {
             text: text,
@@ -102,9 +107,11 @@ const EditorStore = types
       )
     },
     setSelectedFormat(size?: string, color?: string) {
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
+
       self.items.forEach((item) => {
         if (item.selected) {
-          if (size) item.size = size
+          if (size) item.size = size as TextSize
           if (color) item.color = color
         }
       })

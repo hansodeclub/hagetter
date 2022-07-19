@@ -4,18 +4,18 @@ FROM node
 WORKDIR /usr/src/app
 
 # Installing dependencies
-COPY package.json ./
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn
 
 # Copying source files
 COPY . .
 
 # Building app
-RUN npm run build
+RUN yarn build
 
 # for local development or CI
 # COPY key.json key.json
 # ENV GOOGLE_APPLICATION_CREDENTIALS key.json
 
 # Running the app
-CMD npx next start --port $PORT
+CMD yarn start --port $PORT
