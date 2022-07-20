@@ -46,8 +46,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       limit: 300,
       visibility: 'public',
     })
-    context.res.setHeader('Surrogate-Control', 'max-age=2592000')
-    context.res.setHeader('Cache-control', 'public, max-age=0')
+    context.res.setHeader('Surrogate-Control', 'public, max-age=2592000')
+    context.res.setHeader('Cache-control', 'max-age=0')
 
     return {
       props: {
