@@ -48,8 +48,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     const postRepository = new PostFirestoreRepository()
     const post = await postRepository.getPost(hid)
 
-    context.res.setHeader('Surrogate-Control', 'max-age=2592000')
-    context.res.setHeader('Cache-control', 'public, max-age=0')
+    context.res.setHeader('Cache-control', 'public, max-age=0, s-maxage=21600')
 
     return {
       props: {
