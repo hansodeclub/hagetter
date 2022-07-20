@@ -46,10 +46,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       limit: 300,
       visibility: 'public',
     })
-    context.res.setHeader(
-      'Cache-control',
-      'public, max-age=0, s-maxage=2592000'
-    )
+    context.res.setHeader('Cache-control', 'public, max-age=0, s-maxage=21600')
 
     return {
       props: {
