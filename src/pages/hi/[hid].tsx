@@ -14,6 +14,7 @@ import { HagetterPost, parseHagetterPost } from '@/entities/HagetterPost'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { JsonString, toJson, fromJson } from '@/utils/serializer'
 import head from '@/utils/head'
+import { sendCacheControl } from '@/utils/cdn/cloudflare'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: (theme) => ({
@@ -48,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     const postRepository = new PostFirestoreRepository()
     const post = await postRepository.getPost(hid)
 
-    context.res.setHeader('Cache-control', 'public, max-age=0, s-maxage=21600')
+    sendCacheControl(context.res)
 
     return {
       props: {
