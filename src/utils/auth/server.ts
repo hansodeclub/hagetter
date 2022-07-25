@@ -49,9 +49,6 @@ const getAccessToken = async (
   formData.append('client_secret', client_secret)
   formData.append('redirect_uri', redirect_uri)
 
-  console.log(`https://${instance}/oauth/token`)
-  console.log(formData)
-
   const res = (await fetch(`https://${instance}/oauth/token`, {
     method: 'POST',
     headers: {

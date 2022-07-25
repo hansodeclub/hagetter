@@ -15,6 +15,7 @@ import { HagetterItem, PostVisibility } from '@/entities/HagetterPost'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { fromJsonObject, toJsonObject } from '@/utils/serializer'
 import getHost from '@/utils/getHost'
+import { purgeCache } from '@/utils/cdn/cloudflare'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.id)
@@ -114,41 +115,20 @@ const deletePost = withApiAuth(async ({ req, user }) => {
   return { key: id }
 })
 
-const purgeCache = async (
+const purgePostCache = async (
   req: NextApiRequest,
   hid: string,
   purgeHome: boolean = true
 ) => {
   const baseUrl = `${getHost(req)}`
-  if (purgeHome) {
-    try {
-      await fetch(baseUrl, { method: 'PURGE' })
-      try {
-        console.log(
-          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`
-        )
-        await fetch(
-          `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`,
-          { method: 'PURGE' }
-        )
-      } catch (err) {
-        console.error(err)
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const urls = [
+    baseUrl,
+    `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`,
+    `${getHost(req)}/hi/${hid}`,
+    `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/hi/${hid}.json`,
+  ]
 
-  const url = `${getHost(req)}/hi/${hid}`
-  try {
-    await fetch(url, { method: 'PURGE' })
-    await fetch(
-      `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/hi/${hid}.json`,
-      { method: 'PURGE' }
-    )
-  } catch (err) {
-    console.error(err)
-  }
+  await purgeCache(urls)
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -160,10 +140,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } else await getPost(req, res)
     } else if (req.method === 'POST') {
       const key = (await createPost(req, res)) as any
-      if (key) await purgeCache(req, key.key)
+      if (key) await purgePostCache(req, key.key)
     } else if (req.method === 'DELETE') {
       const key = (await deletePost(req, res)) as any
-      if (key) await purgeCache(req, key.key)
+      if (key) await purgePostCache(req, key.key)
     } else if (req.method === 'PURGE') {
       respondSuccess(res)
     } else {

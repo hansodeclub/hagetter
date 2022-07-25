@@ -13,6 +13,7 @@ import { GetServerSideProps, NextPage } from 'next'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { QueryResult } from '@/entities/api/QueryResult'
 import RecentPosts from '@/components/widgets/RecentPosts'
+import { sendCacheControl } from '@/utils/cdn/cloudflare'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {
@@ -46,7 +47,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       limit: 300,
       visibility: 'public',
     })
-    context.res.setHeader('Cache-control', 'public, max-age=0, s-maxage=21600')
+
+    sendCacheControl(context.res)
 
     return {
       props: {
@@ -56,6 +58,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       },
     }
   } catch (err) {
+    console.log(err)
     return {
       props: {
         code: err.code ?? 500,
