@@ -13,6 +13,7 @@ import { GetServerSideProps, NextPage } from 'next'
 import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
 import { QueryResult } from '@/entities/api/QueryResult'
 import RecentPosts from '@/components/widgets/RecentPosts'
+import SearchBox from '@/components/SearchBox'
 import { sendCacheControl } from '@/utils/cdn/cloudflare'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -82,6 +83,9 @@ const PC = ({ recentPosts }: Props) => {
             <BorderedBox style={{ flexGrow: 1, maxWidth: 300 }}>
               <img src="/donmi_kusa_semai.png" style={{ width: '100%' }} />
             </BorderedBox>
+            <SearchBox
+              sx={{ marginTop: 1, border: '1px solid #ccc', width: 300 }}
+            />
           </Grid>
         </Hidden>
         <Grid item>
@@ -96,6 +100,7 @@ const PC = ({ recentPosts }: Props) => {
 
 const Mobile = ({ recentPosts }: Props) => (
   <div style={{ borderBottom: '1px solid #888' }}>
+    <SearchBox sx={{ padding: 1, border: '1px solid #ccc', width: '100%' }} />
     <RecentPosts posts={recentPosts} />
   </div>
 )

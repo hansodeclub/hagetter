@@ -124,7 +124,7 @@ const purgePostCache = async (
   const urls = [
     baseUrl,
     `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`,
-    `${getHost(req)}/hi/${hid}`,
+    `${baseUrl}/hi/${hid}`,
     `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/hi/${hid}.json`,
   ]
 

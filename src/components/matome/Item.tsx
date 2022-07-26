@@ -21,6 +21,17 @@ interface TextItemProps {
   onClick?: () => any
 }
 
+const MultilineText = ({ text }) => {
+  const texts = text.split(/(\n)/).map((item, index) => {
+    return (
+      <React.Fragment key={index}>
+        {item.match(/\n/) ? <br /> : item}
+      </React.Fragment>
+    )
+  })
+  return <>{texts}</>
+}
+
 export const TextItem: React.FC<TextItemProps> = ({
   text,
   variant,
@@ -39,7 +50,7 @@ export const TextItem: React.FC<TextItemProps> = ({
         color: color,
       }}
     >
-      {text}
+      <MultilineText text={text} />
     </Typography>
   </li>
 )
