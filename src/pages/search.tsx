@@ -1,14 +1,9 @@
 import * as React from 'react'
 import Head from 'next/head'
 import sanitizeHtml from 'sanitize-html'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Hidden from '@mui/material/Hidden'
 import Header from '@/components/Header'
 import { SxProps, Theme } from '@mui/material/styles'
 import { fromJson, JsonString, toJson } from '@/utils/serializer'
-import { HagetterPostInfo } from '@/entities/HagetterPost'
 import { GetServerSideProps, NextPage } from 'next'
 import Box from '@mui/material/Box'
 import { getHitString, search } from '@/utils/search/algolia'
@@ -27,15 +22,6 @@ const styles: { [key: string]: SxProps<Theme> } = {
     },
     paddingBottom: 2,
   },
-}
-
-interface PageProps {
-  keyword: string
-  items: JsonString<HitItem>
-  hits: number
-  page: number | null
-  pages: number | null
-  error: string | null
 }
 
 interface HitItem {
@@ -60,6 +46,15 @@ const processItem = (hit: any): HitItem => {
   }
 }
 
+interface PageProps {
+  keyword: string
+  items: JsonString<HitItem[]>
+  hits: number
+  page: number | null
+  pages: number | null
+  error: string | null
+}
+
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
@@ -70,11 +65,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       return {
         props: {
           keyword: '',
+          items: toJson([]),
           hits: 0,
-          items: [],
-          error: null,
           page: null,
           pages: null,
+          error: null,
         },
       }
     }
@@ -84,8 +79,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     return {
       props: {
         keyword,
-        hits: nbHits,
         items: toJson(hits.map(processItem)),
+        hits: nbHits,
         page: page,
         pages: nbPages,
         error: null,
@@ -97,17 +92,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       props: {
         keyword: '',
         hits: 0,
-        items: [],
+        items: toJson([]),
         page: null,
         pages: null,
         error: err.message,
       },
     }
   }
-}
-
-interface Props {
-  recentPosts: HagetterPostInfo[]
 }
 
 const Item: React.FC<{ item: HitItem }> = ({ item }) => {
