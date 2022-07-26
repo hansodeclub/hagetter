@@ -34,4 +34,3 @@ firebase-key.json
 # firebase
 **/.firebaserc
 .firebase/
-/functions/

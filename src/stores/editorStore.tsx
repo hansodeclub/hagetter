@@ -65,19 +65,17 @@ const EditorStore = types
       if (self.items.find((item) => item.id === status.id)) {
         return // duplicated item
       }
+
       const index = anchor
         ? self.items.findIndex((item) => item.id === anchor)
         : self.items.length
 
-      const account2 = { ...status.account, note: '' }
-      const status2 = { ...status, account: account2 }
-
       self.items.splice(index === -1 ? 0 : index, 0, {
-        id: status2.id,
-        sortKey: moment(status2.createdAt).valueOf(),
+        id: status.id,
+        sortKey: moment(status.createdAt).valueOf(),
         selected: false,
         type: 'status',
-        data: status2,
+        data: status,
         size: size as TextSize | undefined,
         color,
       })
@@ -88,13 +86,17 @@ const EditorStore = types
       const anchorIndex = anchor
         ? self.items.findIndex((item) => item.id === anchor)
         : -1
+
+      const id = generateId()
+
       const sortKey =
-        anchorIndex !== -1 ? self.items[anchorIndex].sortKey - 1 : generateId()
+        anchorIndex !== -1 ? self.items[anchorIndex].sortKey - 1 : id
+
       self.items.splice(
         anchorIndex !== -1 ? anchorIndex : self.items.length,
         0,
         {
-          id: generateId().toString(),
+          id: id.toString(),
           sortKey: sortKey,
           selected: false,
           type: 'text',

@@ -1,0 +1,1 @@
+export { updateAlgoliaIndex } from './algolia'
