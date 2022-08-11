@@ -43,6 +43,7 @@
     "next": "^12.2.2",
     "next-cookies": "^1.1.2",
     "node-fetch": "^3.2.4",
+    "node-html-parser": "^5.4.1",
     "nookies": "^2.5.2",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^11.0.5",

@@ -1,4 +1,5 @@
 import { Entity } from 'megalodon'
+import * as parser from 'node-html-parser'
 
 // https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md
 
@@ -91,22 +92,63 @@ export const fromMastoAttachment = (
   }
 }
 
+const insertContentText = (content: string, text: string) => {
+  const root = parser.parse(content)
+
+  if (root.childNodes[0]?.nodeType === parser.NodeType.ELEMENT_NODE) {
+    const children = root.childNodes[0].childNodes
+    root.childNodes[0].childNodes = [
+      new parser.TextNode(text, root.childNodes[0] as parser.HTMLElement),
+      ...children,
+    ]
+
+    return root.toString()
+  } else {
+    return `${text}${content}`
+  }
+}
+
 export const fromMastoStatus = (
   status: Entity.Status,
   server: string
 ): Status => {
-  return {
-    id: status.id,
-    mediaAttachments: status.media_attachments.map(fromMastoAttachment),
-    url: status.url,
-    emojis: status.emojis.map(fromMastoEmoji),
-    createdAt: status.created_at,
-    visibility: status.visibility,
-    content: status.content,
-    sensitive: status.sensitive,
-    spoilerText: status.spoiler_text,
-    inReplyToId: status.in_reply_to_id,
-    inReplyToAccountId: status.in_reply_to_account_id,
-    account: fromMastoAccount(status.account, server),
+  let content = status.content
+  if (status.reblog !== null && content === '') {
+    const reblog = status.reblog
+
+    content = insertContentText(
+      reblog.content,
+      `RT @${status.reblog.account.acct} `
+    )
+
+    return {
+      id: status.id,
+      mediaAttachments: reblog.media_attachments.map(fromMastoAttachment),
+      url: status.url,
+      emojis: reblog.emojis.map(fromMastoEmoji),
+      createdAt: status.created_at,
+      visibility: status.visibility,
+      content,
+      sensitive: reblog.sensitive,
+      spoilerText: reblog.spoiler_text,
+      inReplyToId: reblog.in_reply_to_id,
+      inReplyToAccountId: reblog.in_reply_to_account_id,
+      account: fromMastoAccount(status.account, server),
+    }
+  } else {
+    return {
+      id: status.id,
+      mediaAttachments: status.media_attachments.map(fromMastoAttachment),
+      url: status.url,
+      emojis: status.emojis.map(fromMastoEmoji),
+      createdAt: status.created_at,
+      visibility: status.visibility,
+      content,
+      sensitive: status.sensitive,
+      spoilerText: status.spoiler_text,
+      inReplyToId: status.in_reply_to_id,
+      inReplyToAccountId: status.in_reply_to_account_id,
+      account: fromMastoAccount(status.account, server),
+    }
   }
 }
