@@ -47,7 +47,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({ sx }) => {
         render={({ field }) => (
           <TextField
             {...field}
-            sx={sx}
+            sx={[
+              { backgroundColor: 'white' },
+              ...(Array.isArray(sx) ? sx : [sx]),
+            ]}
             InputProps={{
               endAdornment: (
                 <IconButton

@@ -186,6 +186,7 @@ const Timeline: React.FC<{ name: string }> = observer(({ name }) => {
                     key={status.id}
                     status={status}
                     disabled={!isPublic(status.visibility)}
+                    originalOnly
                   />
                 </Box>
               ))}
@@ -276,6 +277,7 @@ const SearchTimeline: React.FC = observer(() => {
                     key={status.id}
                     status={status}
                     disabled={!isPublic(status.visibility)}
+                    originalOnly
                   />
                 </Box>
               ))}
@@ -342,6 +344,7 @@ const UrlSearchTimeline: React.FC = observer(() => {
                   key={status.id}
                   status={status}
                   disabled={!isPublic(status.visibility)}
+                  originalOnly
                 />
               </Box>
             ))}

@@ -1,10 +1,8 @@
 import * as functions from 'firebase-functions'
-import * as admin from 'firebase-admin'
 import * as striptags from 'striptags'
 import algoliasearch from 'algoliasearch'
 
-admin.initializeApp()
-const db = admin.firestore()
+import { db } from './lib/firebase-admin'
 
 const itemToText = (item: any) => {
   if (item.type === 'status') {

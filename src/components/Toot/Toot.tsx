@@ -3,12 +3,13 @@ import { TextSize } from '@/entities/HagetterPost'
 import Media from './Media'
 import Typography from '@mui/material/Typography'
 import LockIcon from '@mui/icons-material/Lock'
-import Avatar from '@mui/material/Avatar'
+import Avatar from '@/components/Avatar'
 import { Status } from '@/entities/Status'
 import emojify, { buildCustomEmojis } from '@/utils/mastodon/emoji'
 import Timestamp from './Timestamp'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import { originalWord } from 'quicktype/dist/quicktype-core/support/Strings'
 
 const styles: any = {
   root: {
@@ -106,6 +107,7 @@ export interface StatusProps {
   className?: string
   missingAvatar?: string
   sx?: SxProps<Theme>
+  originalOnly?: boolean
 }
 
 export const isPublic = (visibility) => {
@@ -122,6 +124,7 @@ const Toot: React.FC<StatusProps> = ({
   disabled,
   missingAvatar = '/public/missing.png',
   sx,
+  originalOnly,
 }) => {
   return (
     <Box
@@ -139,7 +142,9 @@ const Toot: React.FC<StatusProps> = ({
           <Avatar
             alt={status.account.displayName || status.account.username}
             src={status.account.avatar}
+            acct={status.account.acct}
             sx={styles.avatar}
+            originalOnly={originalOnly}
           />
         </div>
       </Box>
