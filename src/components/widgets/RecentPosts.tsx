@@ -2,9 +2,9 @@ import * as React from 'react'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import { SxProps, Theme } from '@mui/material/styles'
-import Avatar from '@mui/material/Avatar'
+import Avatar from '@/components/Avatar'
 import Box from '@mui/material/Box'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { ListPosts } from '@/usecases/ListPosts'
 import { HagetterPostInfo } from '@/entities/HagetterPost'
 import { PostClientRepository } from '@/infrastructure/PostClientRepository'
@@ -65,11 +65,18 @@ const Content: React.FC<{ items: HagetterPostInfo[] }> = ({ items }) => {
             <Box sx={styles.innerBox}>
               <Box sx={styles.title}>{item.title}</Box>
               <Box sx={styles.footer}>
-                <Avatar src={item.owner.avatar} sx={styles.avatar} />
+                <Avatar
+                  src={item.owner.avatar}
+                  acct={item.owner.acct}
+                  alt=""
+                  sx={styles.avatar}
+                />
                 <Box sx={styles.name}>{item.owner.displayName}</Box>
                 <Box sx={styles.grow} />
                 <Box style={{ marginTop: 5 }}>
-                  {moment(item.createdAt).format('YYYY-MM-DD HH:MM:SS')}
+                  {moment(item.createdAt)
+                    .tz('Asia/Tokyo')
+                    .format('YYYY-MM-DD HH:MM:SS')}
                 </Box>
               </Box>
             </Box>

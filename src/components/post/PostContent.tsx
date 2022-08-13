@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import moment from 'moment'
 
 import Typography from '@mui/material/Typography'
-import Avatar from '@mui/material/Avatar'
+import Avatar from '@/components/Avatar'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
@@ -62,7 +62,12 @@ const PostContent = observer<PostContentProps>(({ post }) => {
       </Typography>
       <Typography variant="body2">{post['description']}</Typography>
       <Box sx={styles.footer}>
-        <Avatar src={post.owner.avatar} sx={styles.avatar} />
+        <Avatar
+          src={post.owner.avatar}
+          acct={post.owner.acct}
+          alt=""
+          sx={styles.avatar}
+        />
         <Box sx={styles.name}>{post.owner.displayName}</Box>
         <Box sx={styles.grow} />
         <Box sx={{ mt: 1 }}>
