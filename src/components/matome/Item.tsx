@@ -59,9 +59,11 @@ const Item = observer(
   ({
     item,
     onClick,
+    preferOriginal,
   }: {
     item: THagetterItem
     onClick: (item: THagetterItem) => boolean
+    preferOriginal?: boolean
   }) => {
     if (item.type === 'status') {
       const status: Status = item.data as Status
@@ -74,6 +76,7 @@ const Item = observer(
             selected={item.selected}
             status={status}
             sx={styles.toot}
+            preferOriginal={preferOriginal}
           />
         </li>
       )

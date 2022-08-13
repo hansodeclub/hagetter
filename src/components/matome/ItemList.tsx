@@ -7,7 +7,8 @@ import Item from './Item'
 const ItemList: React.FC<{
   items: THagetterItem[]
   onSelect: (item: THagetterItem) => boolean
-}> = observer(({ items, onSelect }) => {
+  preferOriginal?: boolean
+}> = observer(({ items, onSelect, preferOriginal }) => {
   /*const [list, setList] = React.useState<HagetterItem[]>(items);
 
   const onSortEnd = ({ oldIndex, newIndex }: any) => {
@@ -19,7 +20,12 @@ const ItemList: React.FC<{
   return (
     <div>
       {items.map((value, index) => (
-        <Item key={value.id} onClick={onSelect} item={value} />
+        <Item
+          key={value.id}
+          onClick={onSelect}
+          item={value}
+          preferOriginal={preferOriginal}
+        />
       ))}
     </div>
   )
