@@ -320,7 +320,7 @@ const PostEditor: React.FC = observer(() => {
       <Box sx={styles.outer}>
         <Box sx={styles.content}>
           <Box sx={styles.tootSelector}>
-            <ItemList onSelect={onSelect} items={editor.items} />
+            <ItemList onSelect={onSelect} items={editor.items} preferOriginal />
             {editor.items.length === 0 && <HowTo />}
           </Box>
         </Box>

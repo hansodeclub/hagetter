@@ -7,7 +7,7 @@ interface AvatarProps {
   src: string
   acct?: string
   alt: string
-  originalOnly?: boolean
+  preferOriginal?: boolean
   sx: SxProps
 }
 
@@ -16,16 +16,12 @@ const FallbackAvatar: React.FC<AvatarProps> = ({
   acct,
   alt,
   sx,
-  originalOnly,
+  preferOriginal,
 }) => {
   const baseUri = process.env.NEXT_PUBLIC_MEDIA_URL
   if (!baseUri) {
     console.error('NEXT_PUBLIC_MEDIA_URL is not set')
     return null
-  }
-
-  if (originalOnly) {
-    return <Avatar alt={alt} src={src} sx={sx} />
   }
 
   const ext = path.extname(src)
@@ -35,6 +31,19 @@ const FallbackAvatar: React.FC<AvatarProps> = ({
   const fallbackAvatar = acct
     ? `${baseUri}/avatars/${Buffer.from(acct).toString('base64')}`
     : undefined
+
+  if (preferOriginal) {
+    return (
+      <Avatar alt={alt} src={src} sx={sx}>
+        {acct && (
+          <Avatar alt={alt} src={cachedAvatar} sx={sx}>
+            <Avatar alt={alt} src={fallbackAvatar} sx={sx} />
+          </Avatar>
+        )}
+        {!acct && <Avatar alt={alt} src={cachedAvatar} sx={sx} />}
+      </Avatar>
+    )
+  }
 
   return (
     <Avatar alt={alt} src={cachedAvatar} sx={sx}>

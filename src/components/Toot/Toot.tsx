@@ -9,7 +9,6 @@ import emojify, { buildCustomEmojis } from '@/utils/mastodon/emoji'
 import Timestamp from './Timestamp'
 import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import { originalWord } from 'quicktype/dist/quicktype-core/support/Strings'
 
 const styles: any = {
   root: {
@@ -107,7 +106,7 @@ export interface StatusProps {
   className?: string
   missingAvatar?: string
   sx?: SxProps<Theme>
-  originalOnly?: boolean
+  preferOriginal?: boolean
 }
 
 export const isPublic = (visibility) => {
@@ -124,7 +123,7 @@ const Toot: React.FC<StatusProps> = ({
   disabled,
   missingAvatar = '/public/missing.png',
   sx,
-  originalOnly,
+  preferOriginal,
 }) => {
   return (
     <Box
@@ -144,7 +143,7 @@ const Toot: React.FC<StatusProps> = ({
             src={status.account.avatar}
             acct={status.account.acct}
             sx={styles.avatar}
-            originalOnly={originalOnly}
+            preferOriginal={preferOriginal}
           />
         </div>
       </Box>
