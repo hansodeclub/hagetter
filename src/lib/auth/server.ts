@@ -1,10 +1,8 @@
 import crypto from 'crypto'
-import { FormData } from 'formdata-node'
 import jwt from 'jsonwebtoken'
-import * as Masto from 'masto'
-import fetch from 'node-fetch'
+import generator from 'megalodon'
 
-import { InstanceFirestoreRepository } from '@/core/infrastructure/firestore/InstanceFirestoreRepository'
+import { InstanceFirestoreRepository } from '@/core/infrastructure/server-firestore/InstanceFirestoreRepository'
 
 export const encrypt = (token: string) => {
   const iv = crypto.randomBytes(16)
@@ -28,82 +26,37 @@ export const decrypt = (token: string) => {
   return decrypted
 }
 
-interface OAuthToken {
-  accessToken: string
-  tokenType: string
-  scope: string
-  createdAt: number
-}
-
-const getAccessToken = async (
-  code: string,
-  client_id: string,
-  client_secret: string,
-  redirect_uri,
-  instance: string,
-  access_token: string
-): Promise<OAuthToken> => {
-  const formData = new FormData()
-  formData.append('grant_type', 'authorization_code')
-  formData.append('code', code)
-  formData.append('client_id', client_id)
-  formData.append('client_secret', client_secret)
-  formData.append('redirect_uri', redirect_uri)
-
-  const res = (await fetch(`https://${instance}/oauth/token`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    body: formData as any,
-  })) as any
-
-  if (res.status === 200) {
-    const body = await res.json()
-    return {
-      accessToken: body.access_token,
-      tokenType: body.token_type,
-      scope: body.scope,
-      createdAt: body.createdAt,
-    }
-  } else if (res.status === 400 || res.status === 401) {
-    const body = await res.json()
-    throw Error(`${body.error}: ${body.error_description}`)
-  } else {
-    throw Error(`Error: code=${res.status}`)
-  }
-}
-
 export const login = async (code: string, instance: string, redirect_uri) => {
   const instanceRepository = new InstanceFirestoreRepository()
-  const instanceInfo = await instanceRepository.getInstance(instance)
+  const instanceInfo = await instanceRepository.getInstanceSecret(instance)
   if (!instanceInfo) {
     throw Error(`Unable to find instance: ${instance}`)
   }
 
-  const { server, clientId, clientSecret, accessToken } = instanceInfo
-  const oauthToken = await getAccessToken(
-    code,
+  const { server, clientId, sns, clientSecret } = instanceInfo
+  if (sns !== 'mastodon' && sns !== 'pleroma' && sns !== 'misskey') {
+    throw Error('Invalid SNS Type')
+  }
+
+  const userToken = await generator(sns, server).fetchAccessToken(
     clientId,
     clientSecret,
-    redirect_uri,
-    instance,
-    accessToken
+    code,
+    redirect_uri
   )
 
-  const userMasto = await Masto.login({
-    url: server,
-    accessToken: oauthToken.accessToken,
-  })
+  const client = generator(sns, server, userToken.accessToken)
 
-  const profile = await userMasto.accounts.verifyCredentials()
+  const profileRes = await client.verifyAccountCredentials()
+  if (profileRes.status !== 200) {
+    throw Error('Login Error')
+  }
+
+  const profile = profileRes.data
+
   profile.acct = profile.username + '@' + instance
 
-  const token = generateToken(
-    profile.username,
-    instance,
-    oauthToken.accessToken
-  )
+  const token = generateToken(profile.username, instance, userToken.accessToken)
 
   return { token, profile }
 }
@@ -118,6 +71,7 @@ export const logout = async (token) => {
     throw Error(`Unable to find instance: ${instance}`)
   }
 
+  /*
   const { clientId, clientSecret, server } = instanceInfo
 
   const masto = await Masto.login({
@@ -125,7 +79,7 @@ export const logout = async (token) => {
     accessToken: accessToken,
   })
 
-  /*await masto.revokeAccessToken({
+  await masto.revokeAccessToken({
     client_id,
     client_secret,
   })*/

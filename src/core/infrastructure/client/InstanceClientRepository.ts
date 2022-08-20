@@ -13,7 +13,7 @@ export class InstanceClientRepository implements IInstanceRepository {
     return null
   }
 
-  async listInstances(): Promise<string[]> {
+  async listInstances(): Promise<InstanceInfo[]> {
     return []
   }
 }

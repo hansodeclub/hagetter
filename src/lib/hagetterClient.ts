@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch'
+import { v4 as uuidv4 } from 'uuid'
 
 import { ErrorReport } from '@/core/domains/error/ErrorReport'
 import { InstanceInfo } from '@/core/domains/instance/Instance'
@@ -235,8 +236,15 @@ export class HagetterClient {
    * Get OAuth login URL
    */
   getOAuthUrl(instanceInfo: InstanceInfo, callbackUri: string) {
-    const { server, clientId, clientSecret } = instanceInfo
-    return `${server}/oauth/authorize?response_type=code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${callbackUri}`
+    const { server, clientId, clientSecret, sns } = instanceInfo
+    const encodedCallback = encodeURIComponent(callbackUri)
+    if (sns === 'misskey') {
+      const session = uuidv4()
+      const permission = encodeURIComponent('read:account,read:favorites')
+      return `${server}/miauth/${session}/?name=Hagetter&permission=${permission}&callback=${encodedCallback}`
+    }
+
+    return `${server}/oauth/authorize?response_type=code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${encodedCallback}`
   }
 
   /**

@@ -1,4 +1,3 @@
-import { MastoClient, login as mastoLogin } from 'masto'
 import generator, { MegalodonInterface } from 'megalodon'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -76,7 +75,6 @@ export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
 }
 
 export interface WithMastoParams extends WithAuthParams {
-  masto: MastoClient
   client: MegalodonInterface
 }
 
@@ -85,14 +83,14 @@ export const withApiMasto = (
 ) => {
   return withApiAuth(async ({ req, res, user, accessToken }) => {
     const [_, instance] = user.split('@')
-    const masto = await mastoLogin({
+    /*const masto = await mastoLogin({
       url: `https://${instance}`,
       accessToken: accessToken,
-    })
+    })*/
 
     const client = generator('mastodon', `https://${instance}`, accessToken)
 
-    return proc({ req, res, user, accessToken, masto, client })
+    return proc({ req, res, user, accessToken, client })
   })
 }
 

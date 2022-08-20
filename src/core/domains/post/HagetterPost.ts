@@ -1,9 +1,8 @@
-import { VerifiableStatus } from '@/core/domains/post/VerifiableStatus'
-
 import { ValidationError } from '@/lib/errors'
 import { JsonObject, fromJsonObject } from '@/lib/serializer'
 
 import { Account, Status } from './Status'
+import { VerifiableStatus } from './VerifiableStatus'
 
 export type PostVisibility = 'public' | 'unlisted' | 'draft'
 

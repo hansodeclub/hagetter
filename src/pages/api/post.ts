@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
 import { HagetterItem, PostVisibility } from '@/core/domains/post/HagetterPost'
 import { VerifiableStatus } from '@/core/domains/post/VerifiableStatus'
-import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
 
 import { NotFound } from '@/lib/api/HttpResponse'
 import {
@@ -133,7 +133,7 @@ const purgePostCache = async (
   await purgeCache(urls)
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === 'GET') {
       const action = head(req.query.action)
@@ -156,3 +156,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     respondError(res, err)
   }
 }
+
+export default handler

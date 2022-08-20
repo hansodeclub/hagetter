@@ -1,10 +1,6 @@
-import {
-  HagetterPost,
-  HagetterPostInfo,
-  PostVisibility,
-} from '@/core/domains/post/HagetterPost'
-
 import { QueryResult } from '@/lib/api/QueryResult'
+
+import { HagetterPost, HagetterPostInfo, PostVisibility } from './HagetterPost'
 
 export interface QueryPostsOptions {
   limit?: number

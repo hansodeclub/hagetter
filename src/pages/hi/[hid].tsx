@@ -15,7 +15,7 @@ import {
   HagetterPost,
   parseHagetterPost,
 } from '@/core/domains/post/HagetterPost'
-import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
 
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
 import head from '@/lib/head'

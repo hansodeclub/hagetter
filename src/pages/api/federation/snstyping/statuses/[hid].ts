@@ -1,4 +1,4 @@
-import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
 
 import { withApi } from '@/lib/api/server'
 import head from '@/lib/head'

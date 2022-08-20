@@ -15,7 +15,7 @@ import SearchBox from '@/components/SearchBox'
 import RecentPosts from '@/components/widgets/RecentPosts'
 
 import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
-import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
 
 import { QueryResult } from '@/lib/api/QueryResult'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'

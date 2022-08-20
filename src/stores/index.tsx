@@ -1,7 +1,7 @@
 import React from 'react'
 
 import makeInspectable from 'mobx-devtools-mst'
-import { useLocalStore } from 'mobx-react-lite'
+import { useLocalObservable } from 'mobx-react-lite'
 import { Instance, types } from 'mobx-state-tree'
 
 import EditorStore from './editorStore'
@@ -37,7 +37,7 @@ export type TRootStore = Instance<typeof RootStore>
 export const storeContext = React.createContext<TRootStore | null>(null)
 
 export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
-  const store = useLocalStore(() => {
+  const store = useLocalObservable(() => {
     const sessionStore = SessionStore.create({ id: 'defaultSession' })
     return RootStore.create({
       session: sessionStore,
