@@ -54,9 +54,13 @@ export const login = async (code: string, instance: string, redirect_uri) => {
 
   const profile = profileRes.data
 
-  profile.acct = profile.username + '@' + instance
+  profile.acct = profile.username + '@' + instanceInfo.name
 
-  const token = generateToken(profile.username, instance, userToken.accessToken)
+  const token = generateToken(
+    profile.username,
+    instanceInfo.name,
+    userToken.accessToken
+  )
 
   return { token, profile }
 }
