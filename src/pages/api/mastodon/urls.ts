@@ -1,4 +1,4 @@
-import { withApiMasto, transformStatus } from '@/utils/api/server'
+import { transformStatus, withApiMasto } from '@/lib/api/server'
 
 export default withApiMasto(
   async ({ req, res, user, accessToken, client, masto }) => {

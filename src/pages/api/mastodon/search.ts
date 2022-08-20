@@ -1,5 +1,5 @@
-import { withApiMasto, transformStatus } from '@/utils/api/server'
-import head from '@/utils/head'
+import { transformStatus, withApiMasto } from '@/lib/api/server'
+import head from '@/lib/head'
 
 export default withApiMasto(async ({ req, user, client }) => {
   const keyword = head(req.query.keyword)

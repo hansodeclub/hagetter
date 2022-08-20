@@ -1,9 +1,11 @@
 import { cast, types } from 'mobx-state-tree'
 import moment from 'moment'
 import stable from 'stable'
+
+import { TextSize, isTextSize } from '@/core/domains/post/HagetterPost'
+import { Status } from '@/core/domains/post/Status'
+
 import HagetterItem from './hagetterItem'
-import { isTextSize, TextSize } from '@/entities/HagetterPost'
-import { Status } from '@/entities/Status'
 
 /*
 export interface HagetterItem {

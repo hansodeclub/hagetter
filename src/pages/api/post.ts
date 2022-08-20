@@ -1,21 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import { HagetterItem, PostVisibility } from '@/core/domains/post/HagetterPost'
+import { VerifiableStatus } from '@/core/domains/post/VerifiableStatus'
+import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+
+import { NotFound } from '@/lib/api/HttpResponse'
 import {
+  getMyAccount,
   respondError,
+  respondSuccess,
+  secureStatus,
   withApi,
   withApiAuth,
   withApiMasto,
-  secureStatus,
-  getMyAccount,
-  respondSuccess,
-} from '@/utils/api/server'
-import head from '@/utils/head'
-import { NotFound } from '@/entities/api/HttpResponse'
-import { VerifiableStatus } from '@/entities/VerifiableStatus'
-import { HagetterItem, PostVisibility } from '@/entities/HagetterPost'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
-import { fromJsonObject, toJsonObject } from '@/utils/serializer'
-import getHost from '@/utils/getHost'
-import { purgeCache } from '@/utils/cdn/cloudflare'
+} from '@/lib/api/server'
+import { purgeCache } from '@/lib/cdn/cloudflare'
+import getHost from '@/lib/getHost'
+import head from '@/lib/head'
+import { fromJsonObject, toJsonObject } from '@/lib/serializer'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.id)

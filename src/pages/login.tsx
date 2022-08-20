@@ -1,22 +1,23 @@
 import React from 'react'
-import Head from 'next/head'
-
-import { GetServerSideProps, NextPage } from 'next'
 
 import cookie from 'js-cookie'
+import { GetServerSideProps, NextPage } from 'next'
+import Head from 'next/head'
 import nookies from 'nookies'
 import Select from 'react-select'
 
-import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+
 import Header from '@/components/Header'
 
-import { InstanceFirestoreRepository } from '@/infrastructure/firestore/InstanceFirestoreRepository'
-import { ListInstances } from '@/usecases/ListInstances'
-import { HagetterClient } from '@/utils/hagetterClient'
-import getHost from '@/utils/getHost'
+import { InstanceFirestoreRepository } from '@/core/infrastructure/firestore/InstanceFirestoreRepository'
+import { ListInstances } from '@/core/usecases/ListInstances'
+
+import getHost from '@/lib/getHost'
+import { HagetterClient } from '@/lib/hagetterClient'
 
 interface Props {
   code: number

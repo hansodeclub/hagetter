@@ -1,20 +1,25 @@
-import * as React from 'react'
+import React from 'react'
+
+import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
+
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Hidden from '@mui/material/Hidden'
-import Header from '@/components/Header'
-import BorderedBox from '@/components/BorderedBox'
 import { SxProps, Theme } from '@mui/material/styles'
-import { fromJson, JsonString, toJson } from '@/utils/serializer'
-import { HagetterPostInfo } from '@/entities/HagetterPost'
-import { GetServerSideProps, NextPage } from 'next'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
-import { QueryResult } from '@/entities/api/QueryResult'
-import RecentPosts from '@/components/widgets/RecentPosts'
+import useMediaQuery from '@mui/material/useMediaQuery'
+
+import BorderedBox from '@/components/BorderedBox'
+import Header from '@/components/Header'
 import SearchBox from '@/components/SearchBox'
-import { sendCacheControl } from '@/utils/cdn/cloudflare'
+import RecentPosts from '@/components/widgets/RecentPosts'
+
+import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
+import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+
+import { QueryResult } from '@/lib/api/QueryResult'
+import { sendCacheControl } from '@/lib/cdn/cloudflare'
+import { JsonString, fromJson, toJson } from '@/lib/serializer'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {

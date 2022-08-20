@@ -1,11 +1,16 @@
 import React from 'react'
-import { THagetterItem } from '@/stores/hagetterItem'
+
 import { observer } from 'mobx-react-lite'
-import Toot from '../Toot/Toot'
-import { Status } from '@/entities/Status'
-import { TextSize } from '@/entities/HagetterPost'
+
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
+
+import { TextSize } from '@/core/domains/post/HagetterPost'
+import { Status } from '@/core/domains/post/Status'
+
+import { THagetterItem } from '@/stores/hagetterItem'
+
+import Toot from '../Toot/Toot'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   toot: {

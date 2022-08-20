@@ -1,10 +1,11 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs
-
 import * as React from 'react'
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+
 import createEmotionServer from '@emotion/server/create-instance'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
+
+import createEmotionCache from '@/lib/createEmotionCache'
 import theme from '@/theme'
-import createEmotionCache from '@/utils/createEmotionCache'
 
 class MyDocument extends Document {
   render() {

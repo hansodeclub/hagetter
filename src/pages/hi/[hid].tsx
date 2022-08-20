@@ -1,20 +1,25 @@
 import * as React from 'react'
-import { GetServerSideProps, NextPage } from 'next'
-import Head from 'next/head'
-import NextError from 'next/error'
 
+import { GetServerSideProps, NextPage } from 'next'
+import NextError from 'next/error'
+import Head from 'next/head'
+
+import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import { SxProps, Theme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
 
 import Header from '@/components/Header'
 import PostContent from '@/components/post/PostContent'
 
-import { HagetterPost, parseHagetterPost } from '@/entities/HagetterPost'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
-import { JsonString, toJson, fromJson } from '@/utils/serializer'
-import head from '@/utils/head'
-import { sendCacheControl } from '@/utils/cdn/cloudflare'
+import {
+  HagetterPost,
+  parseHagetterPost,
+} from '@/core/domains/post/HagetterPost'
+import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+
+import { sendCacheControl } from '@/lib/cdn/cloudflare'
+import head from '@/lib/head'
+import { JsonString, fromJson, toJson } from '@/lib/serializer'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: (theme) => ({

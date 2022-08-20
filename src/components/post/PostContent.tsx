@@ -1,20 +1,21 @@
 import * as React from 'react'
-import { useRouter } from 'next/router'
+
 import { observer } from 'mobx-react-lite'
 import moment from 'moment'
+import { useRouter } from 'next/router'
 
-import Typography from '@mui/material/Typography'
-import Avatar from '@/components/Avatar'
-import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { SxProps, Theme } from '@mui/material/styles'
 
-import { TextItem } from '@/components/matome/Item'
+import Avatar from '@/components/Avatar'
 import Toot from '@/components/Toot/Toot'
+import { TextItem } from '@/components/matome/Item'
+
+import { HagetterPost } from '@/core/domains/post/HagetterPost'
+import { Status } from '@/core/domains/post/Status'
 
 import { useSession } from '@/stores'
-import { Status } from '@/entities/Status'
-
-import { HagetterPost } from '@/entities/HagetterPost'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   name: {

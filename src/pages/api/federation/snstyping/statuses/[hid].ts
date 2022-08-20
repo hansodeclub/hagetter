@@ -1,7 +1,8 @@
-import { withApi } from '@/utils/api/server'
-import head from '@/utils/head'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
-import { toJsonObject } from '@/utils/serializer'
+import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+
+import { withApi } from '@/lib/api/server'
+import head from '@/lib/head'
+import { toJsonObject } from '@/lib/serializer'
 
 const getPost = withApi(async ({ req, res }) => {
   const id = head(req.query.hid)

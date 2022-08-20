@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { Attachment } from '@/entities/Status'
+
 import { Lightbox } from 'react-modal-image'
 import ReactPlayer from 'react-player'
+
+import { Attachment } from '@/core/domains/post/Status'
 
 export interface MediaProps {
   attachments: Attachment[]

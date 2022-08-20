@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withApi, respondError, withApiAuth } from '@/utils/api/server'
-import head from '@/utils/head'
-import { ListPosts, ListPostsOptions } from '@/usecases/ListPosts'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+
+import { PostFirestoreRepository } from '@/core/infrastructure/firestore/PostFirestoreRepository'
+import { ListPosts, ListPostsOptions } from '@/core/usecases/ListPosts'
+
+import { respondError, withApi, withApiAuth } from '@/lib/api/server'
+import head from '@/lib/head'
 
 const getUserPosts = withApiAuth(async ({ req, res, user }) => {
   const username = head(req.query.user)

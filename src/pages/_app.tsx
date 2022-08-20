@@ -1,18 +1,22 @@
 //https://github.com/mui-org/material-ui/blob/master/examples/nextjs
-
-import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import Head from 'next/head'
-import { AppProps } from 'next/app'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
+
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import theme from '@/theme'
-import { StoreProvider, useSession } from '@/stores'
-import { analytics, logEvent } from '@/utils/firebase/client'
+import { AppProps } from 'next/app'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
+
 import ErrorNotification from '@/components/ErrorNotification'
-import createEmotionCache from '@/utils/createEmotionCache'
+
+import createEmotionCache from '@/lib/createEmotionCache'
+import { analytics, logEvent } from '@/lib/firebase/client'
+import { StoreProvider, useSession } from '@/stores'
 import '@/styles.scss'
+import theme from '@/theme'
+
 require('setimmediate')
 
 // Client-side cache, shared for the whole session of the user in the browser.

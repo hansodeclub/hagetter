@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { respondSuccess, respondError } from '@/utils/api/server'
-import head from '@/utils/head'
-import { ErrorFirestoreRepository } from '@/infrastructure/firestore/ErrorFirestoreRepository'
+
+import { ErrorFirestoreRepository } from '@/core/infrastructure/firestore/ErrorFirestoreRepository'
+
+import { respondError, respondSuccess } from '@/lib/api/server'
+import head from '@/lib/head'
 
 export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = head(req.query.id)

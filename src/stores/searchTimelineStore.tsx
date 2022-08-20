@@ -1,7 +1,10 @@
 import { cast, types } from 'mobx-state-tree'
-import { Status } from '@/entities/Status'
+
+import { Status } from '@/core/domains/post/Status'
+
+import { HagetterClient } from '@/lib/hagetterClient'
+
 import SessionStore from './sessionStore'
-import { HagetterClient } from '@/utils/hagetterClient'
 
 const filterStatus = (statuses: Status[], filter: string) => {
   return statuses.filter(

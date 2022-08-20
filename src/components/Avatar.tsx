@@ -1,7 +1,6 @@
 import React from 'react'
 import { SxProps } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
-import NoSsr from '@mui/material/NoSsr'
 import path from 'path'
 
 interface AvatarProps {
@@ -35,30 +34,26 @@ const FallbackAvatar: React.FC<AvatarProps> = ({
 
   if (preferOriginal) {
     return (
-      <NoSsr>
-        <Avatar alt={alt} src={src} sx={sx}>
-          {acct && (
-            <Avatar alt={alt} src={cachedAvatar} sx={sx}>
-              <Avatar alt={alt} src={fallbackAvatar} sx={sx} />
-            </Avatar>
-          )}
-          {!acct && <Avatar alt={alt} src={cachedAvatar} sx={sx} />}
-        </Avatar>
-      </NoSsr>
+      <Avatar alt={alt} src={src} sx={sx}>
+        {acct && (
+          <Avatar alt={alt} src={cachedAvatar} sx={sx}>
+            <Avatar alt={alt} src={fallbackAvatar} sx={sx} />
+          </Avatar>
+        )}
+        {!acct && <Avatar alt={alt} src={cachedAvatar} sx={sx} />}
+      </Avatar>
     )
   }
 
   return (
-    <NoSsr>
-      <Avatar alt={alt} src={cachedAvatar} sx={sx}>
-        {acct && (
-          <Avatar alt={alt} src={fallbackAvatar} sx={sx}>
-            <Avatar alt={alt} src={src} sx={sx} />
-          </Avatar>
-        )}
-        {!acct && <Avatar alt={alt} src={src} sx={sx} />}
-      </Avatar>
-    </NoSsr>
+    <Avatar alt={alt} src={cachedAvatar} sx={sx}>
+      {acct && (
+        <Avatar alt={alt} src={fallbackAvatar} sx={sx}>
+          <Avatar alt={alt} src={src} sx={sx} />
+        </Avatar>
+      )}
+      {!acct && <Avatar alt={alt} src={src} sx={sx} />}
+    </Avatar>
   )
 }
 

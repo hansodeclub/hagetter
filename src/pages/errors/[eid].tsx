@@ -1,11 +1,15 @@
 import * as React from 'react'
-import { useRouter } from 'next/router'
+
 import NextError from 'next/error'
-import Container from '@mui/material/Container'
+import { useRouter } from 'next/router'
+
 import CircularProgress from '@mui/material/CircularProgress'
-import { ErrorReport } from '@/entities/ErrorReport'
-import head from '@/utils/head'
-import { HagetterClient } from '@/utils/hagetterClient'
+import Container from '@mui/material/Container'
+
+import { ErrorReport } from '@/core/domains/error/ErrorReport'
+
+import { HagetterClient } from '@/lib/hagetterClient'
+import head from '@/lib/head'
 
 const Post = () => {
   const router = useRouter()
