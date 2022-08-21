@@ -1,16 +1,17 @@
 import React from 'react'
-import { useLocalStore, observer as _observer } from 'mobx-react-lite'
-import { types, Instance } from 'mobx-state-tree'
-import makeInspectable from 'mobx-devtools-mst'
 
-import TimelineStore from './timelineStore'
+import makeInspectable from 'mobx-devtools-mst'
+import { useLocalObservable } from 'mobx-react-lite'
+import { Instance, types } from 'mobx-state-tree'
+
+import EditorStore from './editorStore'
+import PostListStore from './postListStore'
 import SearchTimelineStore from './searchTimelineStore'
 import SessionStore from './sessionStore'
-import EditorStore from './editorStore'
+import TimelineStore from './timelineStore'
 import UrlSearchTimelineStore from './urlSearchTimelineStore'
-import PostListStore from './postListStore'
 
-export const observer = function () {}
+export { observer } from 'mobx-react-lite'
 
 export const RootStore = types
   .model('RootStore', {
@@ -36,7 +37,7 @@ export type TRootStore = Instance<typeof RootStore>
 export const storeContext = React.createContext<TRootStore | null>(null)
 
 export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
-  const store = useLocalStore(() => {
+  const store = useLocalObservable(() => {
     const sessionStore = SessionStore.create({ id: 'defaultSession' })
     return RootStore.create({
       session: sessionStore,

@@ -1,13 +1,14 @@
-import * as React from 'react'
-import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
-import { SxProps, Theme } from '@mui/material/styles'
-import Avatar from '@/components/Avatar'
-import Box from '@mui/material/Box'
+import React from 'react'
+
 import moment from 'moment-timezone'
-import { ListPosts } from '@/usecases/ListPosts'
-import { HagetterPostInfo } from '@/entities/HagetterPost'
-import { PostClientRepository } from '@/infrastructure/PostClientRepository'
+
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { SxProps, Theme } from '@mui/material/styles'
+
+import Avatar from '@/components/Avatar'
+
+import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   matomeTitle: {

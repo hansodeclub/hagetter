@@ -1,5 +1,6 @@
-import { withApi } from '@/utils/api/server'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
+
+import { withApi } from '@/lib/api/server'
 
 const getPosts = withApi(async ({ res }) => {
   const postRepository = new PostFirestoreRepository()

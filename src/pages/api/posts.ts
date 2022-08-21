@@ -1,8 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { withApi, respondError, withApiAuth } from '@/utils/api/server'
-import head from '@/utils/head'
-import { ListPosts, ListPostsOptions } from '@/usecases/ListPosts'
-import { PostFirestoreRepository } from '@/infrastructure/firestore/PostFirestoreRepository'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
+
+import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
+import { ListPosts, ListPostsOptions } from '@/core/usecases/ListPosts'
+
+import { respondError, withApi, withApiAuth } from '@/lib/api/server'
+import head from '@/lib/head'
 
 const getUserPosts = withApiAuth(async ({ req, res, user }) => {
   const username = head(req.query.user)
@@ -27,7 +29,7 @@ const getPosts = withApi(async ({ req, res }) => {
   return items
 })
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === 'GET') {
       const username = head(req.query.user)
@@ -44,3 +46,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     respondError(res, err)
   }
 }
+
+export default handler

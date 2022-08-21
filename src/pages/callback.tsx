@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { GetServerSideProps, NextPage } from 'next'
+
 import fetch from 'isomorphic-unfetch'
 import jwt from 'jsonwebtoken'
+import { GetServerSideProps, NextPage } from 'next'
 import Cookies from 'next-cookies'
+
+import { getUrlHost } from '@/lib/api/utils'
+import head from '@/lib/head'
 import { useSession } from '@/stores'
-import { getUrlHost } from '@/utils/api/utils'
-import head from '@/utils/head'
 
 interface Props {
   token?: string

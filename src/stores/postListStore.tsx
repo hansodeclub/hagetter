@@ -1,7 +1,9 @@
-import { types, flow } from 'mobx-state-tree'
-import { HagetterPostInfo } from '@/entities/HagetterPost'
-import { HagetterClient } from '@/utils/hagetterClient'
-import { QueryResult } from '@/entities/api/QueryResult'
+import { flow, types } from 'mobx-state-tree'
+
+import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
+
+import { QueryResult } from '@/lib/api/QueryResult'
+import { HagetterClient } from '@/lib/hagetterClient'
 
 const PostListStore = types
   .model('PostListModel', {

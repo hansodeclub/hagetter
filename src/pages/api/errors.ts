@@ -1,7 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { respondSuccess, respondError } from '@/utils/api/server'
-import head from '@/utils/head'
-import { ErrorFirestoreRepository } from '@/infrastructure/firestore/ErrorFirestoreRepository'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
+
+import { ErrorFirestoreRepository } from '@/core/infrastructure/server-firestore/ErrorFirestoreRepository'
+
+import { respondError, respondSuccess } from '@/lib/api/server'
+import head from '@/lib/head'
 
 export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = head(req.query.id)
@@ -35,7 +37,7 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
   respondSuccess(res, result)
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === 'GET') {
       await getData(req, res)
@@ -49,3 +51,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     respondError(res, err)
   }
 }
+
+export default handler

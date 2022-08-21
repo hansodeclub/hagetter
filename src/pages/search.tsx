@@ -1,13 +1,17 @@
 import * as React from 'react'
+
+import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import sanitizeHtml from 'sanitize-html'
-import Header from '@/components/Header'
-import { SxProps, Theme } from '@mui/material/styles'
-import { fromJson, JsonString, toJson } from '@/utils/serializer'
-import { GetServerSideProps, NextPage } from 'next'
+
 import Box from '@mui/material/Box'
-import { getHitString, search } from '@/utils/search/algolia'
-import head from '@/utils/head'
+import { SxProps, Theme } from '@mui/material/styles'
+
+import Header from '@/components/Header'
+
+import head from '@/lib/head'
+import { getHitString, search } from '@/lib/search/algolia'
+import { JsonString, fromJson, toJson } from '@/lib/serializer'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {

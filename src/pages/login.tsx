@@ -1,44 +1,40 @@
 import React from 'react'
-import Head from 'next/head'
-
-import { GetServerSideProps, NextPage } from 'next'
 
 import cookie from 'js-cookie'
+import { GetServerSideProps, NextPage } from 'next'
+import Head from 'next/head'
 import nookies from 'nookies'
 import Select from 'react-select'
 
-import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+
 import Header from '@/components/Header'
 
-import { InstanceFirestoreRepository } from '@/infrastructure/firestore/InstanceFirestoreRepository'
-import { ListInstances } from '@/usecases/ListInstances'
-import { HagetterClient } from '@/utils/hagetterClient'
-import getHost from '@/utils/getHost'
+import { InstanceInfo } from '@/core/domains/instance/Instance'
+import { InstanceFirestoreRepository } from '@/core/infrastructure/server-firestore/InstanceFirestoreRepository'
+import { ListInstances } from '@/core/usecases/ListInstances'
+import { getInstanceList } from '@/core/usecases/server/instance'
 
-interface Props {
+import getHost from '@/lib/getHost'
+import { HagetterClient } from '@/lib/hagetterClient'
+
+interface PageProps {
   code: number
-  instances: string[]
-  lastInstance?: string
+  instances: InstanceInfo[]
   error?: Error
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const action = new ListInstances(new InstanceFirestoreRepository())
-
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  ctx
+) => {
   try {
-    const instances = await action.execute()
-
-    const lastInstance = nookies.get(ctx)?.__session
-    const res: any = { code: 200, instances, error: null }
-    if (lastInstance) {
-      res.lastInstance = lastInstance
-    }
+    const instances = await getInstanceList()
 
     return {
-      props: res,
+      props: { code: 200, instances, error: null },
     }
   } catch (err) {
     return {
@@ -51,17 +47,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   }
 }
 
-const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
-  const [instance, setInstance] = React.useState<string | undefined>(
-    lastInstance
-  )
+const LoginPage: NextPage<PageProps> = ({ instances, error }) => {
+  const [instance, setInstance] = React.useState<InstanceInfo>()
 
-  const handleInstanceChange = (value) => {
-    setInstance(value.label)
+  const handleInstanceChange = ({ value }: { value: InstanceInfo }) => {
+    setInstance(value)
   }
 
-  const servers = instances.map((instance) => ({
-    label: instance,
+  const selectOptions = instances.map((instance) => ({
+    label: instance.name,
     value: instance,
   }))
 
@@ -78,11 +72,7 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
             <br />
           </Typography>
           <div style={{ maxWidth: 500 }}>
-            <Select
-              options={servers}
-              value={{ label: instance }}
-              onChange={handleInstanceChange}
-            />
+            <Select options={selectOptions} onChange={handleInstanceChange} />
           </div>
           <Button
             variant="contained"
@@ -99,13 +89,11 @@ const LoginPage: NextPage<Props> = ({ instances, error, lastInstance }) => {
   )
 }
 
-const onClickButton = async (instanceName: string) => {
-  cookie.set('__session', instanceName)
-
+const onClickButton = (instance?: InstanceInfo) => {
+  if (!instance) return
   const client = new HagetterClient()
-  const instanceInfo = await client.getInstanceInfo(instanceName)
-  const callbackUri = `${getHost(window)}/callback`
-  location.href = client.getOAuthUrl(instanceInfo, callbackUri)
+  const callbackUri = `${getHost(window)}/auth/${instance.id}`
+  location.href = client.getOAuthUrl(instance, callbackUri)
 }
 
 export default LoginPage

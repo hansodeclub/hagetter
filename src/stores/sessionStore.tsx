@@ -1,13 +1,14 @@
-import { types, flow } from 'mobx-state-tree'
-import { Account } from '@/entities/Status'
+import { flow, types } from 'mobx-state-tree'
+
+import { Account } from '@/core/domains/post/Status'
 
 import {
-  initSession,
   clearSession,
-  getToken,
   getProfile,
-} from '@/utils/auth/client'
-import { HagetterClient } from '@/utils/hagetterClient'
+  getToken,
+  initSession,
+} from '@/lib/auth/client'
+import { HagetterClient } from '@/lib/hagetterClient'
 
 const SessionStore = types
   .model('SessionModel', {

@@ -1,14 +1,19 @@
 import * as React from 'react'
-import { TextSize } from '@/entities/HagetterPost'
-import Media from './Media'
-import Typography from '@mui/material/Typography'
+
 import LockIcon from '@mui/icons-material/Lock'
-import Avatar from '@/components/Avatar'
-import { Status } from '@/entities/Status'
-import emojify, { buildCustomEmojis } from '@/utils/mastodon/emoji'
-import Timestamp from './Timestamp'
-import { SxProps, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { SxProps, Theme } from '@mui/material/styles'
+
+import Avatar from '@/components/Avatar'
+
+import { TextSize } from '@/core/domains/post/HagetterPost'
+import { Status } from '@/core/domains/post/Status'
+
+import emojify, { buildCustomEmojis } from '@/lib/mastodon/emoji'
+
+import Media from './Media'
+import Timestamp from './Timestamp'
 
 const styles: any = {
   root: {

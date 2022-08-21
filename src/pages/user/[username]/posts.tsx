@@ -1,14 +1,18 @@
 import * as React from 'react'
+
+import { useObserver } from 'mobx-react-lite'
+import moment from 'moment'
 import { useRouter } from 'next/router'
-import Header from '@/components/Header'
+
+import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
-import head from '@/utils/head'
-import { HagetterClient } from '@/utils/hagetterClient'
-import { useStore, useSession } from '@/stores'
-import moment from 'moment'
-import { useObserver } from 'mobx-react-lite'
+
+import Header from '@/components/Header'
+
+import { HagetterClient } from '@/lib/hagetterClient'
+import head from '@/lib/head'
+import { useSession, useStore } from '@/stores'
 
 const UserPost = () => {
   const app = useStore()

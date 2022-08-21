@@ -1,40 +1,40 @@
 import React from 'react'
+
 import { observer } from 'mobx-react-lite'
 import {
-  useStore,
-  useTimeline,
-  useSearchTimeline,
-  useUrlSearchTimeline,
-  useEditor,
-} from '@/stores'
+  PullDownContent,
+  PullToRefresh,
+  RefreshContent,
+  ReleaseContent,
+} from 'react-js-pull-to-refresh'
 
-import Toot, { isPublic } from '../Toot/Toot'
-import Paper from '@mui/material/Paper'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
 import HomeIcon from '@mui/icons-material/HomeRounded'
+import LinkIcon from '@mui/icons-material/LinkRounded'
 import PeopleIcon from '@mui/icons-material/PeopleRounded'
 import PublicIcon from '@mui/icons-material/PublicRounded'
 import SearchIcon from '@mui/icons-material/SearchRounded'
 import StarIcon from '@mui/icons-material/StarRounded'
-import LinkIcon from '@mui/icons-material/LinkRounded'
-
+import { Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import LinearProgress from '@mui/material/LinearProgress'
+import Paper from '@mui/material/Paper'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import TextField from '@mui/material/TextField'
+import { SxProps, Theme } from '@mui/material/styles'
+
+import { Status } from '@/core/domains/post/Status'
 
 import {
-  PullToRefresh,
-  ReleaseContent,
-  RefreshContent,
-  PullDownContent,
-} from 'react-js-pull-to-refresh'
+  useEditor,
+  useSearchTimeline,
+  useStore,
+  useTimeline,
+  useUrlSearchTimeline,
+} from '@/stores'
 
-import { Status } from '@/entities/Status'
-import { SxProps, Theme } from '@mui/material/styles'
-import { Typography } from '@mui/material'
-
+import Toot, { isPublic } from '../Toot/Toot'
 import styles from './editorStyles'
 
 /*
