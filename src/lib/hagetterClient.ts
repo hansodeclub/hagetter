@@ -236,7 +236,7 @@ export class HagetterClient {
    * Get OAuth login URL
    */
   getOAuthUrl(instanceInfo: InstanceInfo, callbackUri: string) {
-    const { server, clientId, clientSecret, sns } = instanceInfo
+    const { server, clientId, sns } = instanceInfo
     const encodedCallback = encodeURIComponent(callbackUri)
     if (sns === 'misskey') {
       const session = uuidv4()
@@ -244,7 +244,7 @@ export class HagetterClient {
       return `${server}/miauth/${session}/?name=Hagetter&permission=${permission}&callback=${encodedCallback}`
     }
 
-    return `${server}/oauth/authorize?response_type=code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${encodedCallback}`
+    return `${server}/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodedCallback}`
   }
 
   /**

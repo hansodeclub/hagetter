@@ -4,12 +4,12 @@ export interface InstanceInfo {
   server: string
   sns: string
   clientId: string
-  clientSecret: string
 }
 
 /**
  * Instance Information with tokens
  */
 export type InstanceInfoSecret = InstanceInfo & {
+  clientSecret: string
   accessToken: string
 }

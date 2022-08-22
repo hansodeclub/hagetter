@@ -1,11 +1,11 @@
 import * as React from 'react'
 
-import fetch from 'isomorphic-unfetch'
 import jwt from 'jsonwebtoken'
 import { GetServerSideProps, NextPage } from 'next'
 
+import { signIn } from '@/core/usecases/server/auth'
+
 import { getUrlHost } from '@/lib/api/utils'
-import { login } from '@/lib/auth/server'
 import getHost from '@/lib/getHost'
 import head from '@/lib/head'
 import { useSession } from '@/stores'
@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     if (instance === '' || code === '') throw Error('Invalid request')
 
     const redirectUri = `${getHost(context.req)}/auth/${instance}`
-    const { token, profile } = await login(code, instance, redirectUri)
+    const { token, profile } = await signIn(code, instance, redirectUri)
     return { props: { token, profile } }
   } catch (error) {
     console.error(error)
