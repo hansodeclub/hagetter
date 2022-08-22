@@ -21,7 +21,6 @@ const instanceConverter: FirebaseFirestore.FirestoreDataConverter<InstanceInfo> 
         server: data.server,
         sns: data.sns,
         clientId: data.client_id,
-        clientSecret: data.client_secret,
       }
     },
   }

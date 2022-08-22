@@ -5,12 +5,10 @@ interface GetRecentPostsOptions {
   cursor?: string
 }
 
-const getRecentPosts = async ({ count }: GetRecentPostsOptions) => {
+export const getRecentPost = async ({ count }: GetRecentPostsOptions) => {
   const postRepository = new PostFirestoreRepository()
   return await postRepository.queryPosts({
     limit: count ?? 300,
     visibility: 'public',
   })
 }
-
-export default getRecentPosts

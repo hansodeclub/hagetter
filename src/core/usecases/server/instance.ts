@@ -9,7 +9,7 @@ export const getInstanceList = async (): Promise<InstanceInfo[]> => {
   return await instanceRepository.listInstances()
 }
 
-export const getInstanceDetailSecret = async (
+export const getInstanceInfoSecret = async (
   name: string
 ): Promise<InstanceInfoSecret> => {
   const instanceRepository = new InstanceFirestoreRepository()

@@ -26,26 +26,27 @@ export const decrypt = (token: string) => {
   return decrypted
 }
 
-export const login = async (code: string, instance: string, redirect_uri) => {
-  const instanceRepository = new InstanceFirestoreRepository()
-  const instanceInfo = await instanceRepository.getInstanceSecret(instance)
-  if (!instanceInfo) {
-    throw Error(`Unable to find instance: ${instance}`)
-  }
-
-  const { server, clientId, sns, clientSecret } = instanceInfo
+export const OAuthSignIn = async (
+  instance: string,
+  baseUri: string,
+  clientId: string,
+  clientSecret: string,
+  sns: string,
+  code: string,
+  redirectUri: string
+) => {
   if (sns !== 'mastodon' && sns !== 'pleroma' && sns !== 'misskey') {
     throw Error('Invalid SNS Type')
   }
 
-  const userToken = await generator(sns, server).fetchAccessToken(
+  const userToken = await generator(sns, baseUri).fetchAccessToken(
     clientId,
     clientSecret,
     code,
-    redirect_uri
+    redirectUri
   )
 
-  const client = generator(sns, server, userToken.accessToken)
+  const client = generator(sns, baseUri, userToken.accessToken)
 
   const profileRes = await client.verifyAccountCredentials()
   if (profileRes.status !== 200) {
@@ -54,13 +55,9 @@ export const login = async (code: string, instance: string, redirect_uri) => {
 
   const profile = profileRes.data
 
-  profile.acct = profile.username + '@' + instanceInfo.name
+  profile.acct = profile.username + '@' + instance
 
-  const token = generateToken(
-    profile.username,
-    instanceInfo.name,
-    userToken.accessToken
-  )
+  const token = generateToken(profile.username, instance, userToken.accessToken)
 
   return { token, profile }
 }
