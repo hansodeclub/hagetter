@@ -80,13 +80,20 @@ interface Props {
 }
 
 const PC = ({ recentPosts }: Props) => {
+  const [logo, setLogo] = React.useState('/donmi_kusa_semai.png')
+  React.useEffect(() => {
+    console.log(window.location.hash)
+    if (window.location.hash === '#donmi') {
+      setLogo('/donmi2.jpg')
+    }
+  }, [])
   return (
     <Container sx={styles.container}>
       <Grid container spacing={2}>
         <Hidden xsDown>
           <Grid item>
             <BorderedBox style={{ flexGrow: 1, maxWidth: 300 }}>
-              <img src="/donmi_kusa_semai.png" style={{ width: '100%' }} />
+              <img src={logo} style={{ width: '100%', display: 'block' }} />
             </BorderedBox>
             <SearchBox
               sx={{ marginTop: 1, border: '1px solid #ccc', width: 300 }}
