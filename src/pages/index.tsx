@@ -112,15 +112,20 @@ const PC = ({ recentPosts }: Props) => {
 
 const Mobile = ({ recentPosts }: Props) => (
   <div style={{ borderBottom: '1px solid #888' }}>
-    <SearchBox sx={{ padding: 1, border: '1px solid #ccc', width: '100%' }} />
+    <SearchBox
+      sx={{
+        padding: 1,
+        border: '1px solid #ccc',
+        width: '100%',
+        maxWidth: '667px',
+      }}
+    />
     <RecentPosts posts={recentPosts} />
   </div>
 )
 
 const Home: NextPage<PageProps> = (props) => {
   const wideMonitor = useMediaQuery('(min-width:667px)')
-  //const wideMonitor = useMediaQuery(theme => theme.breakpoints.up('sm'));
-
   const recentPosts = fromJson<QueryResult<HagetterPostInfo>>(props.recentPosts)
 
   return (

@@ -25,19 +25,7 @@ const HagetterItem = types
     selected: types.optional(types.boolean, false),
     anchor: types.maybeNull(types.string),
     type: types.union(types.literal('status'), types.literal('text')),
-    size: types.optional(
-      types.union(
-        types.literal('h1'),
-        types.literal('h2'),
-        types.literal('h3'),
-        types.literal('h4'),
-        types.literal('h5'),
-        types.literal('h6'),
-        types.literal('body2'),
-        types.literal('inherit')
-      ),
-      'inherit'
-    ),
+    size: sizeType,
     color: types.optional(types.string, '#000000'),
     data: types.frozen<TextItem | Status>(),
   })
