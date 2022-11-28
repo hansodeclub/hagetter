@@ -1,24 +1,32 @@
 import * as React from 'react'
-import { Theme } from '@mui/material/styles'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Link from 'next/link'
-import { useSession } from '@/stores'
-import Avatar from '@mui/material/Avatar'
-import { observer } from 'mobx-react-lite'
-import Slide from '@mui/material/Slide'
-import useScrollTrigger from '@mui/material/useScrollTrigger'
-import Box from '@mui/material/Box'
-import Popover from '@mui/material/Popover'
-import IconButton from '@mui/material/IconButton'
 
+import { Roboto_Condensed } from '@next/font/google'
+import { observer } from 'mobx-react-lite'
+import Link from 'next/link'
+
+import { SxProps } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import Divider from '@mui/material/Divider'
-import { SxProps } from '@mui/material'
+import Popover from '@mui/material/Popover'
+import Slide from '@mui/material/Slide'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import { Theme } from '@mui/material/styles'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
+
+import { useSession } from '@/stores'
+
+const robotoCondensedBold = Roboto_Condensed({
+  weight: '700',
+  subsets: ['latin'],
+})
 
 const styles: { [key: string]: SxProps<Theme> } = {
   appbar: {
@@ -36,7 +44,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
   },
   title: {
     fontSize: 24,
-    fontFamily: "'Roboto Condensed', sans-serif",
+    //fontFamily: "'Roboto Condensed', sans-serif",
     fontWeight: 700,
     //textTransform: 'uppercase',
   },
@@ -44,7 +52,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
     textDecoration: 'none',
     color: 'black',
     fontSize: 24,
-    fontFamily: "'Roboto Condensed', sans-serif",
+    //fontFamily: "'Roboto Condensed', sans-serif",
     fontWeight: 700,
   },
 
@@ -128,18 +136,18 @@ const Header: React.FC = observer(() => {
         <AppBar sx={styles.appbar} elevation={0}>
           <Toolbar sx={styles.toolbar}>
             <Box sx={styles.left}>
-              <Link href="/">
-                <a
-                  style={{
-                    textDecoration: 'none',
-                    color: 'black',
-                    fontSize: 24,
-                    fontFamily: "'Roboto Condensed', sans-serif",
-                    fontWeight: 700,
-                  }}
-                >
-                  Hagetter
-                </a>
+              <Link
+                href="/"
+                style={{
+                  textDecoration: 'none',
+                  color: 'black',
+                  fontSize: 24,
+                  // fontFamily: "'Roboto Condensed', sans-serif",
+                  fontWeight: 700,
+                }}
+                className={robotoCondensedBold.className}
+              >
+                Hagetter
               </Link>
             </Box>
             <Box sx={styles.right}>

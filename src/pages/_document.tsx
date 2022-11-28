@@ -9,20 +9,12 @@ import theme from '@/theme'
 
 class MyDocument extends Document {
   render() {
-    const fonts = [
-      'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
-      'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap',
-    ]
-
     return (
       <Html lang="ja">
         <Head>
           <meta charSet="utf-8" />
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
-          {fonts.map((font) => (
-            <link rel="stylesheet" href={font} key={font} />
-          ))}
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>

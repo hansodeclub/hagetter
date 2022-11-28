@@ -1,9 +1,12 @@
 import * as React from 'react'
 
+import dynamic from 'next/dynamic'
 import { Lightbox } from 'react-modal-image'
-import ReactPlayer from 'react-player'
 
 import { Attachment } from '@/core/domains/post/Status'
+
+// dynamic import react-player to prevent hydration error
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })
 
 export interface MediaProps {
   attachments: Attachment[]
