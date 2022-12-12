@@ -146,6 +146,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           display: 'flex',
           alignItems: 'center',
           maxWidth: 632 + leftColumnWidth,
+          marginRight: '72px',
         }}
       >
         <Box>
@@ -154,7 +155,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ fontSize: 'small' }}>
           <Link
-            href={hid === '' ? '/create' : `/edit/${hid}`}
+            href={!hid ? '/create' : `/edit/${hid}`}
             style={{ color: 'black' }}
           >
             旧バージョンはこちら
