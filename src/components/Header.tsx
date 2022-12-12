@@ -21,6 +21,8 @@ import Typography from '@mui/material/Typography'
 import { Theme } from '@mui/material/styles'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 
+import Logo from '@/components/Logo'
+
 import { useSession } from '@/stores'
 
 const robotoCondensedBold = Roboto_Condensed({
@@ -136,19 +138,7 @@ const Header: React.FC = observer(() => {
         <AppBar sx={styles.appbar} elevation={0}>
           <Toolbar sx={styles.toolbar}>
             <Box sx={styles.left}>
-              <Link
-                href="/"
-                style={{
-                  textDecoration: 'none',
-                  color: 'black',
-                  fontSize: 24,
-                  // fontFamily: "'Roboto Condensed', sans-serif",
-                  fontWeight: 700,
-                }}
-                className={robotoCondensedBold.className}
-              >
-                Hagetter
-              </Link>
+              <Logo />
             </Box>
             <Box sx={styles.right}>
               {!session.loading && !session.account && (
@@ -158,7 +148,7 @@ const Header: React.FC = observer(() => {
               )}
               {!session.loading && session.account && (
                 <>
-                  <Link href="/create">
+                  <Link href="/edit/beta">
                     <Button
                       variant="contained"
                       color="primary"

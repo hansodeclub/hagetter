@@ -126,7 +126,7 @@ const Toot: React.FC<StatusProps> = ({
   onClick,
   className,
   disabled,
-  missingAvatar = '/public/missing.png',
+  missingAvatar = '/images/missing.png',
   sx,
   preferOriginal,
 }) => {

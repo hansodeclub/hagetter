@@ -80,11 +80,11 @@ interface Props {
 }
 
 const PC = ({ recentPosts }: Props) => {
-  const [logo, setLogo] = React.useState('/donmi_kusa_semai.png')
+  const [logo, setLogo] = React.useState('/images/donmi_kusa_semai.png')
   React.useEffect(() => {
     console.log(window.location.hash)
     if (window.location.hash === '#donmi') {
-      setLogo('/donmi2.jpg')
+      setLogo('/images/donmi2.jpg')
     }
   }, [])
   return (

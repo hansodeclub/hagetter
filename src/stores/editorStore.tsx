@@ -110,6 +110,16 @@ const EditorStore = types
         }
       )
     },
+    setFormat(id: string, size?: string, color?: string) {
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
+
+      self.items.forEach((item) => {
+        if (item.id === id) {
+          if (size) item.size = size as TextSize
+          if (color) item.color = color
+        }
+      })
+    },
     setSelectedFormat(size?: string, color?: string) {
       if (size && !isTextSize(size)) throw Error('Invalid text size')
 
@@ -126,20 +136,56 @@ const EditorStore = types
         item.setSelected(selected)
       }
     },
+    setShowMenu(id: string, showMenu: boolean) {
+      const item = self.items.find((item) => item.id === id)
+      if (item) {
+        item.setShowMenu(showMenu)
+      }
+    },
     toggleSelected(id: string) {
       const item = self.items.find((item) => item.id === id)
       if (item) {
         item.toggleSelected()
       }
     },
+    resetSelect() {
+      self.items.forEach((item) => {
+        if (item.selected) item.setSelected(false)
+      })
+    },
     removeSelectedItem() {
       self.items = cast(self.items.filter((item) => !item.selected))
+    },
+    removeItem(id: string) {
+      self.items = cast(self.items.filter((item) => item.id !== id))
+    },
+    setEdit(id: string, editMode: boolean) {
+      const item = self.items.find((item) => item.id === id)
+      if (item) {
+        item.setEditMode(editMode)
+      }
+    },
+    moveItem(id: string, direction: 'up' | 'down') {
+      const index = self.items.findIndex((item) => item.id === id)
+      if (index === -1) return
+
+      const items = Array.from(self.items)
+
+      const item = items[index]
+      const targetIndex =
+        direction === 'up' ? index - 1 : direction === 'down' ? index + 1 : -1
+
+      if (targetIndex === -1) return
+
+      items.splice(index, 1)
+      items.splice(targetIndex, 0, item)
+      self.items = cast(items)
     },
     /**
      * 選択したStatusを上下に一つ移動する(複数選択も可)
      * @param direction 動かす方向
      */
-    moveItem(direction: 'up' | 'down') {
+    moveSelectedItem(direction: 'up' | 'down') {
       if (self.items.length <= 1) {
         return
       }
@@ -195,6 +241,9 @@ const EditorStore = types
               (item.data as Status).visibility === 'direct')
         )
       )
+    },
+    get selectedCount() {
+      return self.items.filter((item) => item.selected).length
     },
   }))
 

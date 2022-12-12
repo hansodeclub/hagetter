@@ -78,7 +78,7 @@ const PostContent = observer<PostContentProps>(({ post }) => {
         </Box>
         {isOwner && (
           <Box sx={{ ml: 1 }}>
-            <button onClick={() => router.push(`/edit/${post.id}`)}>
+            <button onClick={() => router.push(`/edit/beta/${post.id}`)}>
               編集
             </button>
           </Box>

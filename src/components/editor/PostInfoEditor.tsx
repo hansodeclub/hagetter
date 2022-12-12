@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
+import Logo from '@/components/Logo'
+
 import { HagetterClient } from '@/lib/hagetterClient'
 import { useEditor, useSession, useStore } from '@/stores'
 
@@ -110,11 +112,7 @@ const PostInfoEditor = observer(() => {
   return (
     <Box>
       <Box sx={styles.title}>
-        <Link href="/">
-          <a style={{ color: 'black', textDecoration: 'none' }}>
-            <Typography variant="h6">Hagetter</Typography>
-          </a>
-        </Link>
+        <Logo />
         <Box sx={styles.grow} />
         {session.account && (
           <>

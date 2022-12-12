@@ -60,16 +60,14 @@ export const TextItem: React.FC<TextItemProps> = ({
   </li>
 )
 
-const Item = observer(
-  ({
-    item,
-    onClick,
-    preferOriginal,
-  }: {
-    item: THagetterItem
-    onClick: (item: THagetterItem) => boolean
-    preferOriginal?: boolean
-  }) => {
+export interface ItemProps {
+  item: THagetterItem
+  onClick?: (item: THagetterItem) => any
+  preferOriginal?: boolean
+}
+
+const Item: React.FC<ItemProps> = observer(
+  ({ item, onClick, preferOriginal }) => {
     if (item.type === 'status') {
       const status: Status = item.data as Status
       return (
