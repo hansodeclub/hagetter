@@ -22,7 +22,6 @@ import Paper from '@mui/material/Paper'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import TextField from '@mui/material/TextField'
-import { SxProps, Theme } from '@mui/material/styles'
 
 import { Status } from '@/core/domains/post/Status'
 
@@ -36,84 +35,6 @@ import {
 
 import Toot, { isPublic } from '../Toot/Toot'
 import styles from './editorStyles'
-
-/*
-const styles: { [key: string]: SxProps<Theme> } = {
-  gridColumn: {
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    boxSizing: 'border-box',
-  },
-  timeline: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    marginTop: 1,
-  },
-  searchArea: {
-    // marginTop: '5px',
-  },
-  timelineContent: {
-    position: 'relative',
-    flexGrow: 1,
-    boxSizing: 'border-box',
-    marginTop: 1,
-    height: '100%',
-    backgroundColor: 'white',
-  },
-  tootSelector: {
-    flexGrow: 1,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: '100%',
-    width: '100%',
-    overflow: 'scroll',
-    '-webkit-overflow-scrolling': 'touch',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    boxSizing: 'border-box',
-  } as SxProps<Theme>,
-  selectorButtom: {
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    padding: '30px',
-  },
-  menu: {
-    border: '1px solid #ccc',
-  },
-  howToContainer: {
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    boxSizing: 'border-box',
-    backgroundColor: '#fff',
-    flexGrow: 1,
-    marginTop: '5px',
-    marginBottom: '2px',
-  },
-  howTo: {
-    margin: 3,
-    paddingTop: 1,
-    paddingBottom: 1,
-    backgroundColor: '#f1f1f1',
-  },
-  howToText: {
-    width: '100%',
-    textAlign: 'center',
-  },
-  progress: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    zIndex: 2,
-  },
-  toot: {
-    borderBottom: '1px solid #ccc',
-  },
-} */
 
 const HowTo: React.FC = () => {
   return (

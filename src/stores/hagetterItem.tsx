@@ -2,6 +2,7 @@ import { types, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree'
 import { Status } from '@/core/domains/post/Status'
 import { HagetterItem } from '@/core/domains/post/HagetterPost'
 import { TextItem } from './editorStore'
+import { TextSize, isTextSize } from '@/core/domains/post/HagetterPost'
 
 const sizeType = types.optional(
   types.union(
@@ -23,6 +24,8 @@ const HagetterItem = types
     id: types.string,
     sortKey: types.number,
     selected: types.optional(types.boolean, false),
+    editMode: types.optional(types.boolean, false),
+    showMenu: types.optional(types.boolean, false),
     anchor: types.maybeNull(types.string),
     type: types.union(types.literal('status'), types.literal('text')),
     size: sizeType,
@@ -36,6 +39,23 @@ const HagetterItem = types
     toggleSelected() {
       self.selected = !self.selected
     },
+    setShowMenu(showMenu: boolean) {
+      self.showMenu = showMenu
+    },
+    setEditMode(editMode: boolean) {
+      self.editMode = editMode
+    },
+    setFormat(size?: string, color?: string) {
+      if (size && !isTextSize(size)) throw Error('Invalid text size')
+
+          if (size) self.size = size as TextSize
+          if (color) self.color = color
+    },
+    setText(text?: string) {
+      if (self.type === 'text'  && text) {
+        self.data = {text}
+      }
+    }
   }))
   .views((self) => ({
     get postData(): HagetterItem {

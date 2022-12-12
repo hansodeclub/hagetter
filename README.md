@@ -1,6 +1,6 @@
 # Hagetter
 
-![donmi](public/donmi_kusa.png)
+![donmi](public/images/donmi_kusa.png)
 
 ## Release Note
 

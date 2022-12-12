@@ -1,27 +1,27 @@
 import React from 'react'
 
-import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import FormatIcon from '@mui/icons-material/TextFormat'
-import AddIcon from '@mui/icons-material/AddCommentRounded'
-import SortIcon from '@mui/icons-material/FormatLineSpacingRounded'
-import UpArrowIcon from '@mui/icons-material/ArrowUpwardRounded'
-import DownArrowIcon from '@mui/icons-material/ArrowDownwardRounded'
-import DeleteIcon from '@mui/icons-material/DeleteRounded'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import styles from './editorStyles'
+import { observer } from 'mobx-react-lite'
 
-import TextFormatSelector from './TextFormatSelector'
+import AddIcon from '@mui/icons-material/AddCommentRounded'
+import DownArrowIcon from '@mui/icons-material/ArrowDownwardRounded'
+import UpArrowIcon from '@mui/icons-material/ArrowUpwardRounded'
+import DeleteIcon from '@mui/icons-material/DeleteRounded'
+import SortIcon from '@mui/icons-material/FormatLineSpacingRounded'
+import FormatIcon from '@mui/icons-material/TextFormat'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import { useEditor } from '@/stores'
 import { THagetterItem } from '@/stores/hagetterItem'
-import { observer } from 'mobx-react-lite'
 
 import ItemList from '../matome/ItemList'
+import TextFormatSelector from './TextFormatSelector'
+import styles from './editorStyles'
 
 /*
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -275,7 +275,7 @@ const PostEditor: React.FC = observer(() => {
           <Grid xs={2}>
             <IconButton
               onClick={() => {
-                editor.moveItem('up')
+                editor.moveSelectedItem('up')
               }}
               sx={{ padding: '12px' }}
             >
@@ -285,7 +285,7 @@ const PostEditor: React.FC = observer(() => {
           <Grid xs={2}>
             <IconButton
               onClick={() => {
-                editor.moveItem('down')
+                editor.moveSelectedItem('down')
               }}
               sx={{ padding: '12px' }}
             >

@@ -39,6 +39,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
     width: '100%',
     overflowY: 'scroll',
     '-webkit-overflow-scrolling': 'touch',
+    overscrollBehaviorY: 'none',
   } as SxProps<Theme>,
   selectorButtom: {
     textAlign: 'center',
