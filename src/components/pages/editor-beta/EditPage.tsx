@@ -207,10 +207,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           toggleDrawer={() => setShowTimeline(!showTimeline)}
         />
       </Drawer>
-      {(editor.selectedCount > 1 ||
-        (editor.selectedCount >= 1 && isMobile)) && (
-        <MultiSelectMenu isMobile={isMobile} />
-      )}
+      {editor.selectedCount >= 1 && <MultiSelectMenu isMobile={isMobile} />}
       <BottomBar onSubmit={onSubmit} submitting={submitting} />
     </Box>
   )
