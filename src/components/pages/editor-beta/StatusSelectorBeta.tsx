@@ -45,7 +45,14 @@ export interface StatusSelectorProps {
 const StatusSelector: React.FC<StatusSelectorProps> =
   observer<StatusSelectorProps>(({ timeline, invisible }) => {
     return (
-      <Box sx={{ width: '400px', height: '100%', paddingBottom: '64px' }}>
+      <Box
+        sx={{
+          width: '400px',
+          maxWidth: 'calc(100vw - 48px)',
+          height: '100%',
+          paddingBottom: '64px',
+        }}
+      >
         {timeline === 'home' && (
           <Timeline name={timeline} invisible={invisible} />
         )}

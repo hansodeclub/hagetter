@@ -62,13 +62,6 @@ const SideContent: React.FC<SideContentProps> = ({
 
   return (
     <List>
-      {showBurgerMenu && (
-        <ListItem disablePadding>
-          <ListItemButton sx={{ display: 'block', px: 2.5, m: 0 }}>
-            <MenuIcon onClick={() => toggleDrawer()} />
-          </ListItemButton>
-        </ListItem>
-      )}
       {items.map(({ icon, label, value }) => (
         <ListItem
           key={value}
@@ -80,7 +73,7 @@ const SideContent: React.FC<SideContentProps> = ({
         >
           <ListItemButton
             key={value}
-            sx={{ display: 'block', px: 2.5, m: 0 }}
+            sx={{ display: 'block', px: 1.5, m: 0 }}
             onClick={onClick(value)}
           >
             <ListItemIcon
