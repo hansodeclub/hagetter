@@ -49,8 +49,6 @@ const SideContent: React.FC<SideContentProps> = ({
   showBurgerMenu,
 }) => {
   const onClick = (value: TimelineName) => () => {
-    setTimeline && setTimeline(value)
-
     if (showBurgerMenu && toggleDrawer) {
       if (value === timeline && showTimeline) {
         toggleDrawer()
@@ -58,6 +56,7 @@ const SideContent: React.FC<SideContentProps> = ({
         toggleDrawer()
       }
     }
+    setTimeline && setTimeline(value)
   }
 
   return (

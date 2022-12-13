@@ -203,6 +203,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           timeline={timeline}
           setTimeline={setTimeline}
           showBurgerMenu={isMobile}
+          showTimeline={showTimeline}
           toggleDrawer={() => setShowTimeline(!showTimeline)}
         />
       </Drawer>
