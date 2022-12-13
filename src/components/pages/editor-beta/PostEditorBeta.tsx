@@ -14,7 +14,7 @@ import styles from '@/components/editor/editorStyles'
 import { useEditor } from '@/stores'
 import { THagetterItem } from '@/stores/hagetterItem'
 
-import ItemList from './ItemListBeta'
+import ItemList from './items/ItemListBeta'
 
 const FormatEdit: React.FC = observer(() => {
   const editor = useEditor()
@@ -69,10 +69,12 @@ export type ItemActionCallback = (
 
 export const leftColumnWidth = 80
 
-const PostEditor: React.FC = observer(() => {
+export interface PostEditorProps {
+  isMobile?: boolean
+}
+
+const PostEditor: React.FC<PostEditorProps> = observer(({ isMobile }) => {
   const editor = useEditor()
-  const [isTextEditMode, setTextEditMode] = React.useState(false)
-  const [isFormatMode, setFormatMode] = React.useState(false)
 
   const onSelect = (item: THagetterItem) => {
     editor.toggleSelected(item.id)
@@ -81,11 +83,6 @@ const PostEditor: React.FC = observer(() => {
 
   const onShowItemMenu = (item: THagetterItem, showMenu: boolean) => {
     editor.setShowMenu(item.id, showMenu)
-  }
-
-  const onAddText = (text, size, color) => {
-    editor.addText(text, size, color, editor.getAnchor())
-    setTextEditMode(false)
   }
 
   const onItemAction = (item: THagetterItem, action: ItemAction) => {
@@ -161,6 +158,7 @@ const PostEditor: React.FC = observer(() => {
           onShowItemMenu={onShowItemMenu}
           onAction={onItemAction}
           preferOriginal
+          isMobile={isMobile}
         />
         {editor.items.length === 0 && <HowTo />}
       </Box>

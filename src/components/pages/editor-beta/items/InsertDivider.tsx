@@ -9,14 +9,15 @@ import { leftColumnWidth } from '@/components/pages/editor-beta/PostEditorBeta'
 
 import { observer, useEditor } from '@/stores'
 
-import TextEdit from './edit-items/TextEdit'
+import TextEdit from '../edit-items/TextEdit'
 
 export interface InsertDividerProps {
   anchor?: string
+  isMobile?: boolean
 }
 
 export const InsertDivider: React.FC<InsertDividerProps> = observer(
-  ({ anchor }) => {
+  ({ anchor, isMobile }) => {
     const editor = useEditor()
     const [mouseOver, setMouseOver] = React.useState(false)
     const [insertTextMode, setInsertTextMode] = React.useState(false)
@@ -29,7 +30,7 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
 
     if (insertTextMode) {
       return (
-        <Box sx={{ marginLeft: `${leftColumnWidth}px` }}>
+        <Box sx={{ marginLeft: isMobile ? 0 : `${leftColumnWidth}px` }}>
           <TextEdit
             onSubmit={onInsertText}
             onCancel={() => setInsertTextMode(false)}
@@ -38,17 +39,19 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
       )
     }
 
+    const selector = isMobile ? '&:before' : '&:hover:before'
+
     return (
       <Box
         sx={{
           height: '32px',
           cursor: 'pointer',
           position: 'relative',
-          marginLeft: `${leftColumnWidth}px`,
+          marginLeft: isMobile ? 0 : `${leftColumnWidth}px`,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          '&:hover:before': {
+          [selector]: {
             content: "''",
             position: 'absolute',
             top: '50%',
@@ -67,13 +70,13 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
             },
           },
         }}
-        onMouseEnter={() => setMouseOver(true)}
-        onMouseLeave={() => setMouseOver(false)}
+        onMouseEnter={isMobile ? undefined : () => setMouseOver(true)}
+        onMouseLeave={isMobile ? undefined : () => setMouseOver(false)}
       >
-        <Fade in={mouseOver}>
+        <Fade in={mouseOver || isMobile}>
           <IconButton
             sx={{
-              border: '1px solid #888',
+              border: isMobile ? '1px solid rgba(0,0,0,0.2)' : '1px solid #888',
               backgroundColor: 'white',
               '&:hover': {
                 backgroundColor: '#f5f5f5',
@@ -82,7 +85,12 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
             size="small"
             onClick={() => setInsertTextMode(true)}
           >
-            <TitleIcon fontSize="small" />
+            <TitleIcon
+              fontSize="small"
+              sx={{
+                color: isMobile ? 'rgba(0,0,0,0.2)' : '#888',
+              }}
+            />
           </IconButton>
         </Fade>
       </Box>

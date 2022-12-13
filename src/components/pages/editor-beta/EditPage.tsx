@@ -50,7 +50,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
   const [timeline, setTimeline] = React.useState<TimelineName | undefined>()
   const [showTimeline, setShowTimeline] = React.useState<boolean>(undefined)
 
-  const isMobile = !useMediaQuery('(min-width:1192px)')
+  const isMobile = !useMediaQuery('(min-width:1170px)')
   const invisible =
     isMobile &&
     ((showTimeline === undefined && isMobile) || showTimeline === false)
@@ -166,21 +166,24 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
         sx={{
           maxWidth: 632 + leftColumnWidth,
           margin: 1,
-          mr: 9,
+          ml: 1 - (isMobile ? 1 : 0),
+          mr: 7 - (isMobile ? 1 : 0),
           padding: 2,
+          paddingBottom: isMobile ? 15 : 2,
           // border: (theme) => theme.app.border,
           backgroundColor: '#fff',
-          boxShadow: 3,
+          boxShadow: isMobile ? 0 : 3,
         }}
       >
         {loading && <CircularProgress />}
-        {!loading && code === 200 && <PostEditor />}
+        {!loading && code === 200 && <PostEditor isMobile={isMobile} />}
       </Box>
       <Box
         sx={{
           position: 'fixed',
           top: 0,
-          right: 64,
+          right: 0,
+          marginRight: '48px',
           height: '100lvh',
           backgroundColor: 'white',
           borderLeft: (theme) => theme.app.border,
@@ -192,12 +195,8 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
       <Drawer
         variant="permanent"
         anchor="right"
-        sx={{
-          '& .MuiPaper-root': {
-            zIndex: (theme) => theme.zIndex.appBar - 1,
-            /*height: 'auto',
-            border: '1px solid rgba(0, 0, 0, 0.12)', */
-          },
+        PaperProps={{
+          sx: { width: '48px', zIndex: (theme) => theme.zIndex.appBar - 1 },
         }}
       >
         <SideContent
@@ -207,7 +206,10 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           toggleDrawer={() => setShowTimeline(!showTimeline)}
         />
       </Drawer>
-      {editor.selectedCount > 1 && <MultiSelectMenu />}
+      {(editor.selectedCount > 1 ||
+        (editor.selectedCount >= 1 && isMobile)) && (
+        <MultiSelectMenu isMobile={isMobile} />
+      )}
       <BottomBar onSubmit={onSubmit} submitting={submitting} />
     </Box>
   )

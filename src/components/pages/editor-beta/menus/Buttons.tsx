@@ -35,7 +35,7 @@ export const EditItemButton: React.FC<{
       aria-label="edit"
       onClick={() => onAction && onAction(item, { type: 'edit' })}
       size="small"
-      sx={{ color: '#888', border: '1px solid #aaa' }}
+      sx={{ color: '#888', border: '1px solid #aaa', backgroundColor: 'white' }}
     >
       <EditIcon fontSize="small" />
     </IconButton>

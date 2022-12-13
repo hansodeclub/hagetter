@@ -35,6 +35,7 @@ export interface ItemProps {
   onClick?: (item: THagetterItem) => any
   preferOriginal?: boolean
   onAction?: ItemActionCallback
+  isMobile?: boolean
 }
 
 const PopupMenu: React.FC<{ children?: React.ReactNode; show: boolean }> = ({
@@ -81,7 +82,7 @@ const FormatEdit: React.FC<{ item: THagetterItem }> = observer(({ item }) => {
 })
 
 const Item: React.FC<ItemProps> = observer(
-  ({ item, onClick, preferOriginal, onAction }) => {
+  ({ item, onClick, preferOriginal, onAction, isMobile }) => {
     const onChangeText = (item, text, size, color) => {
       item.setFormat(size, color)
       item.setText(text)
@@ -92,7 +93,7 @@ const Item: React.FC<ItemProps> = observer(
       const status: Status = item.data as Status
       return (
         <>
-          <PopupMenu show={item.showMenu || item.selected}>
+          <PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
             <Stack spacing={1}>
               <Stack direction="row" spacing={1}>
                 <DeleteItemButton item={item} onAction={onAction} />
@@ -122,7 +123,7 @@ const Item: React.FC<ItemProps> = observer(
       const textItem: any = item.data as any
       return (
         <>
-          <PopupMenu show={item.showMenu || item.selected}>
+          <PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
             <Stack spacing={1}>
               <Stack direction="row" spacing={1}>
                 <DeleteItemButton item={item} onAction={onAction} />
@@ -146,13 +147,20 @@ const Item: React.FC<ItemProps> = observer(
             />
           )}
           {!item.editMode && (
-            <TextItem
-              text={textItem.text}
-              variant={item.size}
-              color={item.color}
-              selected={item.selected}
-              onClick={() => onClick(item)}
-            />
+            <Box sx={{ position: 'relative' }}>
+              <TextItem
+                text={textItem.text}
+                variant={item.size}
+                color={item.color}
+                selected={item.selected}
+                onClick={() => onClick(item)}
+              />
+              {isMobile && (
+                <Box sx={{ position: 'absolute', right: 5, top: 5 }}>
+                  <EditItemButton item={item} onAction={onAction} />
+                </Box>
+              )}
+            </Box>
           )}
         </>
       )
