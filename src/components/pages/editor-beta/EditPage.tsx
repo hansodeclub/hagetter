@@ -203,13 +203,11 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           timeline={timeline}
           setTimeline={setTimeline}
           showBurgerMenu={isMobile}
+          showTimeline={showTimeline}
           toggleDrawer={() => setShowTimeline(!showTimeline)}
         />
       </Drawer>
-      {(editor.selectedCount > 1 ||
-        (editor.selectedCount >= 1 && isMobile)) && (
-        <MultiSelectMenu isMobile={isMobile} />
-      )}
+      {editor.selectedCount >= 1 && <MultiSelectMenu isMobile={isMobile} />}
       <BottomBar onSubmit={onSubmit} submitting={submitting} />
     </Box>
   )
