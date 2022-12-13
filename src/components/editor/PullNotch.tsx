@@ -47,9 +47,11 @@ export const PullNotch: React.FC<PullNotchProps> = ({
         />
         {children}
         {loadMore && (
-          <Box sx={styles.selectorButtom}>
-            <button onClick={loadMore}>もっと読み込む</button>
-          </Box>
+          <>
+            <Box sx={{ ...styles.selectorButtom, pb: '200px' }}>
+              <button onClick={loadMore}>もっと読み込む!</button>
+            </Box>
+          </>
         )}
       </div>
     </PullToRefresh>

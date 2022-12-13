@@ -184,7 +184,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           top: 0,
           right: 0,
           marginRight: '48px',
-          height: '100lvh',
+          height: '100vh',
           backgroundColor: 'white',
           borderLeft: (theme) => theme.app.border,
           visibility: invisible ? 'hidden' : 'visible',
