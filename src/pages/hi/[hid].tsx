@@ -31,10 +31,22 @@ const styles: { [key: string]: SxProps<Theme> } = {
     [theme.breakpoints.up('sm')]: {
       maxWidth: 600,
       margin: 1,
-      border: theme.app.border,
+      marginLeft: 0,
+      //border: theme.app.border,
+      boxShadow: 1,
       borderRadius: 1,
       padding: '10px 5px',
       backgroundColor: '#fff',
+    },
+  }),
+  shareButtons: (theme) => ({
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
+    [theme.breakpoints.up('sm')]: {
+      margin: 2,
+      marginTop: 10,
+      display: 'block',
     },
   }),
 }
@@ -74,6 +86,54 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
+export interface AnyShareButtonProps {
+  title: string
+}
+
+const AnyShare: React.FC = () => {
+  return (
+    <div>
+      <a
+        href="https://anypost.dev/share"
+        onClick={(e) => {
+          window.open(
+            'https://anypost.dev/share?s=' +
+              location.href +
+              '&t=' +
+              document.title,
+            '',
+            'width=500,height=750'
+          )
+          e.preventDefault()
+          return false
+        }}
+        style={{ color: '#444', textDecorationLine: 'none' }}
+      >
+        <div
+          style={{
+            display: 'inline-block',
+            background: '#fff',
+            border: '1px solid #eee',
+            padding: '10px 2px',
+            borderRadius: '4px',
+            textAlign: 'center',
+            width: '60px',
+            lineHeight: '7px',
+            fontFamily: 'Avenir,Helvetica,Arial,sans-serif',
+          }}
+        >
+          <img
+            src="https://anypost.dev/external-assets/share-b.svg"
+            width="18"
+            alt="share"
+          />
+          <div style={{ fontSize: '0.3em', marginTop: '9px' }}>anypost.dev</div>
+        </div>
+      </a>
+    </div>
+  )
+}
+
 const PostPage: NextPage<Props> = (props) => {
   const post = fromJson<HagetterPost>(props.post)
 
@@ -100,13 +160,18 @@ const PostPage: NextPage<Props> = (props) => {
         {ogp.image && <meta property="og:image" content={ogp.image} />}
       </Head>
       <Header />
-      <Container sx={styles.container}>
-        {code === 404 && <NextError statusCode={404} />}
-        {code === 200 && <PostContent post={post} />}
-        {code !== 200 && code !== 404 && (
-          <p>エラー：{error ?? '不明なエラー'}</p>
-        )}
-      </Container>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={styles.shareButtons}>
+          <AnyShare />
+        </Box>
+        <Container sx={styles.container}>
+          {code === 404 && <NextError statusCode={404} />}
+          {code === 200 && <PostContent post={post} />}
+          {code !== 200 && code !== 404 && (
+            <p>エラー：{error ?? '不明なエラー'}</p>
+          )}
+        </Container>
+      </Box>
     </Box>
   )
 }
