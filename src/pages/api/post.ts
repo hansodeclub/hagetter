@@ -31,7 +31,7 @@ const getPost = withApi(async ({ req, res }) => {
     throw new NotFound('Item not found!')
   }
 
-  return toJsonObject(post)
+  return { data: toJsonObject(post) }
 })
 
 const getMyPost = withApiAuth(async ({ req, user }) => {
@@ -54,7 +54,7 @@ const getMyPost = withApiAuth(async ({ req, user }) => {
       id,
     }
 
-    return securePost
+    return { data: securePost }
   } else {
     throw new NotFound('Item not found')
   }
@@ -79,31 +79,35 @@ const createPost = withApiMasto(
     if (!req.body.hid) {
       // Create post
       const postRepository = new PostFirestoreRepository()
-      return await postRepository.createPost(
-        {
-          title: req.body.title,
-          description: req.body.description,
-          image: null,
-          visibility: req.body.visibility as PostVisibility,
-          contents: fromJsonObject(req.body.data),
-        },
-        owner
-      )
+      return {
+        data: await postRepository.createPost(
+          {
+            title: req.body.title,
+            description: req.body.description,
+            image: null,
+            visibility: req.body.visibility as PostVisibility,
+            contents: fromJsonObject(req.body.data),
+          },
+          owner
+        ),
+      }
     } else {
       // Update Post
       const id = head(req.body.hid)
       const postRepository = new PostFirestoreRepository()
-      return await postRepository.updatePost(
-        id,
-        {
-          title: req.body.title,
-          description: req.body.description,
-          image: null,
-          visibility: req.body.visibility as PostVisibility,
-          contents: fromJsonObject(req.body.data),
-        },
-        owner
-      )
+      return {
+        data: await postRepository.updatePost(
+          id,
+          {
+            title: req.body.title,
+            description: req.body.description,
+            image: null,
+            visibility: req.body.visibility as PostVisibility,
+            contents: fromJsonObject(req.body.data),
+          },
+          owner
+        ),
+      }
     }
   }
 )
@@ -114,7 +118,7 @@ const deletePost = withApiAuth(async ({ req, user }) => {
   const postRepository = new PostFirestoreRepository()
   await postRepository.deletePost(id, user)
 
-  return { key: id }
+  return { data: { key: id } }
 })
 
 const purgePostCache = async (
