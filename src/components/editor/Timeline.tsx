@@ -79,8 +79,8 @@ const Timeline: React.FC<{ name: string; invisible?: boolean }> = observer(
               onRefresh={onRefresh}
               invisible={invisible}
               loadMore={
-                !store.init && !store.loading && store.type !== 'favourites'
-                  ? store.loadMore
+                !store.init && !store.loading
+                  ? () => store.loadMore(false)
                   : undefined
               }
             >

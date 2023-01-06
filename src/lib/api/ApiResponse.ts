@@ -11,13 +11,16 @@ export interface ApiResponseBase {
   params?: Array<{ id?: string; value: string }>
 }
 
+export type Links = { next?: string; prev?: string }
+
 export interface ApiSuccess<T> {
-  status: 'ok' // code: 200 にしたい
+  status: 'ok'
   data: T
+  links?: Links
 }
 
 export interface ApiError {
-  status: 'error' // code: number にしたい
+  status: 'error'
   error: {
     message: string
     code?: number
@@ -26,12 +29,13 @@ export interface ApiError {
 
 export type ApiResponse<T> = ApiResponseBase & (ApiSuccess<T> | ApiError)
 
-export const success = <T>(data?: T): ApiSuccess<T> => {
+export const success = <T>(data?: T, links?: Links): ApiSuccess<T> => {
   if (!data) return { status: 'ok', data: null }
 
   return {
     status: 'ok',
     data: toJsonObject<T>(data) as any,
+    links: links,
   }
 }
 

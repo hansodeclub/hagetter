@@ -25,5 +25,5 @@ export default withApiMasto(async ({ req, res, user, accessToken, client }) => {
     result.push(status.data)
   }
 
-  return transformStatus(result, instance)
+  return { data: transformStatus(result, instance) }
 })

@@ -65,6 +65,9 @@ const StatusSelector: React.FC<StatusSelectorProps> =
         {timeline === 'favourites' && (
           <Timeline name={timeline} invisible={invisible} />
         )}
+        {timeline === 'bookmarks' && (
+          <Timeline name={timeline} invisible={invisible} />
+        )}
         {timeline === 'search' && <SearchTimeline invisible={invisible} />}
         {timeline === 'urls' && <UrlSearchTimeline />}
         {timeline === undefined && (

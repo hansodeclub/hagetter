@@ -9,5 +9,5 @@ export default withApiMasto(async ({ req, res, user, accessToken, client }) => {
   console.log(timeline.data.map((t) => t.reblog))
 
   const [_, instance] = user.split('@')
-  return transformStatus(timeline.data as any, instance)
+  return { data: transformStatus(timeline.data as any, instance) }
 })

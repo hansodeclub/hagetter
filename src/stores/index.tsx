@@ -20,6 +20,7 @@ export const RootStore = types
     publicTimeline: TimelineStore,
     homeTimeline: TimelineStore,
     favouriteTimeline: TimelineStore,
+    bookmarkTimeline: TimelineStore,
     searchTimeline: SearchTimelineStore,
     urlSearchTimeline: UrlSearchTimelineStore,
     postLists: PostListStore,
@@ -47,6 +48,7 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
       publicTimeline: { type: 'public', session: sessionStore.id },
       homeTimeline: { type: 'home', session: sessionStore.id },
       favouriteTimeline: { type: 'favourites', session: sessionStore.id },
+      bookmarkTimeline: { type: 'bookmarks', session: sessionStore.id },
       searchTimeline: { type: 'search', session: sessionStore.id },
       urlSearchTimeline: { type: 'urls', session: sessionStore.id },
     })
@@ -77,6 +79,8 @@ export const useTimeline = (name: string) => {
     return store.homeTimeline
   } else if (name === 'favourites') {
     return store.favouriteTimeline
+  } else if (name === 'bookmarks') {
+    return store.bookmarkTimeline
   } else {
     throw Error(`Unknown timeline type: ${name}`)
   }
