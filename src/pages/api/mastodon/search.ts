@@ -9,5 +9,5 @@ export default withApiMasto(async ({ req, user, client }) => {
 
   const timeline = await client.search(keyword, 'statuses')
   const [_, instance] = user.split('@')
-  return transformStatus(timeline.data.statuses, instance)
+  return { data: transformStatus(timeline.data.statuses, instance) }
 })

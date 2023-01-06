@@ -1,5 +1,6 @@
 import React from 'react'
 
+import BookmarkIcon from '@mui/icons-material/BookmarkOutlined'
 import HomeIcon from '@mui/icons-material/HomeRounded'
 import LinkIcon from '@mui/icons-material/LinkRounded'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -21,6 +22,7 @@ const items: ItemProps[] = [
   { icon: <PeopleIcon />, label: 'Local', value: 'local' },
   { icon: <PublicIcon />, label: 'Public', value: 'public' },
   { icon: <StarIcon />, label: 'Starred', value: 'favourites' },
+  { icon: <BookmarkIcon />, label: 'Bookmarks', value: 'bookmarks' },
   { icon: <SearchIcon />, label: 'Search', value: 'search' },
   { icon: <LinkIcon />, label: 'URL', value: 'urls' },
 ]
@@ -30,6 +32,7 @@ export type TimelineName =
   | 'local'
   | 'public'
   | 'favourites'
+  | 'bookmarks'
   | 'search'
   | 'urls'
 

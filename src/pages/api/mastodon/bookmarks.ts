@@ -4,7 +4,7 @@ import { transformStatus, withApiMasto } from '@/lib/api/server'
 import head from '@/lib/head'
 
 export default withApiMasto(async ({ req, user, client }) => {
-  const timeline = await client.getFavourites({
+  const timeline = await client.getBookmarks({
     max_id: head(req.query.max_id),
   })
 

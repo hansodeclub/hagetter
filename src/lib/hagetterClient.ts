@@ -9,7 +9,7 @@ import {
 } from '@/core/domains/post/HagetterPost'
 import { Account, Status } from '@/core/domains/post/Status'
 
-import { ApiResponse } from '@/lib/api/ApiResponse'
+import { ApiResponse, Links } from '@/lib/api/ApiResponse'
 import { QueryResult } from '@/lib/api/QueryResult'
 import { fromJsonObject, toJson } from '@/lib/serializer'
 import { TextItem } from '@/stores/editorStore'
@@ -23,6 +23,7 @@ export class HagetterClient {
 
   private _getUrl(path, query: object = {}) {
     const qs = Object.keys(query)
+      .filter((key) => query[key] !== undefined && query[key] !== null)
       .map((key) => `${key}=${encodeURIComponent(query[key])}`)
       .join('&')
     const q = qs.length > 0 ? '?' : ' '
@@ -98,6 +99,11 @@ export class HagetterClient {
   getData<T>(res: ApiResponse<unknown>, overrideErrorMessage?: string): T {
     if (res.status === 'ok') return res.data as T
     else throw Error(overrideErrorMessage || res.error.message)
+  }
+
+  getLinks(res: ApiResponse<unknown>): Links {
+    if (res.status === 'ok') return res.links as Links
+    else return undefined
   }
 
   /**
@@ -253,16 +259,20 @@ export class HagetterClient {
    * @param token セッショントークン
    * @param max_id カーソル
    */
-  async getTimeline(timeline: string, token: string, max_id?: string) {
-    const query = max_id ? { max_id } : {}
+  async getTimeline(
+    timeline: string,
+    token: string,
+    max_id?: string,
+    min_id?: string
+  ) {
     const res = await this.authGet<Status[]>(
       `mastodon/${timeline}`,
       token,
-      query,
+      { max_id, min_id },
       true
     )
 
-    return this.getData<Status[]>(res)
+    return { data: this.getData<Status[]>(res), links: this.getLinks(res) }
   }
 
   /**

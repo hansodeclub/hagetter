@@ -12,7 +12,7 @@ import {
 } from '@/core/domains/post/Status'
 import { VerifiableStatus } from '@/core/domains/post/VerifiableStatus'
 
-import { ApiResponse, failure, success } from '@/lib/api/ApiResponse'
+import { ApiResponse, Links, failure, success } from '@/lib/api/ApiResponse'
 import { NotFound } from '@/lib/api/HttpResponse'
 import { decrypt, encrypt, verifyAuthorization } from '@/lib/auth/server'
 import { fromJson, toJson } from '@/lib/serializer'
@@ -20,9 +20,10 @@ import { fromJson, toJson } from '@/lib/serializer'
 export const respondSuccess = <T>(
   res: NextApiResponse,
   data?: T,
+  links?: Links,
   code: number = 200
 ) => {
-  res.status(code).json(success(data))
+  res.status(code).json(success(data, links))
 }
 
 export const respondError = (
@@ -47,7 +48,7 @@ export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
     try {
       const response = await proc({ req, res })
       if (response) {
-        respondSuccess(res, response)
+        respondSuccess(res, response.data, response?.links)
       }
 
       return response

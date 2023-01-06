@@ -10,6 +10,10 @@ export const sendCacheControl = (res: ServerResponse) => {
 }
 
 export const purgeCache = async (urls: string[]) => {
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
+
   try {
     const response = await cf.zones.purgeCache(process.env.CLOUDFLARE_ZONE, {
       files: urls,

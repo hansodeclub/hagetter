@@ -7,5 +7,5 @@ export default withApiMasto(async ({ req, res, user, client }) => {
   })
 
   const [_, instance] = user.split('@')
-  return transformStatus(timeline.data as any, instance)
+  return { data: transformStatus(timeline.data as any, instance) }
 })

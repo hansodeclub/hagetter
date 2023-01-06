@@ -2,6 +2,7 @@ import { cast, types } from 'mobx-state-tree'
 
 import { Status } from '@/core/domains/post/Status'
 
+import { Links } from '@/lib/api/ApiResponse'
 import { HagetterClient } from '@/lib/hagetterClient'
 
 import SessionStore from './sessionStore'
@@ -23,6 +24,8 @@ const TimelineStore = types
     filter: types.optional(types.string, ''),
     statuses: types.optional(types.array(types.frozen<Status>()), []),
     session: types.reference(SessionStore),
+    minId: types.maybe(types.string),
+    maxId: types.maybe(types.string),
   })
   .views((self) => ({
     get filteredStatuses() {
@@ -35,6 +38,12 @@ const TimelineStore = types
     },
     concatStatuses(statuses: Status[]) {
       self.statuses = cast(self.statuses.concat(statuses))
+    },
+    setMaxId(maxId: string) {
+      self.maxId = maxId
+    },
+    setMinId(minId: string) {
+      self.minId = minId
     },
     setFilter(filter: string) {
       self.filter = filter
@@ -49,23 +58,36 @@ const TimelineStore = types
       this.setLoading(true)
 
       const hagetterClient = new HagetterClient()
-      const statuses = await hagetterClient.getTimeline(
+      const res = await hagetterClient.getTimeline(
         self.type,
         self.session.token
       )
-      this.setStatuses(statuses)
+      this.setStatuses(res.data)
+      if (res.links?.next) this.setMaxId(res.links.next)
+      if (res.links?.prev) this.setMinId(res.links.prev)
       this.setLoading(false)
     },
-    async loadMore() {
+    async loadMore(newer: boolean = false) {
       this.setLoading(true)
-      const minId = self.statuses.slice(-1)
       const hagetterClient = new HagetterClient()
-      const statuses = await hagetterClient.getTimeline(
+      const res = await hagetterClient.getTimeline(
         self.type,
         self.session.token,
-        minId.length ? minId[0].id : undefined
+        newer ? undefined : self.maxId,
+        newer ? self.minId : undefined
       )
-      this.concatStatuses(statuses)
+
+      if (!newer) {
+        if (res.links?.next) this.setMaxId(res.links.next)
+        else if (self.statuses.length > 0)
+          this.setMaxId(self.statuses[self.statuses.length - 1].id)
+        else this.setMaxId(undefined)
+      } else {
+        if (res.links?.prev) this.setMinId(res.links.prev)
+        else if (self.statuses.length > 0) this.setMinId(self.statuses[0].id)
+        else this.setMinId(undefined)
+      }
+      this.concatStatuses(res.data)
       this.setLoading(false)
     },
   }))
