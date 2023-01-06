@@ -14,7 +14,7 @@ const getUserPosts = withApiAuth(async ({ req, res, user }) => {
 
   const action = new ListPosts(new PostFirestoreRepository())
   const items = await action.execute({ username })
-  return items
+  return { data: items }
 })
 
 const getPosts = withApi(async ({ req, res }) => {
@@ -26,7 +26,7 @@ const getPosts = withApi(async ({ req, res }) => {
 
   const action = new ListPosts(new PostFirestoreRepository())
   const items = await action.execute(options)
-  return items
+  return { data: items }
 })
 
 const handler: NextApiHandler = async (req, res) => {

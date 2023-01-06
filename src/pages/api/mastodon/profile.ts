@@ -9,5 +9,5 @@ export default withApiMasto(async ({ req, res, user, client }) => {
     profile.acct = `${profile.acct}@${instance}`
   }
 
-  return profile
+  return { data: profile }
 })
