@@ -44,7 +44,7 @@
     "mobx-react-lite": "^3.2.2",
     "mobx-state-tree": "^5.1.0",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.34",
+    "moment-timezone": "^0.5.35",
     "next": "^13.0.5",
     "next-cookies": "^1.1.2",
     "node-fetch": "^3.2.4",
