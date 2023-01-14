@@ -64,7 +64,10 @@ const TimelineStore = types
       )
       this.setStatuses(res.data)
       if (res.links?.next) this.setMaxId(res.links.next)
+      else if (res.data.length > 0)
+        this.setMaxId(res.data[res.data.length - 1].id)
       if (res.links?.prev) this.setMinId(res.links.prev)
+      else if (res.data.length > 0) this.setMinId(res.data[0].id)
       this.setLoading(false)
     },
     async loadMore(newer: boolean = false) {
@@ -79,12 +82,13 @@ const TimelineStore = types
 
       if (!newer) {
         if (res.links?.next) this.setMaxId(res.links.next)
-        else if (self.statuses.length > 0)
-          this.setMaxId(self.statuses[self.statuses.length - 1].id)
-        else this.setMaxId(undefined)
+        else if (res.data.length > 0) {
+          console.log('aaa')
+          this.setMaxId(res.data[res.data.length - 1].id)
+        } else this.setMaxId(undefined)
       } else {
         if (res.links?.prev) this.setMinId(res.links.prev)
-        else if (self.statuses.length > 0) this.setMinId(self.statuses[0].id)
+        else if (res.data.length > 0) this.setMinId(res.data[0].id)
         else this.setMinId(undefined)
       }
       this.concatStatuses(res.data)
