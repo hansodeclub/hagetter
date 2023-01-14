@@ -47,7 +47,7 @@
     "moment-timezone": "^0.5.34",
     "next": "^13.0.5",
     "next-cookies": "^1.1.2",
-    "node-fetch": "^3.2.4",
+    "node-fetch": "^3.2.10",
     "node-html-parser": "^5.4.1",
     "nookies": "^2.5.2",
     "parse-link-header": "^2.0.0",
