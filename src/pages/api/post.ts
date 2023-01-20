@@ -145,11 +145,11 @@ const handler: NextApiHandler = async (req, res) => {
         await getMyPost(req, res)
       } else await getPost(req, res)
     } else if (req.method === 'POST') {
-      const key = (await createPost(req, res)) as any
-      if (key) await purgePostCache(req, key.key)
+      const data = (await createPost(req, res)) as any
+      if (data.data?.key) await purgePostCache(req, data.data.key)
     } else if (req.method === 'DELETE') {
-      const key = (await deletePost(req, res)) as any
-      if (key) await purgePostCache(req, key.key)
+      const data = (await deletePost(req, res)) as any
+      if (data.data?.key) await purgePostCache(req, data.data.key)
     } else if (req.method === 'PURGE') {
       respondSuccess(res)
     } else {
