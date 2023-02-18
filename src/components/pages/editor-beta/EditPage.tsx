@@ -169,7 +169,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           ml: 1 - (isMobile ? 1 : 0),
           mr: 7 - (isMobile ? 1 : 0),
           padding: 2,
-          paddingBottom: isMobile ? 15 : 2,
+          marginBottom: '300px',
           // border: (theme) => theme.app.border,
           backgroundColor: '#fff',
           boxShadow: isMobile ? 0 : 3,
