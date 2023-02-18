@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
-import TextFormatSelector from '@/components/editor/TextFormatSelector'
+import { TextFormatter } from '@/components/ui/TextFormatter'
 
 import { observer, useEditor } from '@/stores'
 
@@ -23,15 +23,22 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
     const [size, setSize] = React.useState<string>('h3')
     const [color, setColor] = React.useState('#000000')
 
-    const onSizeChange = (size) => {
-      setSize(size)
-      editor.setSelectedFormat(size)
+    const onChange = ({ size, color }) => {
+      if (size) {
+        setSize(size)
+        editor.setSelectedFormat(size)
+      }
+
+      if (color) {
+        setColor(color)
+        editor.setSelectedFormat(undefined, color)
+      }
     }
 
-    const onColorChange = (color) => {
-      setColor(color)
-      editor.setSelectedFormat(undefined, color)
+    const onMove = (direction: 'up' | 'down') => {
+      editor.moveSelectedItem(direction)
     }
+
     return (
       <Box
         sx={{
@@ -39,56 +46,18 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
           left: 'min(45%, 380px)',
           transform: 'translateX(-50%)',
           bottom: 72,
-          width: isMobile ? '350px' : undefined,
-          border: (theme) => theme.app.border,
-          borderRadius: 1,
-          backgroundColor: 'white',
         }}
       >
-        <Box sx={{ fontSize: 'small', mx: 2, mt: 1 }}>
-          {editor.selectedCount}個のアイテムを選択中
-        </Box>
         <Box sx={{ display: 'flex', mb: 1, alignItems: 'center' }}>
-          <Box>
-            <IconButton color="primary">
-              <DeleteIcon onClick={() => editor.removeSelectedItem()} />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton color="primary">
-              <ArrowUpwardIcon
-                fontSize="small"
-                onClick={() => editor.moveSelectedItem('up')}
-              />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton color="primary" sx={{ mr: isMobile ? 0.5 : 2 }}>
-              <ArrowDownwardIcon
-                fontSize="small"
-                onClick={() => editor.moveSelectedItem('down')}
-              />
-            </IconButton>
-          </Box>
-          <TextFormatSelector
+          <TextFormatter
+            text={`${editor.selectedCount}個のアイテムを選択中`}
             size={size}
-            onSizeChange={onSizeChange}
             color={color}
-            onColorChange={onColorChange}
+            onChange={onChange}
+            onMove={onMove}
+            onUnselect={() => editor.resetSelect()}
+            onRemove={() => editor.removeSelectedItem()}
           />
-          <Box sx={{ mr: isMobile ? 0.5 : 2 }}>
-            <Tooltip title="選択解除">
-              <IconButton
-                size="small"
-                sx={{
-                  ml: isMobile ? 1 : 5,
-                  border: (theme) => theme.app.border,
-                }}
-              >
-                <CloseIcon onClick={() => editor.resetSelect()} />
-              </IconButton>
-            </Tooltip>
-          </Box>
         </Box>
       </Box>
     )
