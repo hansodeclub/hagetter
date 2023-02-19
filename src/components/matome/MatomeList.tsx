@@ -72,7 +72,7 @@ const Content: React.FC<{ items: HagetterPostInfo[] }> = ({ items }) => {
                 <Box sx={styles.name}>{item.owner.displayName}</Box>
                 <Box sx={styles.grow} />
                 <Box style={{ marginTop: 5 }}>
-                  {moment(item.createdAt).format('YYYY-MM-DD HH:MM:SS')}
+                  {moment(item.createdAt).format('YYYY-MM-DD hh:mm:ss')}
                 </Box>
               </Box>
             </Box>

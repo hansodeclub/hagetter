@@ -245,6 +245,33 @@ const EditorStore = types
     get selectedCount() {
       return self.items.filter((item) => item.selected).length
     },
+    get selectedItems() {
+      return self.items.filter((item) => item.selected)
+    },
+    /**
+     * 選択されているStatusのフォーマットを返す
+     * 複数選択されている場合は、colorとsizeは全て同じ値である時のみ返す
+     */
+    get selectedItemsFormat() {
+      const selectedItems = self.items.filter((item) => item.selected)
+      if (selectedItems.length === 0) {
+        return {
+          color: undefined,
+          size: undefined,
+        }
+      }
+      const firstColor = selectedItems[0].color
+      const firstSize = selectedItems[0].size
+
+      return {
+        color: selectedItems.every((item) => item.color === firstColor)
+          ? firstColor
+          : undefined,
+        size: selectedItems.every((item) => item.size === firstSize)
+          ? firstSize
+          : undefined,
+      }
+    },
   }))
 
 export default EditorStore
