@@ -1,15 +1,10 @@
 import React from 'react'
 
-import {
-  PullDownContent,
-  PullToRefresh,
-  RefreshContent,
-  ReleaseContent,
-} from 'react-js-pull-to-refresh'
-
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
+import { Theme } from '@mui/material/styles'
+import { SystemStyleObject } from '@mui/system'
 
 import PullNotch from '@/components/editor/PullNotch'
 
@@ -87,7 +82,13 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
           <Box sx={styles.tootSelector}>
             <PullNotch onRefresh={onRefresh} invisible={invisible}>
               {store.filteredStatuses.map((status) => (
-                <Box key={status.id} sx={styles.toot}>
+                <Box
+                  key={status.id}
+                  sx={[
+                    styles.toot as SystemStyleObject<Theme>,
+                    editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
+                  ]}
+                >
                   <Toot
                     onClick={onStatusSelect}
                     key={status.id}

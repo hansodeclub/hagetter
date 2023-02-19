@@ -1,15 +1,10 @@
 import React from 'react'
 
-import {
-  PullDownContent,
-  PullToRefresh,
-  RefreshContent,
-  ReleaseContent,
-} from 'react-js-pull-to-refresh'
-
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
+import { Theme } from '@mui/material/styles'
+import { SystemStyleObject } from '@mui/system'
 
 import PullNotch from '@/components/editor/PullNotch'
 
@@ -24,6 +19,7 @@ const Timeline: React.FC<{ name: string; invisible?: boolean }> = observer(
   ({ name, invisible }) => {
     const store = useTimeline(name)
     const editor = useEditor()
+    const itemIds = editor.itemIds
     React.useEffect(() => {
       if (store.init) {
         store.reload().catch(console.error)
@@ -85,7 +81,17 @@ const Timeline: React.FC<{ name: string; invisible?: boolean }> = observer(
               }
             >
               {store.filteredStatuses.map((status) => (
-                <Box key={status.id} sx={styles.toot}>
+                <Box
+                  key={status.id}
+                  sx={[
+                    styles.toot as SystemStyleObject<Theme>,
+                    itemIds.has(status.id)
+                      ? {
+                          opacity: 0.6,
+                        }
+                      : {},
+                  ]}
+                >
                   <Toot
                     onClick={onStatusSelect}
                     key={status.id}
