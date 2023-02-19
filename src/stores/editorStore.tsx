@@ -231,6 +231,9 @@ const EditorStore = types
     },
   }))
   .views((self) => ({
+    get itemIds() {
+      return new Set<string>(self.items.map((item) => item.id))
+    },
     get hasPrivateStatus() {
       return (
         undefined !==

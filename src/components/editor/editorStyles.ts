@@ -1,6 +1,7 @@
-import { SxProps, Theme } from '@mui/material/styles'
+import { Theme } from '@mui/material/styles'
+import { SystemStyleObject } from '@mui/system'
 
-const styles: { [key: string]: SxProps<Theme> } = {
+const styles: { [key: string]: SystemStyleObject<Theme> } = {
   tabs: {
     border: (theme: Theme) => theme.app.border,
   },
@@ -40,7 +41,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
     overflowY: 'scroll',
     '-webkit-overflow-scrolling': 'touch',
     overscrollBehaviorY: 'none',
-  } as SxProps<Theme>,
+  },
   selectorButtom: {
     textAlign: 'center',
     justifyContent: 'center',
@@ -75,7 +76,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
   },
   toot: {
     borderBottom: '1px solid #ccc',
-  },
+  } as SystemStyleObject<Theme>,
 }
 
 export default styles

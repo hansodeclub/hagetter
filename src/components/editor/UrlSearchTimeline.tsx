@@ -4,6 +4,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
+import { Theme } from '@mui/material/styles'
+import { SystemStyleObject } from '@mui/system'
 
 import { Status } from '@/core/domains/post/Status'
 
@@ -69,7 +71,13 @@ const UrlSearchTimeline: React.FC = observer(() => {
         <Box sx={styles.tootSelector}>
           <div id="basic-container">
             {store.statuses.map((status) => (
-              <Box key={status.id} sx={styles.toot}>
+              <Box
+                key={status.id}
+                sx={[
+                  styles.toot as SystemStyleObject<Theme>,
+                  editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
+                ]}
+              >
                 <Toot
                   onClick={onStatusSelect}
                   key={status.id}
