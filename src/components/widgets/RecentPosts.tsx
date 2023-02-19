@@ -77,7 +77,7 @@ const Content: React.FC<{ items: HagetterPostInfo[] }> = ({ items }) => {
                 <Box style={{ marginTop: 5 }}>
                   {moment(item.createdAt)
                     .tz('Asia/Tokyo')
-                    .format('YYYY-MM-DD HH:MM:SS')}
+                    .format('YYYY/MM/DD hh:mm')}
                 </Box>
               </Box>
             </Box>

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Drawer from '@mui/material/Drawer'
+import Slide from '@mui/material/Slide'
 import { SxProps, Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
@@ -207,7 +208,11 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           toggleDrawer={() => setShowTimeline(!showTimeline)}
         />
       </Drawer>
-      {editor.selectedCount >= 1 && <MultiSelectMenu isMobile={isMobile} />}
+      <MultiSelectMenu
+        isMobile={isMobile}
+        color={editor.selectedItemsFormat.color}
+        size={editor.selectedItemsFormat.size}
+      />
       <BottomBar onSubmit={onSubmit} submitting={submitting} />
     </Box>
   )

@@ -74,7 +74,7 @@ const UserPost = () => {
                   <li key={item.id}>
                     <a href={`/hi/${item.id}`}>{item.title}</a>
                     {item.visibility === 'unlisted' && '(未収載)'}{' '}
-                    {moment(item.created_at).format('YYYY-MM-DD HH:MM:SS')}
+                    {moment(item.created_at).format('YYYY-MM-DD hh:mm:ss')}
                     <button onClick={() => onDeletePost(item.id)}>削除</button>
                   </li>
                 ))}

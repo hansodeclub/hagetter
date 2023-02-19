@@ -83,7 +83,6 @@ const TimelineStore = types
       if (!newer) {
         if (res.links?.next) this.setMaxId(res.links.next)
         else if (res.data.length > 0) {
-          console.log('aaa')
           this.setMaxId(res.data[res.data.length - 1].id)
         } else this.setMaxId(undefined)
       } else {

@@ -34,11 +34,9 @@ export const BottomBar: React.FC<{ onSubmit: () => any; submitting: boolean }> =
     }, [editor.hasPrivateStatus])
 
     const handleUnlistedChange = (event) => {
-      console.log(event)
       if (editor.hasPrivateStatus) {
         editor.setVisibility('unlisted')
       } else {
-        console.log(event.target.checked)
         editor.setVisibility(event.target.checked ? 'unlisted' : 'public')
       }
     }
