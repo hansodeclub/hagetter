@@ -1,6 +1,7 @@
 // https://github.com/zeit/next.js/blob/canary/examples/with-cookie-auth/utils/auth.js
 import { Component } from 'react'
 
+import 'client-only'
 import cookie from 'js-cookie'
 import jwt from 'jsonwebtoken'
 import nextCookie from 'next-cookies'
@@ -9,7 +10,6 @@ import Router from 'next/router'
 import { Account } from '@/features/posts/types/Status'
 
 export const initSession = (user: string, token: string) => {
-  cookie.remove('token') // remove old implementation's token
   window.localStorage.setItem('user', user)
   window.localStorage.setItem('token', token)
   window.localStorage.removeItem('profile')
@@ -42,7 +42,7 @@ export const getToken = (): string | null => {
 export const getProfile = (): Account | null => {
   const profile = window.localStorage.getItem('profile')
   if (profile) {
-    // Deal with bug
+    // Deal with bug in previous version
     if (profile === 'undefined' || profile === 'null') {
       console.warn(`profile is ${profile}`)
       window.localStorage.removeItem('profile')
@@ -53,6 +53,10 @@ export const getProfile = (): Account | null => {
   }
 
   return null
+}
+
+export const saveProfile = (profile: Account) => {
+  window.localStorage.setItem('profile', JSON.stringify(profile))
 }
 
 export const clearProfile = () => {
