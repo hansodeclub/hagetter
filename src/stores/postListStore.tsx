@@ -1,9 +1,8 @@
 import { flow, types } from 'mobx-state-tree'
 
-import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
-
-import { QueryResult } from '@/lib/api/QueryResult'
-import { HagetterClient } from '@/lib/hagetterClient'
+import { HagetterPostInfo } from '@/features/posts/types'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import { QueryResult } from '@/types/api'
 
 const PostListStore = types
   .model('PostListModel', {
@@ -21,7 +20,7 @@ const PostListStore = types
       self.recentPosts.replace(items)
     },
     loadRecentItems: flow(function* () {
-      const hagetterClient = new HagetterClient()
+      const hagetterClient = new HagetterApiClient()
       self.recentPostLoadingState = 'loading'
       try {
         const res: QueryResult<HagetterPostInfo> =

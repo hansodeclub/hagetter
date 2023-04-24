@@ -1,10 +1,5 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler, NextApiRequest } from 'next'
 
-import { HagetterItem, PostVisibility } from '@/core/domains/post/HagetterPost'
-import { VerifiableStatus } from '@/core/domains/post/VerifiableStatus'
-import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
-
-import { NotFound } from '@/lib/api/HttpResponse'
 import {
   getMyAccount,
   respondError,
@@ -13,20 +8,31 @@ import {
   withApi,
   withApiAuth,
   withApiMasto,
-} from '@/lib/api/server'
+} from '@/features/api/server'
+import {
+  createPost,
+  deletePost,
+  getPost,
+  updatePost,
+} from '@/features/posts/api'
+import {
+  HagetterItem,
+  PostVisibility,
+} from '@/features/posts/types/HagetterPost'
+import { VerifiableStatus } from '@/features/posts/types/VerifiableStatus'
 import { purgeCache } from '@/lib/cdn/cloudflare'
-import getHost from '@/lib/getHost'
-import head from '@/lib/head'
-import { fromJsonObject, toJsonObject } from '@/lib/serializer'
+import head from '@/lib/utils/head'
+import { fromJsonObject, toJsonObject } from '@/lib/utils/serializer'
+import getHost from '@/lib/utils/url'
+import { NotFound } from '@/types/api/HttpResponse'
 
-const getPost = withApi(async ({ req, res }) => {
+const getPostHandler = withApi(async ({ req }) => {
   const id = head(req.query.id)
   if (!id) {
     throw Error('No ID')
   }
 
-  const postRepository = new PostFirestoreRepository()
-  const post = await postRepository.getPost(id)
+  const post = await getPost(id)
   if (!post) {
     throw new NotFound('Item not found!')
   }
@@ -34,14 +40,13 @@ const getPost = withApi(async ({ req, res }) => {
   return { data: toJsonObject(post) }
 })
 
-const getMyPost = withApiAuth(async ({ req, user }) => {
+const getMyPostHandler = withApiAuth(async ({ req, user }) => {
   const id = head(req.query.id)
   if (!id) {
     throw Error('No ID')
   }
 
-  const postRepository = new PostFirestoreRepository()
-  const post = await postRepository.getPost(id)
+  const post = await getPost(id)
 
   if (post) {
     if (post.owner.acct !== user) {
@@ -71,52 +76,47 @@ const secureItems = (items: HagetterItem[]): HagetterItem[] => {
   })
 }
 
-const createPost = withApiMasto(
-  async ({ req, res, user, accessToken, client }) => {
-    const [_, instance] = user.split('@')
-    const owner = await getMyAccount(client, instance)
+const createPostHandler = withApiMasto(async ({ req, user, client }) => {
+  const [_, instance] = user.split('@')
+  const owner = await getMyAccount(client, instance)
 
-    if (!req.body.hid) {
-      // Create post
-      const postRepository = new PostFirestoreRepository()
-      return {
-        data: await postRepository.createPost(
-          {
-            title: req.body.title,
-            description: req.body.description,
-            image: null,
-            visibility: req.body.visibility as PostVisibility,
-            contents: fromJsonObject(req.body.data),
-          },
-          owner
-        ),
-      }
-    } else {
-      // Update Post
-      const id = head(req.body.hid)
-      const postRepository = new PostFirestoreRepository()
-      return {
-        data: await postRepository.updatePost(
+  if (!req.body.hid) {
+    // Create post
+    return {
+      data: await createPost(
+        {
+          title: req.body.title,
+          description: req.body.description,
+          image: null,
+          visibility: req.body.visibility as PostVisibility,
+          contents: fromJsonObject(req.body.data),
+        },
+        owner
+      ),
+    }
+  } else {
+    // Update Post
+    const id = head(req.body.hid)
+    return {
+      data: await updatePost(
+        {
           id,
-          {
-            title: req.body.title,
-            description: req.body.description,
-            image: null,
-            visibility: req.body.visibility as PostVisibility,
-            contents: fromJsonObject(req.body.data),
-          },
-          owner
-        ),
-      }
+          title: req.body.title,
+          description: req.body.description,
+          image: null,
+          visibility: req.body.visibility as PostVisibility,
+          contents: fromJsonObject(req.body.data),
+        },
+        owner
+      ),
     }
   }
-)
+})
 
-const deletePost = withApiAuth(async ({ req, user }) => {
+const deletePostHandler = withApiAuth(async ({ req, user }) => {
   const id = head(req.query.id)
 
-  const postRepository = new PostFirestoreRepository()
-  await postRepository.deletePost(id, user)
+  await deletePost(id, user)
 
   return { data: { key: id } }
 })
@@ -128,7 +128,7 @@ const purgePostCache = async (
 ) => {
   const baseUrl = `${getHost(req)}`
   const urls = [
-    baseUrl,
+    ...(purgeHome ? [baseUrl] : []),
     `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/index.json`,
     `${baseUrl}/hi/${hid}`,
     `${baseUrl}/_next/data/${process.env.NEXT_BUILD_ID}/hi/${hid}.json`,
@@ -142,13 +142,13 @@ const handler: NextApiHandler = async (req, res) => {
     if (req.method === 'GET') {
       const action = head(req.query.action)
       if (action === 'edit') {
-        await getMyPost(req, res)
-      } else await getPost(req, res)
+        await getMyPostHandler(req, res)
+      } else await getPostHandler(req, res)
     } else if (req.method === 'POST') {
-      const data = (await createPost(req, res)) as any
+      const data = (await createPostHandler(req, res)) as any
       if (data.data?.key) await purgePostCache(req, data.data.key)
     } else if (req.method === 'DELETE') {
-      const data = (await deletePost(req, res)) as any
+      const data = (await deletePostHandler(req, res)) as any
       if (data.data?.key) await purgePostCache(req, data.data.key)
     } else if (req.method === 'PURGE') {
       respondSuccess(res)

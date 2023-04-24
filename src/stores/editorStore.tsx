@@ -2,8 +2,7 @@ import { cast, types } from 'mobx-state-tree'
 import moment from 'moment'
 import stable from 'stable'
 
-import { TextSize, isTextSize } from '@/core/domains/post/HagetterPost'
-import { Status } from '@/core/domains/post/Status'
+import { Status, TextSize, isTextSize } from '@/features/posts/types'
 
 import HagetterItem from './hagetterItem'
 
@@ -233,6 +232,11 @@ const EditorStore = types
   .views((self) => ({
     get itemIds() {
       return new Set<string>(self.items.map((item) => item.id))
+    },
+    get editing(): boolean {
+      return (
+        self.items.length > 0 || self.title !== '' || self.description !== ''
+      )
     },
     get hasPrivateStatus() {
       return (

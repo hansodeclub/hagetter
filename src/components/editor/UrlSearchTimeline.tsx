@@ -7,8 +7,7 @@ import TextField from '@mui/material/TextField'
 import { Theme } from '@mui/material/styles'
 import { SystemStyleObject } from '@mui/system'
 
-import { Status } from '@/core/domains/post/Status'
-
+import { Status } from '@/features/posts/types'
 import { observer, useEditor, useStore, useUrlSearchTimeline } from '@/stores'
 
 import Toot, { isPublic } from '../Toot/Toot'
@@ -66,7 +65,13 @@ const UrlSearchTimeline: React.FC = observer(() => {
           検索
         </Button>
       </Box>
-      <Box sx={styles.content}>
+      <Box
+        sx={{
+          position: 'relative',
+          flexGrow: 1,
+          marginTop: 1,
+        }}
+      >
         {store.loading && <LinearProgress sx={styles.progress} />}
         <Box sx={styles.tootSelector}>
           <div id="basic-container">

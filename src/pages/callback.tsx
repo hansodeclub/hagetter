@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken'
 import { GetServerSideProps, NextPage } from 'next'
 import Cookies from 'next-cookies'
 
-import { getUrlHost } from '@/lib/api/utils'
-import head from '@/lib/head'
+import head from '@/lib/utils/head'
+import { getUrlHost } from '@/lib/utils/url'
 import { useSession } from '@/stores'
 
 interface Props {

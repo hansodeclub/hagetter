@@ -1,4 +1,4 @@
-import { transformStatus, withApiMasto } from '@/lib/api/server'
+import { transformStatus, withApiMasto } from '@/features/api/server'
 
 export default withApiMasto(async ({ req, res, user, accessToken, client }) => {
   if (req.method !== 'POST') {

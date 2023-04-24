@@ -6,8 +6,6 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { Stack } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import { SxProps, Theme } from '@mui/material/styles'
 
 import Toot from '@/components/Toot/Toot'
 import TextFormatSelector from '@/components/editor/TextFormatSelector'
@@ -23,12 +21,10 @@ import {
   MoveUpItemButton,
 } from '@/components/pages/editor-beta/menus/Buttons'
 
-import { Status } from '@/core/domains/post/Status'
-
-import { useEditor } from '@/stores'
+import { Status } from '@/features/posts/types'
 import { THagetterItem } from '@/stores/hagetterItem'
 
-import { TextItem, TextItemMenu } from './TextItem'
+import { TextItem } from './TextItem'
 
 export interface ItemProps {
   item: THagetterItem

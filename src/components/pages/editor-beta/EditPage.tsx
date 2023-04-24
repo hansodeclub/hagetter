@@ -20,8 +20,9 @@ import SideContent, {
 import StatusSelectorBeta from '@/components/pages/editor-beta/StatusSelectorBeta'
 import MultiSelectMenu from '@/components/pages/editor-beta/menus/MultiSelectMenu'
 
-import { HagetterClient } from '@/lib/hagetterClient'
-import head from '@/lib/head'
+import { usePageLeaveConfirmation } from '@/hooks/usePageLeaveConfirmation'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import head from '@/lib/utils/head'
 import { useEditor, useSession, useStore } from '@/stores'
 
 import PostEditor, { leftColumnWidth } from './PostEditorBeta'
@@ -56,6 +57,8 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
     isMobile &&
     ((showTimeline === undefined && isMobile) || showTimeline === false)
 
+  usePageLeaveConfirmation(!editor.editing || submitting)
+
   const hid = head(router.query.hid)
   React.useEffect(() => {
     if (create) {
@@ -71,7 +74,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
       setError('ログインしていません')
     }
 
-    const hagetterClient = new HagetterClient()
+    const hagetterClient = new HagetterApiClient()
     hagetterClient
       .getVerifiablePost(hid, session.token)
       .then((data) => {
@@ -112,7 +115,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 
     setSubmitting(true)
 
-    const hagetterClient = new HagetterClient()
+    const hagetterClient = new HagetterApiClient()
     hagetterClient
       .createPost(
         session.token,

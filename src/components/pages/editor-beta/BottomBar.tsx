@@ -7,7 +7,6 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { ListItemIcon, Menu, MenuItem } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
@@ -63,7 +62,7 @@ export const BottomBar: React.FC<{ onSubmit: () => any; submitting: boolean }> =
             loading={submitting}
             onClick={onSubmit}
           >
-            投稿
+            投稿する
           </LoadingButton>
           <Tooltip title="未収載にすると一覧に表示されなくなります。非公開ポストを含む場合は未収載のみ選択可能です。">
             <Box

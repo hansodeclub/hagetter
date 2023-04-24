@@ -1,9 +1,7 @@
 import { cast, types } from 'mobx-state-tree'
 
-import { Status } from '@/core/domains/post/Status'
-
-import { Links } from '@/lib/api/ApiResponse'
-import { HagetterClient } from '@/lib/hagetterClient'
+import { Status } from '@/features/posts/types'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
 
 import SessionStore from './sessionStore'
 
@@ -57,7 +55,7 @@ const TimelineStore = types
 
       this.setLoading(true)
 
-      const hagetterClient = new HagetterClient()
+      const hagetterClient = new HagetterApiClient()
       const res = await hagetterClient.getTimeline(
         self.type,
         self.session.token
@@ -72,7 +70,7 @@ const TimelineStore = types
     },
     async loadMore(newer: boolean = false) {
       this.setLoading(true)
-      const hagetterClient = new HagetterClient()
+      const hagetterClient = new HagetterApiClient()
       const res = await hagetterClient.getTimeline(
         self.type,
         self.session.token,

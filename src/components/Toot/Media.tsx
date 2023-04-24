@@ -3,7 +3,7 @@ import * as React from 'react'
 import dynamic from 'next/dynamic'
 import { Lightbox } from 'react-modal-image'
 
-import { Attachment } from '@/core/domains/post/Status'
+import { Attachment } from '@/features/posts/types'
 
 // dynamic import react-player to prevent hydration error
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })

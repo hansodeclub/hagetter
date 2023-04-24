@@ -11,15 +11,11 @@ import { SxProps, Theme } from '@mui/material/styles'
 import Header from '@/components/Header'
 import PostContent from '@/components/post/PostContent'
 
-import {
-  HagetterPost,
-  parseHagetterPost,
-} from '@/core/domains/post/HagetterPost'
-import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
-
+import { getPost } from '@/features/posts/api'
+import { HagetterPost, parseHagetterPost } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
-import head from '@/lib/head'
-import { JsonString, fromJson, toJson } from '@/lib/serializer'
+import head from '@/lib/utils/head'
+import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: (theme) => ({
@@ -63,8 +59,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const hid: string = head(context.query.hid)
 
   try {
-    const postRepository = new PostFirestoreRepository()
-    const post = await postRepository.getPost(hid)
+    const post = await getPost(hid)
 
     sendCacheControl(context.res)
 

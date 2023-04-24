@@ -8,8 +8,7 @@ import Typography from '@mui/material/Typography'
 import MultilineText from '@/components/MultilineText'
 import { ItemActionCallback } from '@/components/pages/editor-beta/PostEditorBeta'
 
-import { TextSize } from '@/core/domains/post/HagetterPost'
-
+import { TextSize } from '@/features/posts/types'
 import { THagetterItem } from '@/stores/hagetterItem'
 
 export const TextItemMenu: React.FC<{

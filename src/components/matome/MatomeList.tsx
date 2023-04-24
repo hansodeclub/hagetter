@@ -8,9 +8,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
-import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
-import { PostClientRepository } from '@/core/infrastructure/client/PostClientRepository'
-import { ListPosts } from '@/core/usecases/ListPosts'
+import { getRecentPublicPost } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   matomeTitle: {
@@ -90,10 +89,8 @@ const MatomeList = () => {
 
   React.useEffect(() => {
     let unmounted = false
-    const action = new ListPosts(new PostClientRepository())
 
-    action
-      .execute({ visibility: 'public', limit: 10 })
+    getRecentPublicPost({ limit: 300 })
       .then((result) => {
         if (!unmounted) {
           setItems(result.items)

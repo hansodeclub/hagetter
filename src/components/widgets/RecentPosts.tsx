@@ -8,7 +8,7 @@ import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
 
-import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
+import { HagetterPostInfo } from '@/features/posts/types'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   matomeTitle: {

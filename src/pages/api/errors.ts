@@ -1,9 +1,8 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
-import { ErrorFirestoreRepository } from '@/core/infrastructure/server-firestore/ErrorFirestoreRepository'
-
-import { respondError, respondSuccess } from '@/lib/api/server'
-import head from '@/lib/head'
+import { respondError, respondSuccess } from '@/features/api/server'
+import { createError, getError } from '@/features/error-reports/api'
+import head from '@/lib/utils/head'
 
 export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = head(req.query.id)
@@ -12,8 +11,7 @@ export const getData = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const errorRepository = new ErrorFirestoreRepository()
-  const doc = await errorRepository.getError(id)
+  const doc = await getError(id)
   if (!doc) {
     respondError(res, 'Item not found', 404)
   }
@@ -31,8 +29,7 @@ export const postData = async (req: NextApiRequest, res: NextApiResponse) => {
     time: new Date().toISOString(),
   }
 
-  const errorRepository = new ErrorFirestoreRepository()
-  const result = await errorRepository.createError(data)
+  const result = await createError(data)
 
   respondSuccess(res, result)
 }

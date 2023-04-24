@@ -13,8 +13,8 @@ import PostEditor from '@/components/editor/PostEditor'
 import PostInfoEditor from '@/components/editor/PostInfoEditor'
 import StatusSelector from '@/components/editor/StatusSelector'
 
-import { HagetterClient } from '@/lib/hagetterClient'
-import head from '@/lib/head'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import head from '@/lib/utils/head'
 import { useEditor, useSession } from '@/stores'
 
 const gridStyle: SxProps<Theme> = {
@@ -45,7 +45,7 @@ const EditPage = observer(() => {
       setError('ログインしていません')
     }
 
-    const hagetterClient = new HagetterClient()
+    const hagetterClient = new HagetterApiClient()
     hagetterClient
       .getVerifiablePost(hid, session.token)
       .then((data) => {

@@ -1,9 +1,7 @@
 import React from 'react'
 
-import cookie from 'js-cookie'
 import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import nookies from 'nookies'
 import Select from 'react-select'
 
 import Box from '@mui/material/Box'
@@ -13,13 +11,10 @@ import Typography from '@mui/material/Typography'
 
 import Header from '@/components/Header'
 
-import { InstanceInfo } from '@/core/domains/instance/Instance'
-import { InstanceFirestoreRepository } from '@/core/infrastructure/server-firestore/InstanceFirestoreRepository'
-import { ListInstances } from '@/core/usecases/ListInstances'
-import { getInstanceList } from '@/core/usecases/server/instance'
-
-import getHost from '@/lib/getHost'
-import { HagetterClient } from '@/lib/hagetterClient'
+import { listInstances } from '@/features/instances/api'
+import { InstanceInfo } from '@/features/instances/types'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import getHost from '@/lib/utils/url'
 
 interface PageProps {
   code: number
@@ -31,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   ctx
 ) => {
   try {
-    const instances = await getInstanceList()
+    const instances = await listInstances()
 
     return {
       props: { code: 200, instances, error: null },
@@ -91,7 +86,7 @@ const LoginPage: NextPage<PageProps> = ({ instances, error }) => {
 
 const onClickButton = (instance?: InstanceInfo) => {
   if (!instance) return
-  const client = new HagetterClient()
+  const client = new HagetterApiClient()
   const callbackUri = `${getHost(window)}/auth/${instance.id}`
   location.href = client.getOAuthUrl(instance, callbackUri)
 }

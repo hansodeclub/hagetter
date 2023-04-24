@@ -1,10 +1,8 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
-import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
-import { ListPosts, ListPostsOptions } from '@/core/usecases/ListPosts'
-
-import { respondError, withApi, withApiAuth } from '@/lib/api/server'
-import head from '@/lib/head'
+import { respondError, withApi, withApiAuth } from '@/features/api/server'
+import { queryPosts } from '@/features/posts/api'
+import head from '@/lib/utils/head'
 
 const getUserPosts = withApiAuth(async ({ req, res, user }) => {
   const username = head(req.query.user)
@@ -12,20 +10,17 @@ const getUserPosts = withApiAuth(async ({ req, res, user }) => {
     throw Error('不正なユーザーID')
   }
 
-  const action = new ListPosts(new PostFirestoreRepository())
-  const items = await action.execute({ username })
+  const items = await queryPosts({ username })
   return { data: items }
 })
 
 const getPosts = withApi(async ({ req, res }) => {
-  const options: ListPostsOptions = {
+  const items = await queryPosts({
     visibility: 'public',
     limit: Number.parseInt(head(req.query.limit ?? ['100'])),
     cursor: head(req.query.cursor),
-  }
+  })
 
-  const action = new ListPosts(new PostFirestoreRepository())
-  const items = await action.execute(options)
   return { data: items }
 })
 

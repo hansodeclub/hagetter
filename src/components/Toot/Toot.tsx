@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import LockIcon from '@mui/icons-material/Lock'
 import Box from '@mui/material/Box'
@@ -7,12 +7,12 @@ import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
 
-import { TextSize } from '@/core/domains/post/HagetterPost'
-import { Status } from '@/core/domains/post/Status'
-
+import { Status } from '@/features/posts/types'
+import { TextSize } from '@/features/posts/types/HagetterPost'
 import emojify, { buildCustomEmojis } from '@/lib/mastodon/emoji'
 
 import Media from './Media'
+import Poll from './Poll'
 import Timestamp from './Timestamp'
 
 const styles: any = {
@@ -190,6 +190,11 @@ const Toot: React.FC<StatusProps> = ({
         <Box sx={styles.attachments}>
           <Media attachments={status.mediaAttachments} />
         </Box>
+        {status.poll && (
+          <Box sx={styles.attachments}>
+            <Poll poll={status.poll} />
+          </Box>
+        )}
         <Box sx={styles.footer}>
           <a href={status.url} target="_blank" rel="noreferrer">
             <Timestamp value={status.createdAt} sx={styles.timestamp} />

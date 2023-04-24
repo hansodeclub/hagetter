@@ -1,4 +1,4 @@
-import { withApiMasto } from '@/lib/api/server'
+import { withApiMasto } from '@/features/api/server'
 
 export default withApiMasto(async ({ req, res, user, client }) => {
   const response = await client.verifyAccountCredentials()

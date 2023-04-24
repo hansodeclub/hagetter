@@ -1,8 +1,7 @@
 import { types, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree'
-import { Status } from '@/core/domains/post/Status'
-import { HagetterItem } from '@/core/domains/post/HagetterPost'
+import { HagetterItem, Status, TextSize, isTextSize } from '@/features/posts/types'
 import { TextItem } from './editorStore'
-import { TextSize, isTextSize } from '@/core/domains/post/HagetterPost'
+
 
 const sizeType = types.optional(
   types.union(

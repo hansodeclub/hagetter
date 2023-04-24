@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography'
 
 import Header from '@/components/Header'
 
-import { HagetterClient } from '@/lib/hagetterClient'
-import head from '@/lib/head'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import head from '@/lib/utils/head'
 import { useSession, useStore } from '@/stores'
 
 const UserPost = () => {
@@ -29,7 +29,7 @@ const UserPost = () => {
     if (!username) return
     setLoading(true)
 
-    const hagetterClient = new HagetterClient()
+    const hagetterClient = new HagetterApiClient()
     hagetterClient
       .getMyPosts(username, session.token)
       .then((result) => {
@@ -49,7 +49,7 @@ const UserPost = () => {
 
   const onDeletePost = (id: string) => {
     if (window.confirm('削除しますか?')) {
-      const hagetterClient = new HagetterClient()
+      const hagetterClient = new HagetterApiClient()
       hagetterClient
         .deletePost(id, session.token)
         .then((_) => {
