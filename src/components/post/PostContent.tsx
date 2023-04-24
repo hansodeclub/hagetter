@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
+import Timestamp from '@/components/Timestamp'
 import Toot from '@/components/Toot/Toot'
 import { TextItem } from '@/components/matome/Item'
 
@@ -71,7 +72,7 @@ const PostContent = observer<PostContentProps>(({ post }) => {
         <Box sx={styles.grow} />
         <Box sx={{ mt: 1 }}>
           <Typography variant="body2">
-            {moment(post.createdAt).format('YYYY-MM-DD hh:mm')}
+            {moment(post.createdAt).format('YYYY-MM-DD HH:mm')}
           </Typography>
         </Box>
         {isOwner && (

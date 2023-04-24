@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
+import Timestamp from '@/components/Timestamp'
 
 import { Status } from '@/features/posts/types'
 import { TextSize } from '@/features/posts/types/HagetterPost'
@@ -13,7 +14,6 @@ import emojify, { buildCustomEmojis } from '@/lib/mastodon/emoji'
 
 import Media from './Media'
 import Poll from './Poll'
-import Timestamp from './Timestamp'
 
 const styles: any = {
   root: {

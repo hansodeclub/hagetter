@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
+import Timestamp from '@/components/Timestamp'
 
 import { HagetterPostInfo } from '@/features/posts/types'
 
@@ -75,9 +76,7 @@ const Content: React.FC<{ items: HagetterPostInfo[] }> = ({ items }) => {
                 <Box sx={styles.name}>{item.owner.displayName}</Box>
                 <Box sx={styles.grow} />
                 <Box style={{ marginTop: 5 }}>
-                  {moment(item.createdAt)
-                    .tz('Asia/Tokyo')
-                    .format('YYYY/MM/DD hh:mm')}
+                  <Timestamp value={item.createdAt} showSeconds={false} />
                 </Box>
               </Box>
             </Box>
