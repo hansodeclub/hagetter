@@ -25,7 +25,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
   container: {
     paddingTop: 1,
     px: { xs: 0, md: 4 },
-    backgroundColor: { xs: '#fff', md: 'transparent' },
+    backgroundColor: '#fff',
   },
   gridContainer: {
     height: '100vh',
