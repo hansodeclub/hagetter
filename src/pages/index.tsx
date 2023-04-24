@@ -3,6 +3,7 @@ import React from 'react'
 import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
+import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Hidden from '@mui/material/Hidden'
@@ -23,6 +24,8 @@ import { QueryResult } from '@/types/api'
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {
     paddingTop: 1,
+    px: { xs: 0, md: 4 },
+    backgroundColor: { xs: '#fff', md: 'transparent' },
   },
   gridContainer: {
     height: '100vh',
@@ -74,7 +77,7 @@ interface Props {
   recentPosts: HagetterPostInfo[]
 }
 
-const PC = ({ recentPosts }: Props) => {
+const Content = ({ recentPosts }: Props) => {
   const [logo, setLogo] = React.useState('/images/donmi_kusa_semai.png')
   React.useEffect(() => {
     if (window.location.hash === '#donmi') {
@@ -83,43 +86,42 @@ const PC = ({ recentPosts }: Props) => {
   }, [])
   return (
     <Container sx={styles.container}>
-      <Grid container spacing={2}>
-        <Hidden xsDown>
-          <Grid item>
-            <BorderedBox style={{ flexGrow: 1, maxWidth: 300 }}>
+      <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+        <Box>
+          <Hidden mdDown>
+            <BorderedBox
+              style={{
+                flexGrow: 1,
+                maxWidth: 300,
+                marginRight: '16px',
+              }}
+            >
               <img src={logo} style={{ width: '100%', display: 'block' }} />
             </BorderedBox>
-            <SearchBox
-              sx={{ marginTop: 1, border: '1px solid #ccc', width: 300 }}
-            />
-          </Grid>
-        </Hidden>
-        <Grid item>
-          <BorderedBox style={{ minWidth: 300, flexShrink: 0 }}>
-            <RecentPosts posts={recentPosts} />
-          </BorderedBox>
-        </Grid>
-      </Grid>
+          </Hidden>
+          <SearchBox
+            sx={{
+              px: { xs: 1, md: 0 },
+              my: 1,
+              width: { xs: '100%', md: '300px' },
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            minWidth: 300,
+            flexShrink: 0,
+            border: { md: '1px solid #ccc' },
+          }}
+        >
+          <RecentPosts posts={recentPosts} />
+        </Box>
+      </Box>
     </Container>
   )
 }
 
-const Mobile = ({ recentPosts }: Props) => (
-  <div style={{ borderBottom: '1px solid #888' }}>
-    <SearchBox
-      sx={{
-        padding: 1,
-        border: '1px solid #ccc',
-        width: '100%',
-        maxWidth: '667px',
-      }}
-    />
-    <RecentPosts posts={recentPosts} />
-  </div>
-)
-
 const Home: NextPage<PageProps> = (props) => {
-  const wideMonitor = useMediaQuery('(min-width:667px)')
   const recentPosts = fromJson<QueryResult<HagetterPostInfo>>(props.recentPosts)
 
   return (
@@ -129,8 +131,7 @@ const Home: NextPage<PageProps> = (props) => {
       </Head>
       <Header />
 
-      {wideMonitor && <PC recentPosts={recentPosts.items} />}
-      {!wideMonitor && <Mobile recentPosts={recentPosts.items} />}
+      <Content recentPosts={recentPosts.items} />
     </div>
   )
 }
