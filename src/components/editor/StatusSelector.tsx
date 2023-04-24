@@ -23,8 +23,7 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import TextField from '@mui/material/TextField'
 
-import { Status } from '@/core/domains/post/Status'
-
+import { Status } from '@/features/posts/types'
 import {
   useEditor,
   useSearchTimeline,

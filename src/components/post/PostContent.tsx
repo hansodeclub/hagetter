@@ -12,9 +12,7 @@ import Avatar from '@/components/Avatar'
 import Toot from '@/components/Toot/Toot'
 import { TextItem } from '@/components/matome/Item'
 
-import { HagetterPost } from '@/core/domains/post/HagetterPost'
-import { Status } from '@/core/domains/post/Status'
-
+import { HagetterPost, Status } from '@/features/posts/types'
 import { useSession } from '@/stores'
 
 const styles: { [key: string]: SxProps<Theme> } = {

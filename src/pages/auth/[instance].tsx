@@ -3,11 +3,9 @@ import * as React from 'react'
 import jwt from 'jsonwebtoken'
 import { GetServerSideProps, NextPage } from 'next'
 
-import { signIn } from '@/core/usecases/server/auth'
-
-import { getUrlHost } from '@/lib/api/utils'
-import getHost from '@/lib/getHost'
-import head from '@/lib/head'
+import { signIn } from '@/features/auth/auth'
+import head from '@/lib/utils/head'
+import { getHost, getUrlHost } from '@/lib/utils/url'
 import { useSession } from '@/stores'
 
 interface Props {

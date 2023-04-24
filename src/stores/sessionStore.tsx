@@ -1,14 +1,13 @@
 import { flow, types } from 'mobx-state-tree'
 
-import { Account } from '@/core/domains/post/Status'
-
 import {
   clearSession,
   getProfile,
   getToken,
   initSession,
-} from '@/lib/auth/client'
-import { HagetterClient } from '@/lib/hagetterClient'
+} from '@/features/auth/client'
+import { Account } from '@/features/posts/types'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
 
 const SessionStore = types
   .model('SessionModel', {
@@ -54,7 +53,7 @@ const SessionStore = types
 
       // fetch profile via Mastodon API
       self.loading = true
-      const hagetterClient = new HagetterClient()
+      const hagetterClient = new HagetterApiClient()
       const account = yield hagetterClient.getAccount(jwtToken) //fetchProfile(jwtToken)
       setAccount(account)
       self.loading = false

@@ -8,8 +8,7 @@ import { SystemStyleObject } from '@mui/system'
 
 import PullNotch from '@/components/editor/PullNotch'
 
-import { Status } from '@/core/domains/post/Status'
-
+import { Status } from '@/features/posts/types'
 import { observer, useEditor, useSearchTimeline } from '@/stores'
 
 import Toot, { isPublic } from '../Toot/Toot'
@@ -33,8 +32,6 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
     const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
       store.setFilter(event.target.value)
     }
-
-    const onRefresh = async () => {}
 
     return (
       <Box
@@ -80,25 +77,23 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
         >
           {store.loading && <LinearProgress sx={styles.progress} />}
           <Box sx={styles.tootSelector}>
-            <PullNotch onRefresh={onRefresh} invisible={invisible}>
-              {store.filteredStatuses.map((status) => (
-                <Box
+            {store.filteredStatuses.map((status) => (
+              <Box
+                key={status.id}
+                sx={[
+                  styles.toot as SystemStyleObject<Theme>,
+                  editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
+                ]}
+              >
+                <Toot
+                  onClick={onStatusSelect}
                   key={status.id}
-                  sx={[
-                    styles.toot as SystemStyleObject<Theme>,
-                    editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
-                  ]}
-                >
-                  <Toot
-                    onClick={onStatusSelect}
-                    key={status.id}
-                    status={status}
-                    disabled={!isPublic(status.visibility)}
-                    preferOriginal
-                  />
-                </Box>
-              ))}
-            </PullNotch>
+                  status={status}
+                  disabled={!isPublic(status.visibility)}
+                  preferOriginal
+                />
+              </Box>
+            ))}
           </Box>
         </Box>
       </Box>

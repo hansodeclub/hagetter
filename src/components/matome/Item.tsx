@@ -5,9 +5,7 @@ import { observer } from 'mobx-react-lite'
 import Typography from '@mui/material/Typography'
 import { SxProps, Theme } from '@mui/material/styles'
 
-import { TextSize } from '@/core/domains/post/HagetterPost'
-import { Status } from '@/core/domains/post/Status'
-
+import { Status, TextSize } from '@/features/posts/types'
 import { THagetterItem } from '@/stores/hagetterItem'
 
 import Toot from '../Toot/Toot'

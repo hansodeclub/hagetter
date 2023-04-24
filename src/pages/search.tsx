@@ -9,9 +9,9 @@ import { SxProps, Theme } from '@mui/material/styles'
 
 import Header from '@/components/Header'
 
-import head from '@/lib/head'
-import { getHitString, search } from '@/lib/search/algolia'
-import { JsonString, fromJson, toJson } from '@/lib/serializer'
+import { getHitString, search } from '@/features/search/algolia'
+import head from '@/lib/utils/head'
+import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {

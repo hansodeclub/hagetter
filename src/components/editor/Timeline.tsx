@@ -8,8 +8,7 @@ import { SystemStyleObject } from '@mui/system'
 
 import PullNotch from '@/components/editor/PullNotch'
 
-import { Status } from '@/core/domains/post/Status'
-
+import { Status } from '@/features/posts/types'
 import { observer, useEditor, useTimeline } from '@/stores'
 
 import Toot, { isPublic } from '../Toot/Toot'

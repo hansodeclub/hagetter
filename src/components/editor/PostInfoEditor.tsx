@@ -16,7 +16,7 @@ import { SxProps, Theme } from '@mui/material/styles'
 
 import Logo from '@/components/Logo'
 
-import { HagetterClient } from '@/lib/hagetterClient'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import { useEditor, useSession, useStore } from '@/stores'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -89,7 +89,7 @@ const PostInfoEditor = observer(() => {
 
     setPostLoading(true)
 
-    const hagetterClient = new HagetterClient()
+    const hagetterClient = new HagetterApiClient()
     hagetterClient
       .createPost(
         session.token,

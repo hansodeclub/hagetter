@@ -1,18 +1,16 @@
-import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
+import { withApi } from '@/features/api/server'
+import { getPost } from '@/features/posts/api'
+import head from '@/lib/utils/head'
+import { toJsonObject } from '@/lib/utils/serializer'
 
-import { withApi } from '@/lib/api/server'
-import head from '@/lib/head'
-import { toJsonObject } from '@/lib/serializer'
-
-const getPost = withApi(async ({ req, res }) => {
+const getPostItem = withApi(async ({ req, res }) => {
   const id = head(req.query.hid)
   if (!id) {
     res.status(403).json({ message: 'ID not specified' })
   }
 
-  const postRepository = new PostFirestoreRepository()
   try {
-    const post = await postRepository.getPost(id)
+    const post = await getPost(id)
     res.json(
       toJsonObject(
         post.contents.reduce(
@@ -26,4 +24,4 @@ const getPost = withApi(async ({ req, res }) => {
   }
 })
 
-export default getPost
+export default getPostItem

@@ -1,7 +1,10 @@
 import React from 'react'
-import { SxProps } from '@mui/material/styles'
-import Avatar from '@mui/material/Avatar'
+
+import { Buffer } from 'buffer'
 import path from 'path'
+
+import Avatar from '@mui/material/Avatar'
+import { SxProps } from '@mui/material/styles'
 
 interface AvatarProps {
   src: string

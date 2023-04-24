@@ -14,12 +14,11 @@ import Header from '@/components/Header'
 import SearchBox from '@/components/SearchBox'
 import RecentPosts from '@/components/widgets/RecentPosts'
 
-import { HagetterPostInfo } from '@/core/domains/post/HagetterPost'
-import { PostFirestoreRepository } from '@/core/infrastructure/server-firestore/PostFirestoreRepository'
-
-import { QueryResult } from '@/lib/api/QueryResult'
+import { getRecentPublicPost } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
-import { JsonString, fromJson, toJson } from '@/lib/serializer'
+import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
+import { QueryResult } from '@/types/api'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {
@@ -48,11 +47,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   try {
-    const postRepository = new PostFirestoreRepository()
-    const recentPosts = await postRepository.queryPosts({
-      limit: 300,
-      visibility: 'public',
-    })
+    const recentPosts = await getRecentPublicPost({ limit: 300 })
 
     sendCacheControl(context.res)
 

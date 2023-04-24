@@ -1,6 +1,6 @@
 import { NextApiRequest } from 'next'
 
-import getHost from '@/lib/getHost'
+import { getHost } from '@/lib/utils/url'
 
 export const purgeCache = async (
   req: NextApiRequest,
