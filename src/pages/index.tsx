@@ -25,7 +25,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
   container: {
     paddingTop: 1,
     px: { xs: 0, md: 4 },
-    backgroundColor: '#fff',
+    backgroundColor: { xs: '#fff', md: 'transparent' },
   },
   gridContainer: {
     height: '100vh',
@@ -112,6 +112,7 @@ const Content = ({ recentPosts }: Props) => {
             minWidth: 300,
             flexShrink: 0,
             border: { md: '1px solid #ccc' },
+            backgroundColor: '#fff',
           }}
         >
           <RecentPosts posts={recentPosts} />
