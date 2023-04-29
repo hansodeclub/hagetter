@@ -9,11 +9,11 @@ import Container from '@mui/material/Container'
 import { SxProps, Theme } from '@mui/material/styles'
 
 import AnyShare from '@/components/AnyShare'
-import Header from '@/components/Header'
+import Header from '@/components/header'
 import PostContent from '@/components/post/PostContent'
 
 import { getPost } from '@/features/posts/api'
-import { HagetterPost, parseHagetterPost } from '@/features/posts/types'
+import { HagetterPost } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
 import head from '@/lib/utils/head'
 import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'

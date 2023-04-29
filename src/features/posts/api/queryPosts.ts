@@ -23,7 +23,7 @@ export const queryPosts = async (
 
   if (options?.visibility)
     query = query.where('visibility', '==', options.visibility)
-  else if (options?.username)
+  if (options?.username)
     query = query.where('owner.acct', '==', options.username)
 
   if (options?.limit) query = query.limit(options.limit + 1)

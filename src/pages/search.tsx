@@ -7,7 +7,7 @@ import sanitizeHtml from 'sanitize-html'
 import Box from '@mui/material/Box'
 import { SxProps, Theme } from '@mui/material/styles'
 
-import Header from '@/components/Header'
+import Header from '@/components/header'
 
 import { getHitString, search } from '@/features/search/algolia'
 import head from '@/lib/utils/head'

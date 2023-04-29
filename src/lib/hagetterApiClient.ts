@@ -14,6 +14,12 @@ import { TextItem } from '@/stores/editorStore'
 import { QueryResult } from '@/types/api'
 import { ApiResponse, Links } from '@/types/api/ApiResponse'
 
+export interface GetPostsOptions {
+  visibility?: 'public' | 'unlisted' | 'private' | 'draft'
+  user?: string
+  cursor?: string
+  limit?: number
+}
 export class HagetterApiClient {
   readonly apiRoot: string
 
@@ -144,7 +150,9 @@ export class HagetterApiClient {
   /**
    * ポスト一覧を取得する(publicのみ)
    */
-  async getPosts(options?: object): Promise<QueryResult<HagetterPostInfo>> {
+  async getPosts(
+    options?: GetPostsOptions
+  ): Promise<QueryResult<HagetterPostInfo>> {
     const res = await this.get('posts', options)
     return this.getData<QueryResult<HagetterPost>>(res)
   }
@@ -158,6 +166,7 @@ export class HagetterApiClient {
   ): Promise<QueryResult<HagetterPostInfo>> {
     const res = await this.authGet('posts', token, {
       user,
+      visibility: 'unlisted',
     })
     return this.getData<QueryResult<HagetterPostInfo>>(res)
   }

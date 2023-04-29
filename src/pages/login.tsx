@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
-import Header from '@/components/Header'
+import Header from '@/components/header'
 
 import { listInstances } from '@/features/instances/api'
 import { InstanceInfo } from '@/features/instances/types'
