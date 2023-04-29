@@ -22,6 +22,7 @@ import { Theme } from '@mui/material/styles'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 
 import Logo from '@/components/Logo'
+import UserMenu from '@/components/header/UserMenu'
 
 import { useSession } from '@/stores'
 
@@ -76,52 +77,12 @@ const styles: { [key: string]: SxProps<Theme> } = {
   },
 }
 
-interface UserMenuProps {
-  acct: string
-}
-
-const UserMenu: React.FC<UserMenuProps> = observer(({ acct }) => {
-  const session = useSession()
-
-  return (
-    <List>
-      <Box m={1}>
-        <Typography
-          sx={styles.username}
-          color="textSecondary"
-          variant="subtitle2"
-          noWrap
-        >
-          ユーザー名
-        </Typography>
-        <Typography
-          sx={styles.username}
-          color="textSecondary"
-          variant="subtitle1"
-          noWrap
-        >
-          {acct}
-        </Typography>
-      </Box>
-      <Divider />
-      <Link href="/user/[username]/posts" as={`/user/${acct}/posts`}>
-        <ListItem button>
-          <ListItemText primary="まとめ一覧" />
-        </ListItem>
-      </Link>
-      <Divider />
-      <ListItem button onClick={() => session.logout()}>
-        <ListItemText primary="ログアウト" />
-      </ListItem>
-    </List>
-  )
-})
-
 const Header: React.FC = observer(() => {
   const trigger = useScrollTrigger({})
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
+  console.log(session.account)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -181,7 +142,10 @@ const Header: React.FC = observer(() => {
                       horizontal: 'center',
                     }}
                   >
-                    <UserMenu acct={session.account.acct} />
+                    <UserMenu
+                      displayName={session.account.displayName}
+                      acct={session.account.acct}
+                    />
                   </Popover>
                 </>
               )}

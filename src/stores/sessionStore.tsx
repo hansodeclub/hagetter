@@ -8,6 +8,7 @@ import {
 } from '@/features/auth/client'
 import { Account } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import { fromJsonObject } from '@/lib/utils/serializer'
 
 const SessionStore = types
   .model('SessionModel', {
@@ -42,7 +43,7 @@ const SessionStore = types
 
       // get Profile cache
       if (self.account) {
-        return self.account
+        return fromJsonObject(self.account) as Account
       }
 
       const localStorageAccount = getProfile()

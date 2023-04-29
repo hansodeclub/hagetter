@@ -1,89 +1,46 @@
 import * as React from 'react'
 
-import { useObserver } from 'mobx-react-lite'
-import moment from 'moment'
-import { useRouter } from 'next/router'
+import { GetServerSideProps, NextPage } from 'next'
 
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
+import UserEntriesPage from '@/components/pages/user-entries'
 
-import Header from '@/components/Header'
-
-import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import { queryPosts } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 import head from '@/lib/utils/head'
-import { useSession, useStore } from '@/stores'
+import {
+  JsonString,
+  fromJson,
+  toJson,
+  toJsonObject,
+} from '@/lib/utils/serializer'
+import { QueryResult } from '@/types/api'
 
-const UserPost = () => {
-  const app = useStore()
-  const session = useSession()
-  const router = useRouter()
-
-  const username = head(router.query.username)
-  const [loading, setLoading] = React.useState(true)
-  const [invoke, setInvoke] = React.useState(false)
-  const [items, setItems] = React.useState<any>()
-
-  React.useEffect(() => {
-    let unmounted = false
-    if (!username) return
-    setLoading(true)
-
-    const hagetterClient = new HagetterApiClient()
-    hagetterClient
-      .getMyPosts(username, session.token)
-      .then((result) => {
-        if (!unmounted) {
-          setItems(result.items)
-          setLoading(false)
-        }
-      })
-      .catch((err) => {
-        app.notifyError(err)
-        setLoading(false)
-      })
-    return () => {
-      unmounted = true
-    }
-  }, [username, invoke])
-
-  const onDeletePost = (id: string) => {
-    if (window.confirm('削除しますか?')) {
-      const hagetterClient = new HagetterApiClient()
-      hagetterClient
-        .deletePost(id, session.token)
-        .then((_) => {
-          setInvoke(!invoke)
-        })
-        .catch(app.notifyError)
-    }
-  }
-
-  return useObserver(() => (
-    <div>
-      <Header />
-      <Container>
-        {loading && <CircularProgress sx={{ margin: 3 }} />}
-        {!loading && (
-          <div>
-            <h4>あなたのまとめ一覧</h4>
-            <ul>
-              {!loading &&
-                items &&
-                items.map((item) => (
-                  <li key={item.id}>
-                    <a href={`/hi/${item.id}`}>{item.title}</a>
-                    {item.visibility === 'unlisted' && '(未収載)'}{' '}
-                    {moment(item.created_at).format('YYYY-MM-DD hh:mm:ss')}
-                    <button onClick={() => onDeletePost(item.id)}>削除</button>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
-      </Container>
-    </div>
-  ))
+interface PageProps {
+  username: string
+  posts: JsonString<QueryResult<HagetterPostInfo>>
 }
 
-export default UserPost
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
+  const username = head(context.query.username)
+  if (!username) {
+    return {
+      notFound: true,
+    }
+  }
+  const posts = await queryPosts({ username, visibility: 'public' })
+  return {
+    props: {
+      username: username,
+      posts: toJson(posts),
+    },
+  }
+}
+
+export const UserEntries: NextPage<PageProps> = (props) => {
+  const username = props.username
+  const posts = fromJson<QueryResult<HagetterPostInfo>>(props.posts)
+  return <UserEntriesPage username={username} posts={posts.items} />
+}
+export default UserEntries

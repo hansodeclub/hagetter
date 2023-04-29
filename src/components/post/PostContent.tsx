@@ -62,13 +62,30 @@ const PostContent = observer<PostContentProps>(({ post }) => {
       </Typography>
       <Typography variant="body2">{post['description']}</Typography>
       <Box sx={styles.footer}>
-        <Avatar
-          src={post.owner.avatar}
-          acct={post.owner.acct}
-          alt=""
-          sx={styles.avatar}
-        />
-        <Box sx={styles.name}>{post.owner.displayName}</Box>
+        <a href={`/user/${post.owner.acct}/posts`} target="_blank">
+          <Avatar
+            src={post.owner.avatar}
+            acct={post.owner.acct}
+            alt=""
+            sx={styles.avatar}
+          />
+        </a>
+        <Box sx={styles.name}>
+          <a href={`/user/${post.owner.acct}/posts`} target="_blank">
+            <Typography
+              sx={{
+                textDecoration: 'none',
+                color: 'black',
+                '&:hover': {
+                  color: 'orange',
+                  textDecoration: 'underline',
+                },
+              }}
+            >
+              {post.owner.displayName}
+            </Typography>
+          </a>
+        </Box>
         <Box sx={styles.grow} />
         <Box sx={{ mt: 1 }}>
           <Typography variant="body2">

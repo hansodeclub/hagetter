@@ -11,8 +11,8 @@ import { SxProps, Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import BorderedBox from '@/components/BorderedBox'
-import Header from '@/components/Header'
 import SearchBox from '@/components/SearchBox'
+import Header from '@/components/header'
 import RecentPosts from '@/components/widgets/RecentPosts'
 
 import { getRecentPublicPost } from '@/features/posts/api'
@@ -77,28 +77,39 @@ interface Props {
   recentPosts: HagetterPostInfo[]
 }
 
-const Content = ({ recentPosts }: Props) => {
+const DonmiChan: React.FC = () => {
   const [logo, setLogo] = React.useState('/images/donmi_kusa_semai.png')
   React.useEffect(() => {
     if (window.location.hash === '#donmi') {
       setLogo('/images/donmi2.jpg')
     }
   }, [])
+
+  return <img src={logo} style={{ width: '100%', display: 'block' }} />
+}
+
+const Content = ({ recentPosts }: Props) => {
   return (
     <Container sx={styles.container}>
-      <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+      <Box sx={{ display: { xs: 'block', md: 'flex' }, mb: 2 }}>
         <Box>
-          <Hidden mdDown>
-            <BorderedBox
-              style={{
-                flexGrow: 1,
-                maxWidth: 300,
-                marginRight: '16px',
-              }}
-            >
-              <img src={logo} style={{ width: '100%', display: 'block' }} />
-            </BorderedBox>
-          </Hidden>
+          <Box
+            style={{
+              flexGrow: 1,
+              width: 300,
+            }}
+            sx={{
+              mr: '16px',
+              display: { xs: 'none', md: 'block' },
+              border: '1px solid #ccc',
+              borderRadius: 1,
+              backgroundColor: '#fff',
+            }}
+          >
+            <React.Suspense fallback={''} unstable_avoidThisFallback={true}>
+              <DonmiChan />
+            </React.Suspense>
+          </Box>
           <SearchBox
             sx={{
               px: { xs: 1, md: 0 },
