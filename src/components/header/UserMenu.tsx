@@ -66,9 +66,14 @@ const styles: { [key: string]: SxProps<Theme> } = {
 interface UserMenuProps {
   displayName: string
   acct: string
+  onLogout?: () => void
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ displayName, acct }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({
+  displayName,
+  acct,
+  onLogout = () => {},
+}) => {
   const router = useRouter()
 
   return (
@@ -100,7 +105,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName, acct }) => {
         <ListItemText>投稿の管理</ListItemText>
       </MenuItem>
       <Divider />
-      <MenuItem>
+      <MenuItem onClick={() => onLogout()}>
         <ListItemIcon>
           <LogoutOutlinedIcon />
         </ListItemIcon>

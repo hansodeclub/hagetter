@@ -145,6 +145,7 @@ const Header: React.FC = observer(() => {
                     <UserMenu
                       displayName={session.account.displayName}
                       acct={session.account.acct}
+                      onLogout={session.logout}
                     />
                   </Popover>
                 </>
