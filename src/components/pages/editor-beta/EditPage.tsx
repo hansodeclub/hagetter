@@ -52,7 +52,6 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 
   const [timeline, setTimeline] = React.useState<TimelineName | undefined>()
   const [showTimeline, setShowTimeline] = React.useState<boolean>(undefined)
-  console.log(showTimeline)
 
   const isMobile = !useMediaQuery('(min-width:780px)')
   const isTablet = !useMediaQuery('(min-width:1140px)')
