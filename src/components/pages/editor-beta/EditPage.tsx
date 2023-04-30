@@ -7,20 +7,16 @@ import { useRouter } from 'next/router'
 
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
-import Drawer from '@mui/material/Drawer'
-import Slide from '@mui/material/Slide'
 import { SxProps, Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import Logo from '@/components/Logo'
 import BottomBar from '@/components/pages/editor-beta/BottomBar'
-import SideContent, {
-  TimelineName,
-} from '@/components/pages/editor-beta/SideContent'
+import { TimelineName } from '@/components/pages/editor-beta/SideContent'
 import SidePanel from '@/components/pages/editor-beta/SidePanel'
-import StatusSelectorBeta from '@/components/pages/editor-beta/StatusSelectorBeta'
 import MultiSelectMenu from '@/components/pages/editor-beta/menus/MultiSelectMenu'
 
+import { useDocumentHeight } from '@/hooks/useDocumentHeight'
 import { usePageLeaveConfirmation } from '@/hooks/usePageLeaveConfirmation'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import head from '@/lib/utils/head'
@@ -53,8 +49,10 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
   const [timeline, setTimeline] = React.useState<TimelineName | undefined>()
   const [showTimeline, setShowTimeline] = React.useState<boolean>(undefined)
 
+  const height = useDocumentHeight()
+
   const isMobile = !useMediaQuery('(min-width:780px)')
-  const isTablet = !useMediaQuery('(min-width:1140px)')
+  const isTablet = !useMediaQuery('(min-width:1096px)')
   const invisible =
     isTablet &&
     ((showTimeline === undefined && isMobile) || showTimeline === false)
@@ -189,7 +187,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           position: 'fixed',
           top: 0,
           right: 0,
-          height: '100vh',
+          height,
           paddingBottom: '64px',
           zIndex: 100,
         }}
