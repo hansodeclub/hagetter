@@ -17,13 +17,37 @@ interface ItemProps {
 }
 
 const items: ItemProps[] = [
-  { icon: <HomeIcon />, label: 'Home', value: 'home' },
-  { icon: <PeopleIcon />, label: 'Local', value: 'local' },
-  { icon: <PublicIcon />, label: 'Public', value: 'public' },
-  { icon: <StarIcon />, label: 'Starred', value: 'favourites' },
-  { icon: <BookmarkIcon />, label: 'Bookmarks', value: 'bookmarks' },
-  { icon: <SearchIcon />, label: 'Search', value: 'search' },
-  { icon: <LinkIcon />, label: 'URL', value: 'urls' },
+  {
+    icon: <HomeIcon sx={{ fontSize: '28px' }} />,
+    label: 'Home',
+    value: 'home',
+  },
+  {
+    icon: <PeopleIcon sx={{ fontSize: '28px' }} />,
+    label: 'Local',
+    value: 'local',
+  },
+  {
+    icon: <PublicIcon sx={{ fontSize: '28px' }} />,
+    label: 'Public',
+    value: 'public',
+  },
+  {
+    icon: <StarIcon sx={{ fontSize: '28px' }} />,
+    label: 'Starred',
+    value: 'favourites',
+  },
+  {
+    icon: <BookmarkIcon sx={{ fontSize: '28px' }} />,
+    label: 'Bookmarks',
+    value: 'bookmarks',
+  },
+  {
+    icon: <SearchIcon sx={{ fontSize: '28px' }} />,
+    label: 'Search',
+    value: 'search',
+  },
+  { icon: <LinkIcon sx={{ fontSize: '28px' }} />, label: 'URL', value: 'urls' },
 ]
 
 export type TimelineName =
@@ -48,10 +72,10 @@ const SideContent: React.FC<SideContentProps> = ({
   setTimeline,
   toggleDrawer,
   showTimeline,
-  showBurgerMenu,
 }) => {
-  const onClick = (value: TimelineName) => () => {
-    if (showBurgerMenu && toggleDrawer) {
+  const onClick = (value: TimelineName) => {
+    console.log('onClick', value)
+    if (toggleDrawer) {
       if (value === timeline && showTimeline) {
         toggleDrawer()
       } else if (!showTimeline) {
@@ -62,27 +86,29 @@ const SideContent: React.FC<SideContentProps> = ({
   }
 
   return (
-    <List>
+    <List sx={{ width: 48 }}>
       {items.map(({ icon, label, value }) => (
         <ListItem
           key={value}
           disablePadding
           sx={{
             display: 'block',
-            backgroundColor: value === timeline ? '#2196f3' : 'inherit',
+            // backgroundColor: value === timeline ? '#2196f3' : 'inherit',
           }}
         >
           <ListItemButton
             key={value}
-            sx={{ display: 'block', px: 1.5, m: 0 }}
-            onClick={onClick(value)}
+            sx={{
+              display: 'block',
+              px: 1.2,
+            }}
+            onClick={() => onClick(value)}
           >
             <ListItemIcon
               sx={{
                 minWidth: 0,
-                mx: 0,
                 justifyContent: 'center',
-                color: value === timeline ? 'white' : 'inherit',
+                color: value === timeline ? '#2196f3' : 'inherit',
               }}
             >
               {icon}

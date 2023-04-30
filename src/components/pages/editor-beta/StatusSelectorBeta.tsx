@@ -22,7 +22,6 @@ const HowTo: React.FC = () => {
     >
       <Typography
         sx={{
-          width: '100%',
           textAlign: 'center',
         }}
       >
@@ -47,10 +46,8 @@ const StatusSelector: React.FC<StatusSelectorProps> =
     return (
       <Box
         sx={{
-          width: '400px',
-          maxWidth: 'calc(100vw - 48px)',
+          width: 360,
           height: '100%',
-          paddingBottom: '64px',
         }}
       >
         {timeline === 'home' && (
@@ -70,15 +67,7 @@ const StatusSelector: React.FC<StatusSelectorProps> =
         )}
         {timeline === 'search' && <SearchTimeline invisible={invisible} />}
         {timeline === 'urls' && <UrlSearchTimeline />}
-        {timeline === undefined && (
-          <Box
-            sx={{
-              backgroundColor: '#fff',
-            }}
-          >
-            <HowTo />
-          </Box>
-        )}
+        {timeline === undefined && <HowTo />}
       </Box>
     )
   })

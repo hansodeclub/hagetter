@@ -61,6 +61,7 @@
     "react-player": "^2.9.0",
     "react-select": "^3.0.4",
     "react-sortable-hoc": "^1.10.1",
+    "react-transition-group": "^4.4.5",
     "sanitize-html": "^2.7.1",
     "sass": "^1.26.5",
     "setimmediate": "^1.0.5",

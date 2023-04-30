@@ -17,6 +17,7 @@ import BottomBar from '@/components/pages/editor-beta/BottomBar'
 import SideContent, {
   TimelineName,
 } from '@/components/pages/editor-beta/SideContent'
+import SidePanel from '@/components/pages/editor-beta/SidePanel'
 import StatusSelectorBeta from '@/components/pages/editor-beta/StatusSelectorBeta'
 import MultiSelectMenu from '@/components/pages/editor-beta/menus/MultiSelectMenu'
 
@@ -52,9 +53,10 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
   const [timeline, setTimeline] = React.useState<TimelineName | undefined>()
   const [showTimeline, setShowTimeline] = React.useState<boolean>(undefined)
 
-  const isMobile = !useMediaQuery('(min-width:1170px)')
+  const isMobile = !useMediaQuery('(min-width:780px)')
+  const isTablet = !useMediaQuery('(min-width:1140px)')
   const invisible =
-    isMobile &&
+    isTablet &&
     ((showTimeline === undefined && isMobile) || showTimeline === false)
 
   usePageLeaveConfirmation(!editor.editing || submitting)
@@ -187,30 +189,21 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
           position: 'fixed',
           top: 0,
           right: 0,
-          marginRight: '48px',
           height: '100vh',
-          backgroundColor: 'white',
-          borderLeft: (theme) => theme.app.border,
-          visibility: invisible ? 'hidden' : 'visible',
+          paddingBottom: '64px',
+          zIndex: 100,
         }}
       >
-        <StatusSelectorBeta timeline={timeline} invisible={invisible} />
+        <Box sx={{ p: 1, pr: isTablet ? 0 : 1, width: '100%', height: '100%' }}>
+          <SidePanel
+            timeline={timeline}
+            onChangeTimeline={setTimeline}
+            invisible={invisible}
+            toggleInvisible={() => setShowTimeline(!showTimeline)}
+            isTablet={isTablet}
+          />
+        </Box>
       </Box>
-      <Drawer
-        variant="permanent"
-        anchor="right"
-        PaperProps={{
-          sx: { width: '48px', zIndex: (theme) => theme.zIndex.appBar - 1 },
-        }}
-      >
-        <SideContent
-          timeline={timeline}
-          setTimeline={setTimeline}
-          showBurgerMenu={isMobile}
-          showTimeline={showTimeline}
-          toggleDrawer={() => setShowTimeline(!showTimeline)}
-        />
-      </Drawer>
       <MultiSelectMenu
         isMobile={isMobile}
         color={editor.selectedItemsFormat.color}
