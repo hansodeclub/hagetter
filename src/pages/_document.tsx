@@ -4,6 +4,8 @@ import * as React from 'react'
 import createEmotionServer from '@emotion/server/create-instance'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
+import { ResponsiveIndicator } from '@/components/ResponsiveIndicator'
+
 import createEmotionCache from '@/lib/createEmotionCache'
 import theme from '@/theme'
 
@@ -21,6 +23,7 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <ResponsiveIndicator />
         </body>
       </Html>
     )
