@@ -30,7 +30,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
     <Paper
       sx={{
         display: 'flex',
-        maxWidth: 48 + 360,
+        maxWidth: 375,
         height: '100%',
         border: '1px solid #ccc',
         borderRight: isTablet ? 0 : '1px solid #ccc',
@@ -58,7 +58,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
           sx={{
             height: '100%',
             backgroundColor: 'white',
-            width: invisible ? 0 : 360,
+            width: invisible ? 0 : 375 - 54,
           }}
           style={{
             transition: isTablet ? 'width .2s ease-out' : undefined,

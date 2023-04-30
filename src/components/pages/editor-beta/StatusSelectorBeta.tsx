@@ -46,7 +46,7 @@ const StatusSelector: React.FC<StatusSelectorProps> =
     return (
       <Box
         sx={{
-          width: 360,
+          width: '100%',
           height: '100%',
         }}
       >
