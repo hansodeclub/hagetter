@@ -22,7 +22,7 @@ export const useDocumentHeight = () => {
       window.removeEventListener('orientationchange', handleResize)
       window.visualViewport?.removeEventListener('resize', handleResize)
     }
-  }, [getHeight])
+  }, [])
 
   return height
 }

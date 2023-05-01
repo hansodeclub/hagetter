@@ -89,7 +89,7 @@ const PostContent = observer<PostContentProps>(({ post }) => {
         <Box sx={styles.grow} />
         <Box sx={{ mt: 1 }}>
           <Typography variant="body2">
-            {moment(post.createdAt).format('YYYY-MM-DD HH:mm')}
+            <Timestamp value={post.createdAt} showSeconds={false} />
           </Typography>
         </Box>
         {isOwner && (
