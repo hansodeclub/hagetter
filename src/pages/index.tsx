@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { QueryResult } from 'features/api/types'
 import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
@@ -19,7 +20,6 @@ import { getRecentPublicPost } from '@/features/posts/api'
 import { HagetterPostInfo } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
 import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
-import { QueryResult } from '@/types/api'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {

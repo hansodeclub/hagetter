@@ -1,6 +1,6 @@
+import { NotFound } from '@/features/api/types/HttpResponse'
 import { OAuthSignIn } from '@/features/auth/server'
 import { getInstance, getInstanceSecret } from '@/features/instances/api'
-import { NotFound } from '@/types/api/HttpResponse'
 
 export const signIn = async (
   code: string,

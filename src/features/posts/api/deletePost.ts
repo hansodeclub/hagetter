@@ -1,7 +1,7 @@
+import { NotFound } from '@/features/api/types/HttpResponse'
 import { HagetterPostInfo } from '@/features/posts/types/HagetterPost'
 import { firestore } from '@/lib/firebase/admin'
 import { fromJsonObject } from '@/lib/utils/serializer'
-import { NotFound } from '@/types/api/HttpResponse'
 
 /**
  * ポストを削除する。ポストは所有者しか削除出来ない。

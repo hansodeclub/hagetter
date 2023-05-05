@@ -97,7 +97,7 @@ export const generateToken = (
   instance: string,
   access_token: string
 ): string => {
-  const token = jwt.sign(
+  return jwt.sign(
     {
       user: `${username}@${instance}`,
       token: encrypt(access_token),
@@ -108,8 +108,6 @@ export const generateToken = (
       algorithm: 'HS256',
     }
   )
-
-  return token
 }
 
 /**
@@ -144,35 +142,3 @@ export const verifyAuthorization = (authorization: string) => {
 
   throw Error('Invalid Authorization Header')
 }
-
-/**
- * Sign status with server private key
- * @param acct
- * @param displayName
- * @param content
- */
-/*export const signStatus = (status: any) => {
-  const privKey = process.env.SIGN_PRIVKEY
-  if (!privKey) {
-    throw Error('Unable to read private key')
-  }
-  const sign = crypto.createSign('RSA-SHA256')
-  sign.update(new Buffer(JSON.stringify(status)))
-  return sign.sign(privKey.replace('\\n', '\n'), 'hex') // set private key
-}*/
-
-/**
- * Check if user does not modify status
- * @param acct
- * @param displayName
- * @param content
- */
-/*export const verifyStatus = (status: any): boolean => {
-  const pubKey = process.env.SIGN_PUBKEY
-  if (!pubKey) {
-    throw Error('Unable to read public key')
-  }
-  const sign = crypto.createVerify('RSA-SHA256')
-  sign.update(new Buffer(JSON.stringify(status)))
-  return sign.verify(pubKey.replace('\\n', '\n'), 'hex') // set public key
-}*/

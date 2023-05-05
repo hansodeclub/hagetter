@@ -4,11 +4,12 @@ import {
   getMyAccount,
   respondError,
   respondSuccess,
-  secureStatus,
+  signStatus,
   withApi,
   withApiAuth,
   withApiMasto,
 } from '@/features/api/server'
+import { NotFound } from '@/features/api/types/HttpResponse'
 import {
   createPost,
   deletePost,
@@ -24,7 +25,6 @@ import { purgeCache } from '@/lib/cdn/cloudflare'
 import head from '@/lib/utils/head'
 import { fromJsonObject, toJsonObject } from '@/lib/utils/serializer'
 import getHost from '@/lib/utils/url'
-import { NotFound } from '@/types/api/HttpResponse'
 
 const getPostHandler = withApi(async ({ req }) => {
   const id = head(req.query.id)
@@ -70,7 +70,7 @@ const secureItems = (items: HagetterItem[]): HagetterItem[] => {
     if (item.type === 'status') {
       return {
         ...item,
-        data: secureStatus(item.data as VerifiableStatus),
+        data: signStatus(item.data as VerifiableStatus),
       }
     } else return item
   })

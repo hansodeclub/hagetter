@@ -1,6 +1,13 @@
 import generator, { MegalodonInterface } from 'megalodon'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import {
+  ApiResponse,
+  Links,
+  failure,
+  success,
+} from '@/features/api/types/ApiResponse'
+import { NotFound } from '@/features/api/types/HttpResponse'
 import { decrypt, encrypt, verifyAuthorization } from '@/features/auth/server'
 import {
   HagetterItem,
@@ -11,8 +18,6 @@ import {
   fromMastoStatus,
 } from '@/features/posts/types'
 import { fromJson, toJson } from '@/lib/utils/serializer'
-import { ApiResponse, Links, failure, success } from '@/types/api/ApiResponse'
-import { NotFound } from '@/types/api/HttpResponse'
 
 export const respondSuccess = <T>(
   res: NextApiResponse,
@@ -104,7 +109,7 @@ export const getMyAccount = async (
  * ステータスの捏造防止のために暗号化情報を付与する(TODO: JWSに置き換え)
  * @param status
  */
-export const secureStatus = (status: Status): VerifiableStatus => {
+export const signStatus = (status: Status): VerifiableStatus => {
   return {
     ...status,
     secure: encrypt(toJson(status)),
@@ -151,6 +156,6 @@ export const transformStatus = (
 ): VerifiableStatus[] => {
   return statuses.map((mastoStatus) => {
     const status = fromMastoStatus(mastoStatus, instance)
-    return secureStatus(status)
+    return signStatus(status)
   })
 }
