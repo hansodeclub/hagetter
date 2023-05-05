@@ -10,7 +10,8 @@ import SnackbarContent from '@mui/material/SnackbarContent'
 import { amber } from '@mui/material/colors'
 import { SxProps, Theme } from '@mui/material/styles'
 
-import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import { HagetterClient } from '@/lib/hagetterClient'
+
 import { useStore } from '@/stores'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -33,7 +34,7 @@ const styles: { [key: string]: SxProps<Theme> } = {
 const sendError = async (error: Error) => {
   let url
   try {
-    const hagetterClient = new HagetterApiClient()
+    const hagetterClient = new HagetterClient()
     const errorId = hagetterClient.postError(
       window.location.href,
       error.message,

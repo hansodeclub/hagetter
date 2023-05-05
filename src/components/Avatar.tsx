@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Buffer } from 'buffer'
 import path from 'path'
 
 import Avatar from '@mui/material/Avatar'

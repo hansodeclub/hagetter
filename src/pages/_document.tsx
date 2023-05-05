@@ -7,6 +7,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { ResponsiveIndicator } from '@/components/ResponsiveIndicator'
 
 import createEmotionCache from '@/lib/createEmotionCache'
+
 import theme from '@/theme'
 
 class MyDocument extends Document {

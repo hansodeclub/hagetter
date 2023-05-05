@@ -1,5 +1,3 @@
-'use client'
-
 import * as React from 'react'
 
 import { Roboto_Condensed } from '@next/font/google'
@@ -27,6 +25,8 @@ import useScrollTrigger from '@mui/material/useScrollTrigger'
 import Logo from '@/components/Logo'
 
 import { getAccount } from '@/features/auth/api'
+
+;('use client')
 
 const robotoCondensedBold = Roboto_Condensed({
   weight: '700',
