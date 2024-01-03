@@ -23,7 +23,7 @@ const getUserPublicPosts = withApi(async ({ req, res }) => {
 const getPosts = withApi(async ({ req, res }) => {
   const items = await queryPosts({
     visibility: 'public',
-    limit: Number.parseInt(head(req.query.limit ?? ['100'])),
+    limit: Number.parseInt(head(req.query.limit) ?? '100'),
     cursor: head(req.query.cursor),
   })
 

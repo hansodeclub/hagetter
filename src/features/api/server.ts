@@ -72,7 +72,9 @@ export interface WithAuthParams extends WithApiParams {
 
 export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
   return withApi(async ({ req, res }) => {
-    const { user, accessToken } = verifyAuthorization(req.headers.authorization)
+    const { user, accessToken } = verifyAuthorization(
+      req.headers.authorization!
+    )
     return proc({ req, res, user, accessToken })
   })
 }

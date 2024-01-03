@@ -45,7 +45,7 @@ export const TextItem: React.FC<TextItemProps> = ({
   <li style={{ display: 'inline', padding: 0, margin: 0 }}>
     <Typography
       variant={variant}
-      onClick={() => onClick()}
+      onClick={onClick && (() => onClick())}
       sx={{
         margin: 0,
         padding: '5px 10px',
@@ -73,7 +73,7 @@ const Item: React.FC<ItemProps> = observer(
           <Toot
             variant={item.size}
             color={item.color}
-            onClick={() => onClick(item)}
+            onClick={onClick && (() => onClick(item))}
             selected={item.selected}
             status={status}
             sx={styles.toot}
@@ -89,7 +89,7 @@ const Item: React.FC<ItemProps> = observer(
           variant={item.size}
           color={item.color}
           selected={item.selected}
-          onClick={() => onClick(item)}
+          onClick={onClick && (() => onClick(item))}
         />
       )
     } else {

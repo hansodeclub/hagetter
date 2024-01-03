@@ -72,8 +72,8 @@ export interface ChangeEvent {
 export interface TextFormatterProps {
   text: string
   selected?: boolean
-  color: string
-  size: string
+  color?: string
+  size?: string
   onUnselect?: () => void
   onChange: (event: ChangeEvent) => void
   onMove: (direction: 'up' | 'down') => void

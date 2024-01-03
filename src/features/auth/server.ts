@@ -4,9 +4,11 @@ import generator from 'megalodon'
 
 import { getInstance } from '@/features/instances/api'
 
+import { serverConfig } from '@/config/server'
+
 export const encrypt = (token: string) => {
   const iv = crypto.randomBytes(16)
-  const key = Buffer.from(process.env.ENCRYPT_KEY, 'hex')
+  const key = Buffer.from(serverConfig.encryptKey, 'hex')
   const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
   let encrypted = cipher.update(token, 'utf8', 'hex')
   encrypted += cipher.final('hex')
@@ -15,7 +17,7 @@ export const encrypt = (token: string) => {
 
 export const decrypt = (token: string) => {
   const [iv, encrypted] = token.split(':')
-  const key = Buffer.from(process.env.ENCRYPT_KEY, 'hex')
+  const key = Buffer.from(serverConfig.encryptKey, 'hex')
   const decipher = crypto.createDecipheriv(
     'aes-256-cbc',
     key,
@@ -102,7 +104,7 @@ export const generateToken = (
       user: `${username}@${instance}`,
       token: encrypt(access_token),
     },
-    process.env.JWT_SECRET,
+    serverConfig.jwtSecret,
     {
       expiresIn: '24h',
       algorithm: 'HS256',
@@ -116,9 +118,13 @@ export const generateToken = (
  */
 export const verifyToken = (token: string) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+    const decoded = jwt.verify(token, serverConfig.jwtSecret, {
       algorithms: ['HS256'],
     })
+
+    if (!decoded || typeof decoded !== 'object') {
+      throw Error('Invalid token')
+    }
 
     return {
       user: decoded.user,

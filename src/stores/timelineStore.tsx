@@ -1,7 +1,8 @@
 import { cast, types } from 'mobx-state-tree'
 
-import { Status } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
+import { Status } from '@/features/posts/types'
 
 import SessionStore from './sessionStore'
 
@@ -58,7 +59,7 @@ const TimelineStore = types
       const hagetterClient = new HagetterApiClient()
       const res = await hagetterClient.getTimeline(
         self.type,
-        self.session.token
+        self.session.token!
       )
       this.setStatuses(res.data)
       if (res.links?.next) this.setMaxId(res.links.next)
@@ -73,7 +74,7 @@ const TimelineStore = types
       const hagetterClient = new HagetterApiClient()
       const res = await hagetterClient.getTimeline(
         self.type,
-        self.session.token,
+        self.session.token!,
         newer ? undefined : self.maxId,
         newer ? self.minId : undefined
       )

@@ -4,7 +4,6 @@ module.exports = {
   poweredByHeader: false,
   experimental: {
     runtime: 'nodejs',
-    appDir: 'true',
   },
   webpack: (config, { webpack, buildId, isServer }) => {
     config.plugins.push(

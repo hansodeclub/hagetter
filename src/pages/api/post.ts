@@ -115,6 +115,9 @@ const createPostHandler = withApiMasto(async ({ req, user, client }) => {
 
 const deletePostHandler = withApiAuth(async ({ req, user }) => {
   const id = head(req.query.id)
+  if (!id) {
+    throw Error('ID not specified')
+  }
 
   await deletePost(id, user)
 

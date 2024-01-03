@@ -15,7 +15,7 @@ export type Links = { next?: string; prev?: string }
 
 export interface ApiSuccess<T> {
   status: 'ok'
-  data: T
+  data?: T
   links?: Links
 }
 
@@ -30,7 +30,7 @@ export interface ApiError {
 export type ApiResponse<T> = ApiResponseBase & (ApiSuccess<T> | ApiError)
 
 export const success = <T>(data?: T, links?: Links): ApiSuccess<T> => {
-  if (!data) return { status: 'ok', data: null }
+  if (!data) return { status: 'ok' }
 
   return {
     status: 'ok',

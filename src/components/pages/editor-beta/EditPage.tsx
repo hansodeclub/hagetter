@@ -16,10 +16,11 @@ import { TimelineName } from '@/components/pages/editor-beta/SideContent'
 import SidePanel from '@/components/pages/editor-beta/SidePanel'
 import MultiSelectMenu from '@/components/pages/editor-beta/menus/MultiSelectMenu'
 
-import { useDocumentHeight } from '@/hooks/useDocumentHeight'
-import { usePageLeaveConfirmation } from '@/hooks/usePageLeaveConfirmation'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import head from '@/lib/utils/head'
+
+import { useDocumentHeight } from '@/hooks/useDocumentHeight'
+import { usePageLeaveConfirmation } from '@/hooks/usePageLeaveConfirmation'
 import { useEditor, useSession, useStore } from '@/stores'
 
 import PostEditor, { leftColumnWidth } from './PostEditorBeta'
@@ -47,7 +48,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
   const session = useSession()
 
   const [timeline, setTimeline] = React.useState<TimelineName | undefined>()
-  const [showTimeline, setShowTimeline] = React.useState<boolean>(undefined)
+  const [showTimeline, setShowTimeline] = React.useState<boolean>()
 
   const height = useDocumentHeight()
 
@@ -76,7 +77,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 
     const hagetterClient = new HagetterApiClient()
     hagetterClient
-      .getVerifiablePost(hid, session.token)
+      .getVerifiablePost(hid, session.token!)
       .then((data) => {
         if (!unmounted) {
           editor.reset()
@@ -118,7 +119,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
     const hagetterClient = new HagetterApiClient()
     hagetterClient
       .createPost(
-        session.token,
+        session.token!,
         editor.title,
         editor.description,
         editor.hasPrivateStatus ? 'unlisted' : (editor.visibility as any),

@@ -7,13 +7,14 @@ const getPostItem = withApi(async ({ req, res }) => {
   const id = head(req.query.hid)
   if (!id) {
     res.status(403).json({ message: 'ID not specified' })
+    return
   }
 
   try {
     const post = await getPost(id)
     res.json(
       toJsonObject(
-        post.contents.reduce(
+        post!.contents.reduce(
           (acc, item) => (item.type === 'status' ? [...acc, item.data] : acc),
           []
         )

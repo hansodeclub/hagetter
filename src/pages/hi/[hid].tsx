@@ -12,11 +12,12 @@ import AnyShare from '@/components/AnyShare'
 import Header from '@/components/header'
 import PostContent from '@/components/post/PostContent'
 
-import { getPost } from '@/features/posts/api'
-import { HagetterPost } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
 import head from '@/lib/utils/head'
 import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
+
+import { getPost } from '@/features/posts/api'
+import { HagetterPost } from '@/features/posts/types'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: (theme) => ({
@@ -57,7 +58,7 @@ interface Props {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const hid: string = head(context.query.hid)
+  const hid = head(context.query.hid) as string
 
   try {
     const post = await getPost(hid)
@@ -87,7 +88,7 @@ export interface AnyShareButtonProps {
 }
 
 const PostPage: NextPage<Props> = (props) => {
-  const post = fromJson<HagetterPost>(props.post)
+  const post = fromJson<HagetterPost>(props.post!)
 
   const { code, error } = props
 

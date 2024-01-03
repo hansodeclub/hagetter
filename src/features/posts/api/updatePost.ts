@@ -25,7 +25,7 @@ export const updatePost = async (
     throw new NotFound('Invalid post id')
   }
 
-  const oldRecordInfo = fromJsonObject<HagetterPostInfo>(res.data())
+  const oldRecordInfo = fromJsonObject<HagetterPostInfo>(res.data()!)
 
   if (oldRecordInfo.owner.acct !== owner.acct) {
     throw new Error("You are trying to update other owner's post, fuck you")

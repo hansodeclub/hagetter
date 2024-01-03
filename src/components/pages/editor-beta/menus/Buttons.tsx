@@ -12,7 +12,7 @@ import { THagetterItem } from '@/stores/hagetterItem'
 
 export const DeleteItemButton: React.FC<{
   item: THagetterItem
-  onAction: ItemActionCallback
+  onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
   return (
     <IconButton
@@ -28,7 +28,7 @@ export const DeleteItemButton: React.FC<{
 
 export const EditItemButton: React.FC<{
   item: THagetterItem
-  onAction: ItemActionCallback
+  onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
   return (
     <IconButton
@@ -44,7 +44,7 @@ export const EditItemButton: React.FC<{
 
 export const MoveUpItemButton: React.FC<{
   item: THagetterItem
-  onAction: ItemActionCallback
+  onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
   return (
     <IconButton
@@ -60,7 +60,7 @@ export const MoveUpItemButton: React.FC<{
 
 export const MoveDownItemButton: React.FC<{
   item: THagetterItem
-  onAction: ItemActionCallback
+  onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
   return (
     <IconButton

@@ -5,8 +5,6 @@ import { GetServerSideProps, NextPage } from 'next'
 
 import UserEntriesPage from '@/components/pages/user-entries'
 
-import { queryPosts } from '@/features/posts/api'
-import { HagetterPostInfo } from '@/features/posts/types'
 import head from '@/lib/utils/head'
 import {
   JsonString,
@@ -14,6 +12,9 @@ import {
   toJson,
   toJsonObject,
 } from '@/lib/utils/serializer'
+
+import { queryPosts } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 
 interface PageProps {
   username: string

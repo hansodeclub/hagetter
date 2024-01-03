@@ -16,6 +16,7 @@ import { amber, lightBlue } from '@mui/material/colors'
 import Header from '@/components/header'
 
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
 import { useSession, useStore } from '@/stores'
 import { observer } from '@/stores'
 
@@ -62,11 +63,16 @@ const EntriesPage = observer(() => {
   React.useEffect(() => {
     let unmounted = false
     if (!session.account) return
+    const token = session.token
+    if (!token) {
+      alert('ログインしてください')
+      return
+    }
     setLoading(true)
 
     const hagetterClient = new HagetterApiClient()
     hagetterClient
-      .getMyPosts(session.account.acct, session.token)
+      .getMyPosts(session.account.acct, token)
       .then((result) => {
         if (!unmounted) {
           setItems(result.items)
@@ -83,6 +89,7 @@ const EntriesPage = observer(() => {
   }, [session.account, invoke])
 
   const onDeletePost = (id: string) => {
+    if (!session.token) return
     if (window.confirm('削除しますか?')) {
       const hagetterClient = new HagetterApiClient()
       hagetterClient

@@ -107,7 +107,7 @@ export class HagetterApiClient {
     else throw Error(overrideErrorMessage || res.error.message)
   }
 
-  getLinks(res: ApiResponse<unknown>): Links {
+  getLinks(res: ApiResponse<unknown>): Links | undefined {
     if (res.status === 'ok') return res.links as Links
     else return undefined
   }
@@ -133,7 +133,7 @@ export class HagetterApiClient {
    */
   async getAccount(token: string): Promise<Account> {
     const res = await this.authGet<Account>('mastodon/profile', token)
-    if (res.status === 'ok') return res.data
+    if (res.status === 'ok') return res.data as Account
     else throw Error('Unable to get account')
   }
 

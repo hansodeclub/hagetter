@@ -1,4 +1,5 @@
 import algoliasearch from 'algoliasearch'
+import { serverConfig } from '@/config/server'
 
 export const getHitString = (hit: any): string | undefined => {
   const res = hit._highlightResult
@@ -16,8 +17,8 @@ export const getHitString = (hit: any): string | undefined => {
 
 export const search = async (keyword: string, page?: number) => {
   const client = algoliasearch(
-    process.env.ALGOLIA_APP_ID,
-    process.env.ALGOLIA_API_KEY
+    serverConfig.algoliaAppId,
+    serverConfig.algoliaApiKey
   )
   const index = client.initIndex('posts')
 

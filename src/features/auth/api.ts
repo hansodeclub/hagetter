@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { Account } from '@/core/domains/post/Status'
+import { Account } from '@/features/posts/types'
 
 import {
   clearSession,
   getProfile,
   getToken,
   saveProfile,
-} from '@/lib/auth/client'
-import { HagetterClient } from '@/lib/hagetterClient'
+} from '@/features/auth/client'
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
 
 export interface Session {
   loading: boolean
@@ -56,7 +56,7 @@ export const getAccount = async () => {
   }
 
   // fetch profile via Mastodon API
-  const hagetterClient = new HagetterClient()
+  const hagetterClient = new HagetterApiClient()
   const account = await hagetterClient.getAccount(jwtToken)
   saveProfile(account)
 

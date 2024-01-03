@@ -20,7 +20,7 @@ export const deletePost = async (
     throw new NotFound('Invalid post id')
   }
 
-  const recordInfo = fromJsonObject<HagetterPostInfo>(res.data())
+  const recordInfo = fromJsonObject<HagetterPostInfo>(res.data()!)
 
   if (recordInfo.owner.acct !== username) {
     throw new Error("You are trying to delete other owner's post, fuck you")

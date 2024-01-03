@@ -1,7 +1,8 @@
 import { cast, types } from 'mobx-state-tree'
 
-import { Status } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
+import { Status } from '@/features/posts/types'
 
 import SessionStore from './sessionStore'
 
@@ -34,7 +35,7 @@ const urlSearchTimelineStore = types
 
         const hagetterClient = new HagetterApiClient()
         const statuses = await hagetterClient.getUrlTimeline(
-          self.session.token,
+          self.session.token!,
           urlList
         )
         this.setStatuses(statuses)

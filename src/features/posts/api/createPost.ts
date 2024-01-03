@@ -43,7 +43,6 @@ export const createPost = async (
 
     stars: 0,
     createdAt: new Date().toISOString(),
-    updatedAt: null,
   }
 
   const contents = verifyItems(postData.contents)

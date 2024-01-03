@@ -22,8 +22,11 @@ export const getPost = async (hid: string): Promise<HagetterPost | null> => {
   }
 
   return {
+    ...(parseHagetterPostInfo(postInfo.data()!) as Exclude<
+      HagetterPost,
+      'id' | 'contents'
+    >),
     id: hid,
-    contents: contents.data().contents.map(parseContentItem),
-    ...parseHagetterPostInfo(postInfo.data()),
+    contents: contents.data()!.contents.map(parseContentItem),
   }
 }

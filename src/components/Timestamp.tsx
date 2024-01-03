@@ -2,27 +2,22 @@ import * as React from 'react'
 
 import moment from 'moment-timezone'
 
-import Box from '@mui/material/Box'
-import { SxProps, Theme } from '@mui/material/styles'
-
-export interface TimestampProps {
+export interface TimestampProps extends React.HTMLAttributes<HTMLSpanElement> {
   value: string
   showSeconds?: boolean
-  className?: string
-  sx?: SxProps<Theme>
 }
 
 const Timestamp: React.FC<TimestampProps> = ({
   value,
   showSeconds = true,
-  className,
-  sx,
+  ...rest
 }) => {
   const date = moment(value).tz('Asia/Tokyo')
+
   return (
-    <Box className={className} sx={sx}>
+    <span {...rest}>
       {date.format('YYYY-MM-DD HH:mm' + (showSeconds ? ':ss' : ''))}
-    </Box>
+    </span>
   )
 }
 

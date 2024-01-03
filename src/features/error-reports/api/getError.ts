@@ -9,5 +9,5 @@ export const getError = async (id: string): Promise<ErrorReport | null> => {
     .withConverter(errorFirestoreConverter)
     .doc(id)
     .get()
-  return doc.data()
+  return doc.data() || null
 }

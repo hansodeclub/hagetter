@@ -1,4 +1,7 @@
 /* Global CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .emojione {
   font-size: inherit;
@@ -7,10 +10,10 @@
   margin: -.2ex .15em .2ex;
   width: 16px;
   height: 16px;
+}
 
-  img {
-      width: auto;
-  }
+.emojione img {
+  width: auto;
 }
 
 a {

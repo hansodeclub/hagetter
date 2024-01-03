@@ -12,7 +12,7 @@ import Box from '@mui/material/Box'
 import styles from '@/components/editor/editorStyles'
 
 export interface PullNotchProps {
-  onRefresh?: () => any
+  onRefresh: () => any
   children?: React.ReactNode
   loadMore?: () => any
   invisible?: boolean
@@ -26,7 +26,7 @@ export const PullNotch: React.FC<PullNotchProps> = ({
 }) => {
   return (
     <PullToRefresh
-      pullDownContent={!invisible && <PullDownContent label="リロード" />}
+      pullDownContent={invisible ? <></> : <PullDownContent label="リロード" />}
       releaseContent={<ReleaseContent />}
       refreshContent={<RefreshContent height="100" />}
       pullDownThreshold={100}

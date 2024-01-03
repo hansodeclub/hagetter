@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 
 import { Roboto_Condensed } from '@next/font/google'
@@ -25,8 +27,6 @@ import Logo from '@/components/Logo'
 import UserMenu from '@/components/header/UserMenu'
 
 import { useSession } from '@/stores'
-
-;('use client')
 
 const robotoCondensedBold = Roboto_Condensed({
   weight: '700',
@@ -84,7 +84,6 @@ const Header: React.FC = observer(() => {
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
-  console.log(session.account)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }

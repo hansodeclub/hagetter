@@ -8,9 +8,10 @@ import { SxProps, Theme } from '@mui/material/styles'
 import Avatar from '@/components/Avatar'
 import Timestamp from '@/components/Timestamp'
 
+import emojify, { buildCustomEmojis } from '@/lib/mastodon/emoji'
+
 import { Status } from '@/features/posts/types'
 import { TextSize } from '@/features/posts/types/HagetterPost'
-import emojify, { buildCustomEmojis } from '@/lib/mastodon/emoji'
 
 import Media from './Media'
 import Poll from './Poll'
@@ -78,6 +79,9 @@ const styles: any = {
       color: '#ff4040',
       textDecoration: 'underline',
     },
+    '& p': {
+      wordBreak: 'break-word',
+    },
   },
   attachments: {
     maxWidth: '100%',
@@ -95,10 +99,6 @@ const styles: any = {
       color: '#888',
     },
   } as SxProps<Theme>,
-  timestamp: {
-    color: '#888',
-    typography: 'body2',
-  },
 }
 
 export interface StatusProps {
@@ -166,7 +166,7 @@ const Toot: React.FC<StatusProps> = ({
               style={{ color: color }}
               component="div"
             >
-              <span
+              <div
                 dangerouslySetInnerHTML={{
                   __html: emojify(
                     status['content'],
@@ -177,7 +177,7 @@ const Toot: React.FC<StatusProps> = ({
             </Typography>
           )}
           {!variant && (
-            <span
+            <div
               dangerouslySetInnerHTML={{
                 __html: emojify(
                   status['content'],
@@ -196,8 +196,8 @@ const Toot: React.FC<StatusProps> = ({
           </Box>
         )}
         <Box sx={styles.footer}>
-          <a href={status.url} target="_blank" rel="noreferrer">
-            <Timestamp value={status.createdAt} sx={styles.timestamp} />
+          <a href={status.url || undefined} target="_blank" rel="noreferrer">
+            <Timestamp className="text-gray-500" value={status.createdAt} />
           </a>
 
           <Box sx={styles.displayName}>

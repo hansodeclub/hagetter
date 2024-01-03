@@ -64,7 +64,7 @@ export const getInstance = async (
     .withConverter(instanceConverter)
     .doc(name)
     .get()
-  return doc.data()
+  return doc.data() || null
 }
 
 /**
@@ -81,5 +81,5 @@ export const getInstanceSecret = async (
     .get()
 
   if (!doc.exists) return null
-  return doc.data()
+  return doc.data() || null
 }

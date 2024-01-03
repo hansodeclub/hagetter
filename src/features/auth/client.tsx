@@ -28,9 +28,14 @@ export const getToken = (): string | null => {
   const token = window.localStorage.getItem('token')
   if (!token) return null
 
-  const exp = jwt.decode(token).exp * 1000
+  const decodedToken = jwt.decode(token)
+  if (!decodedToken || typeof decodedToken === 'string') return null
+
+  const exp = decodedToken?.exp
+  if (!exp) return null
+
   const now = new Date().getTime()
-  if (exp > now + 1000 * 60 * 60) {
+  if (exp * 1000 > now + 1000 * 60 * 60) {
     // JWTトークンの有効期限が1時間以上余っている時のみトークンを返す
     return token
   } else {

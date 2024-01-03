@@ -1,7 +1,8 @@
 import { cast, types } from 'mobx-state-tree'
 
-import { Status } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
+import { Status } from '@/features/posts/types'
 
 import SessionStore from './sessionStore'
 
@@ -46,7 +47,7 @@ const SearchTimelineStore = types
 
       const hagetterClient = new HagetterApiClient()
       const statuses = await hagetterClient.getSearchTimeline(
-        self.session.token,
+        self.session.token!,
         self.keyword
       )
 
