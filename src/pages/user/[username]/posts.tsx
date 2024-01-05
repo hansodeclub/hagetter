@@ -1,11 +1,10 @@
 import * as React from 'react'
 
+import { QueryResult } from 'features/api/types'
 import { GetServerSideProps, NextPage } from 'next'
 
 import UserEntriesPage from '@/components/pages/user-entries'
 
-import { queryPosts } from '@/features/posts/api'
-import { HagetterPostInfo } from '@/features/posts/types'
 import head from '@/lib/utils/head'
 import {
   JsonString,
@@ -13,7 +12,9 @@ import {
   toJson,
   toJsonObject,
 } from '@/lib/utils/serializer'
-import { QueryResult } from '@/types/api'
+
+import { queryPosts } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 
 interface PageProps {
   username: string

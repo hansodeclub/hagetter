@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { QueryResult } from 'features/api/types'
 import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
@@ -15,11 +16,11 @@ import SearchBox from '@/components/SearchBox'
 import Header from '@/components/header'
 import RecentPosts from '@/components/widgets/RecentPosts'
 
-import { getRecentPublicPost } from '@/features/posts/api'
-import { HagetterPostInfo } from '@/features/posts/types'
 import { sendCacheControl } from '@/lib/cdn/cloudflare'
 import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
-import { QueryResult } from '@/types/api'
+
+import { getRecentPublicPost } from '@/features/posts/api'
+import { HagetterPostInfo } from '@/features/posts/types'
 
 const styles: { [key: string]: SxProps<Theme> } = {
   container: {
@@ -106,7 +107,7 @@ const Content = ({ recentPosts }: Props) => {
               backgroundColor: '#fff',
             }}
           >
-            <React.Suspense fallback={''} unstable_avoidThisFallback={true}>
+            <React.Suspense fallback={''}>
               <DonmiChan />
             </React.Suspense>
           </Box>
@@ -134,7 +135,9 @@ const Content = ({ recentPosts }: Props) => {
 }
 
 const Home: NextPage<PageProps> = (props) => {
-  const recentPosts = fromJson<QueryResult<HagetterPostInfo>>(props.recentPosts)
+  const recentPosts = fromJson<QueryResult<HagetterPostInfo>>(
+    props.recentPosts!
+  )
 
   return (
     <div>

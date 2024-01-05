@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import { Roboto_Condensed } from '@next/font/google'
 import Link from 'next/link'

@@ -15,6 +15,7 @@ import StatusSelector from '@/components/editor/StatusSelector'
 
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import head from '@/lib/utils/head'
+
 import { useEditor, useSession } from '@/stores'
 
 const gridStyle: SxProps<Theme> = {
@@ -47,7 +48,7 @@ const EditPage = observer(() => {
 
     const hagetterClient = new HagetterApiClient()
     hagetterClient
-      .getVerifiablePost(hid, session.token)
+      .getVerifiablePost(hid, session.token!)
       .then((data) => {
         if (!unmounted) {
           editor.setId(hid)

@@ -17,6 +17,7 @@ import { SxProps, Theme } from '@mui/material/styles'
 import Logo from '@/components/Logo'
 
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
 import { useEditor, useSession, useStore } from '@/stores'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -80,8 +81,9 @@ const PostInfoEditor = observer(() => {
       return
     }
 
+    const token = session.token
     // const token = cookie.get('token');
-    if (!session.loggedIn) {
+    if (!session.loggedIn || !token) {
       console.error('Not logged in')
       alert('ログインしていないようです')
       return
@@ -92,7 +94,7 @@ const PostInfoEditor = observer(() => {
     const hagetterClient = new HagetterApiClient()
     hagetterClient
       .createPost(
-        session.token,
+        token,
         editor.title,
         editor.description,
         editor.hasPrivateStatus ? 'unlisted' : (editor.visibility as any),

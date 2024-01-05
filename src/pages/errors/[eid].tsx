@@ -6,9 +6,10 @@ import { useRouter } from 'next/router'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 
-import { ErrorReport } from '@/features/error-reports/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import head from '@/lib/utils/head'
+
+import { ErrorReport } from '@/features/error-reports/types'
 
 const Post = () => {
   const router = useRouter()

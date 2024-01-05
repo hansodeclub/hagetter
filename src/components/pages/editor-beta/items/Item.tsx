@@ -106,7 +106,7 @@ const Item: React.FC<ItemProps> = observer(
             <Toot
               variant={item.size}
               color={item.color}
-              onClick={() => onClick(item)}
+              onClick={onClick && (() => onClick(item))}
               selected={item.selected}
               status={status}
               preferOriginal={preferOriginal}
@@ -149,7 +149,7 @@ const Item: React.FC<ItemProps> = observer(
                 variant={item.size}
                 color={item.color}
                 selected={item.selected}
-                onClick={() => onClick(item)}
+                onClick={onClick && (() => onClick(item))}
               />
               {isMobile && (
                 <Box sx={{ position: 'absolute', right: 5, top: 5 }}>

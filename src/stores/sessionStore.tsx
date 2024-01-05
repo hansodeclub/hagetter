@@ -1,5 +1,8 @@
 import { flow, types } from 'mobx-state-tree'
 
+import { HagetterApiClient } from '@/lib/hagetterApiClient'
+import { fromJsonObject } from '@/lib/utils/serializer'
+
 import {
   clearSession,
   getProfile,
@@ -7,15 +10,13 @@ import {
   initSession,
 } from '@/features/auth/client'
 import { Account } from '@/features/posts/types'
-import { HagetterApiClient } from '@/lib/hagetterApiClient'
-import { fromJsonObject } from '@/lib/utils/serializer'
 
 const SessionStore = types
   .model('SessionModel', {
     id: types.identifier,
     initializing: types.optional(types.boolean, true),
     loading: types.optional(types.boolean, false),
-    account: types.optional(types.frozen<Account>(), null),
+    account: types.optional(types.frozen<Account | null>(), null),
   })
   .views((self) => ({
     get loggedIn() {

@@ -1,8 +1,9 @@
+import { QueryResult } from 'features/api/types'
 import { flow, types } from 'mobx-state-tree'
 
-import { HagetterPostInfo } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
-import { QueryResult } from '@/types/api'
+
+import { HagetterPostInfo } from '@/features/posts/types'
 
 const PostListStore = types
   .model('PostListModel', {

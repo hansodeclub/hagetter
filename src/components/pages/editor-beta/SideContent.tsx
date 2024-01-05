@@ -74,7 +74,6 @@ const SideContent: React.FC<SideContentProps> = ({
   showTimeline,
 }) => {
   const onClick = (value: TimelineName) => {
-    console.log('onClick', value)
     if (toggleDrawer) {
       if (value === timeline && showTimeline) {
         toggleDrawer()
@@ -93,7 +92,6 @@ const SideContent: React.FC<SideContentProps> = ({
           disablePadding
           sx={{
             display: 'block',
-            // backgroundColor: value === timeline ? '#2196f3' : 'inherit',
           }}
         >
           <ListItemButton

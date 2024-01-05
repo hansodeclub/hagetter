@@ -11,6 +11,7 @@ import { amber } from '@mui/material/colors'
 import { SxProps, Theme } from '@mui/material/styles'
 
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
 import { useStore } from '@/stores'
 
 const styles: { [key: string]: SxProps<Theme> } = {
@@ -37,7 +38,7 @@ const sendError = async (error: Error) => {
     const errorId = hagetterClient.postError(
       window.location.href,
       error.message,
-      error.stack.split('\n')
+      error.stack ? error.stack.split('\n') : []
     )
     url = `${window.location.origin}/errors/${errorId}`
   } catch (err) {}
@@ -49,7 +50,7 @@ const sendError = async (error: Error) => {
   )
 }
 
-const Action: React.FC<{ error?: Error }> = ({ error }) => (
+const Action: React.FC<{ error: Error }> = ({ error }) => (
   <Button color="primary" size="small" onClick={() => sendError(error)}>
     報告する
   </Button>

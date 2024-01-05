@@ -12,7 +12,7 @@ import SideContent, {
 import StatusSelectorBeta from './StatusSelectorBeta'
 
 export interface SidePanelProps {
-  timeline: TimelineName
+  timeline?: TimelineName
   onChangeTimeline: (timeline: TimelineName) => void
   invisible?: boolean
   toggleInvisible?: () => void

@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 
 import { fromMastoStatus } from '@/features/posts/types/Status'
 
-import Toot from './Toot'
+import Toot, { StatusProps } from './Toot'
 import linkStatus from './testdata/link.json'
 import mediaStatus from './testdata/media.json'
 import pollStatus from './testdata/poll.json'
@@ -14,7 +14,7 @@ const meta: Meta = {
 }
 export default meta
 
-type Story = StoryObj<typeof Toot>
+type Story = StoryObj<StatusProps>
 export const Default: Story = {
   args: {
     status: fromMastoStatus(linkStatus as any, 'handon.club'),

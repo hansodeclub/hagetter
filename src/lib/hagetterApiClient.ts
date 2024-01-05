@@ -1,6 +1,8 @@
+import { QueryResult } from 'features/api/types'
 import fetch from 'isomorphic-unfetch'
 import { v4 as uuidv4 } from 'uuid'
 
+import { ApiResponse, Links } from '@/features/api/types/ApiResponse'
 import { ErrorReport } from '@/features/error-reports/types'
 import { InstanceInfo } from '@/features/instances/types'
 import {
@@ -11,8 +13,6 @@ import {
 } from '@/features/posts/types'
 import { fromJsonObject, toJson } from '@/lib/utils/serializer'
 import { TextItem } from '@/stores/editorStore'
-import { QueryResult } from '@/types/api'
-import { ApiResponse, Links } from '@/types/api/ApiResponse'
 
 export interface GetPostsOptions {
   visibility?: 'public' | 'unlisted' | 'private' | 'draft'
@@ -107,7 +107,7 @@ export class HagetterApiClient {
     else throw Error(overrideErrorMessage || res.error.message)
   }
 
-  getLinks(res: ApiResponse<unknown>): Links {
+  getLinks(res: ApiResponse<unknown>): Links | undefined {
     if (res.status === 'ok') return res.links as Links
     else return undefined
   }
@@ -133,7 +133,7 @@ export class HagetterApiClient {
    */
   async getAccount(token: string): Promise<Account> {
     const res = await this.authGet<Account>('mastodon/profile', token)
-    if (res.status === 'ok') return res.data
+    if (res.status === 'ok') return res.data as Account
     else throw Error('Unable to get account')
   }
 

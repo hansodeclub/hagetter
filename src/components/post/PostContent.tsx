@@ -1,12 +1,7 @@
 import * as React from 'react'
 
 import { observer } from 'mobx-react-lite'
-import moment from 'moment'
 import { useRouter } from 'next/router'
-
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import { SxProps, Theme } from '@mui/material/styles'
 
 import Avatar from '@/components/Avatar'
 import Timestamp from '@/components/Timestamp'
@@ -15,33 +10,6 @@ import { TextItem } from '@/components/matome/Item'
 
 import { HagetterPost, Status } from '@/features/posts/types'
 import { useSession } from '@/stores'
-
-const styles: { [key: string]: SxProps<Theme> } = {
-  name: {
-    paddingTop: 1,
-    height: '30px',
-    marginLeft: 1,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-  },
-  title: {
-    paddingTop: 1,
-    paddingBottom: 1,
-    paddingLeft: 5,
-  },
-  footer: {
-    paddingTop: 1,
-    paddingLeft: 1,
-    paddingRight: 1,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-}
 
 export interface PostContentProps {
   post: HagetterPost
@@ -56,57 +24,60 @@ const PostContent = observer<PostContentProps>(({ post }) => {
     session.account.acct === post.owner.acct
 
   return (
-    <Box>
-      <Typography variant="h5">
-        <b>{post['title']}</b>
-      </Typography>
-      <Typography variant="body2">{post['description']}</Typography>
-      <Box sx={styles.footer}>
-        <a href={`/user/${post.owner.acct}/posts`} target="_blank">
-          <Avatar
-            src={post.owner.avatar}
-            acct={post.owner.acct}
-            alt=""
-            sx={styles.avatar}
-          />
-        </a>
-        <Box sx={styles.name}>
-          <a href={`/user/${post.owner.acct}/posts`} target="_blank">
-            <Typography
+    <div>
+      <h1 className="text-2xl font-bold">{post['title']}</h1>
+      <div className="my-2">{post['description']}</div>
+      <div className="flex items-center align-middle">
+        <div>
+          <a
+            href={`/user/${post.owner.acct}/posts`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Avatar
+              src={post.owner.avatar}
+              acct={post.owner.acct}
+              alt=""
               sx={{
-                textDecoration: 'none',
-                color: 'black',
-                '&:hover': {
-                  color: 'orange',
-                  textDecoration: 'underline',
-                },
+                width: 32,
+                height: 32,
               }}
-            >
-              {post.owner.displayName}
-            </Typography>
+            />
           </a>
-        </Box>
-        <Box sx={styles.grow} />
-        <Box sx={{ mt: 1 }}>
-          <Typography variant="body2">
-            <Timestamp value={post.createdAt} showSeconds={false} />
-          </Typography>
-        </Box>
+        </div>
+        <div className="ml-2">
+          <a
+            href={`/user/${post.owner.acct}/posts`}
+            target="_blank"
+            rel="noreferrer"
+            className="no-underline text-black hover:text-orange-400 hover:underline"
+          >
+            {post.owner.displayName}
+          </a>
+        </div>
+        <div className="grow" />
+        <div>
+          <Timestamp
+            value={post.createdAt}
+            className="text-base text-gray-500"
+            showSeconds={false}
+          />
+        </div>
         {isOwner && (
-          <Box sx={{ ml: 1 }}>
+          <div className="ml-1">
             <button onClick={() => router.push(`/edit/beta/${post.id}`)}>
               編集
             </button>
-          </Box>
+          </div>
         )}
-      </Box>
-      <hr />
-      <Box>
+      </div>
+      <hr className="mt-2 mb-3" />
+      <div>
         {post.contents.map((item) => (
           <Item key={item.id} item={item} />
         ))}
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 })
 

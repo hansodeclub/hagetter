@@ -18,7 +18,6 @@ export const makeResult = <T>(
     return {
       count: items.length,
       items: items,
-      cursor: null,
     }
 
   // last item only used for checking that result has next page

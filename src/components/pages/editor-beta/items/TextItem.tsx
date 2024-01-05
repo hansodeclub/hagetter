@@ -47,7 +47,7 @@ export const TextItem: React.FC<TextItemProps> = ({
   <li style={{ display: 'inline', padding: 0, margin: 0 }}>
     <Typography
       variant={variant}
-      onClick={() => onClick()}
+      onClick={onClick}
       sx={{
         margin: 0,
         padding: '5px 10px',

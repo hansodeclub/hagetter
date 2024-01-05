@@ -1,10 +1,10 @@
 import { verifyItems } from '@/features/api/server'
+import { NotFound } from '@/features/api/types/HttpResponse'
 import { CreatePostParams } from '@/features/posts/api/createPost'
 import { HagetterPostInfo } from '@/features/posts/types/HagetterPost'
 import { Account } from '@/features/posts/types/Status'
 import { firestore } from '@/lib/firebase/admin'
 import { fromJsonObject, toJsonObject } from '@/lib/utils/serializer'
-import { NotFound } from '@/types/api/HttpResponse'
 
 export type UpdatePostParams = CreatePostParams & { id: string }
 /**
@@ -25,7 +25,7 @@ export const updatePost = async (
     throw new NotFound('Invalid post id')
   }
 
-  const oldRecordInfo = fromJsonObject<HagetterPostInfo>(res.data())
+  const oldRecordInfo = fromJsonObject<HagetterPostInfo>(res.data()!)
 
   if (oldRecordInfo.owner.acct !== owner.acct) {
     throw new Error("You are trying to update other owner's post, fuck you")

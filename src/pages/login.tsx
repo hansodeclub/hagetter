@@ -11,15 +11,16 @@ import Typography from '@mui/material/Typography'
 
 import Header from '@/components/header'
 
-import { listInstances } from '@/features/instances/api'
-import { InstanceInfo } from '@/features/instances/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
 import getHost from '@/lib/utils/url'
+
+import { listInstances } from '@/features/instances/api'
+import { InstanceInfo } from '@/features/instances/types'
 
 interface PageProps {
   code: number
   instances: InstanceInfo[]
-  error?: Error
+  error: Error | null
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
@@ -77,7 +78,7 @@ const LoginPage: NextPage<PageProps> = ({ instances, error }) => {
           >
             認証
           </Button>
-          {error && <p>{error}</p>}
+          {error && <p>{error.message}</p>}
         </Box>
       </Container>
     </div>

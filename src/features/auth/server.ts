@@ -4,9 +4,11 @@ import generator from 'megalodon'
 
 import { getInstance } from '@/features/instances/api'
 
+import { serverConfig } from '@/config/server'
+
 export const encrypt = (token: string) => {
   const iv = crypto.randomBytes(16)
-  const key = Buffer.from(process.env.ENCRYPT_KEY, 'hex')
+  const key = Buffer.from(serverConfig.encryptKey, 'hex')
   const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
   let encrypted = cipher.update(token, 'utf8', 'hex')
   encrypted += cipher.final('hex')
@@ -15,7 +17,7 @@ export const encrypt = (token: string) => {
 
 export const decrypt = (token: string) => {
   const [iv, encrypted] = token.split(':')
-  const key = Buffer.from(process.env.ENCRYPT_KEY, 'hex')
+  const key = Buffer.from(serverConfig.encryptKey, 'hex')
   const decipher = crypto.createDecipheriv(
     'aes-256-cbc',
     key,
@@ -97,19 +99,17 @@ export const generateToken = (
   instance: string,
   access_token: string
 ): string => {
-  const token = jwt.sign(
+  return jwt.sign(
     {
       user: `${username}@${instance}`,
       token: encrypt(access_token),
     },
-    process.env.JWT_SECRET,
+    serverConfig.jwtSecret,
     {
       expiresIn: '24h',
       algorithm: 'HS256',
     }
   )
-
-  return token
 }
 
 /**
@@ -118,9 +118,13 @@ export const generateToken = (
  */
 export const verifyToken = (token: string) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+    const decoded = jwt.verify(token, serverConfig.jwtSecret, {
       algorithms: ['HS256'],
     })
+
+    if (!decoded || typeof decoded !== 'object') {
+      throw Error('Invalid token')
+    }
 
     return {
       user: decoded.user,
@@ -144,35 +148,3 @@ export const verifyAuthorization = (authorization: string) => {
 
   throw Error('Invalid Authorization Header')
 }
-
-/**
- * Sign status with server private key
- * @param acct
- * @param displayName
- * @param content
- */
-/*export const signStatus = (status: any) => {
-  const privKey = process.env.SIGN_PRIVKEY
-  if (!privKey) {
-    throw Error('Unable to read private key')
-  }
-  const sign = crypto.createSign('RSA-SHA256')
-  sign.update(new Buffer(JSON.stringify(status)))
-  return sign.sign(privKey.replace('\\n', '\n'), 'hex') // set private key
-}*/
-
-/**
- * Check if user does not modify status
- * @param acct
- * @param displayName
- * @param content
- */
-/*export const verifyStatus = (status: any): boolean => {
-  const pubKey = process.env.SIGN_PUBKEY
-  if (!pubKey) {
-    throw Error('Unable to read public key')
-  }
-  const sign = crypto.createVerify('RSA-SHA256')
-  sign.update(new Buffer(JSON.stringify(status)))
-  return sign.verify(pubKey.replace('\\n', '\n'), 'hex') // set public key
-}*/

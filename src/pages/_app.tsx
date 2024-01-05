@@ -13,8 +13,9 @@ import ErrorNotification from '@/components/ErrorNotification'
 
 import createEmotionCache from '@/lib/createEmotionCache'
 import { analytics, logEvent } from '@/lib/firebase/client'
+
 import { StoreProvider, useSession } from '@/stores'
-import '@/styles.scss'
+import '@/styles.css'
 import theme from '@/theme'
 
 require('setimmediate')

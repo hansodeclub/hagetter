@@ -1,10 +1,10 @@
+import { QueryResult, makeResult } from '@/features/api/types/QueryResult'
 import {
   HagetterPostInfo,
   PostVisibility,
   parseHagetterPostInfo,
 } from '@/features/posts/types/HagetterPost'
 import { firestore } from '@/lib/firebase/admin'
-import { QueryResult, makeResult } from '@/types/api/QueryResult'
 
 export interface QueryPostsParams {
   limit?: number

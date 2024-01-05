@@ -15,8 +15,9 @@ import { amber, lightBlue } from '@mui/material/colors'
 
 import Header from '@/components/header'
 
-import { HagetterPostInfo } from '@/features/posts/types'
 import { HagetterApiClient } from '@/lib/hagetterApiClient'
+
+import { HagetterPostInfo } from '@/features/posts/types'
 import { useSession, useStore } from '@/stores'
 import { observer } from '@/stores'
 
