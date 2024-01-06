@@ -6,12 +6,8 @@ import Head from 'next/head'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import Hidden from '@mui/material/Hidden'
 import { SxProps, Theme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
-import BorderedBox from '@/components/BorderedBox'
 import SearchBox from '@/components/SearchBox'
 import Header from '@/components/header'
 import RecentPosts from '@/components/widgets/RecentPosts'
