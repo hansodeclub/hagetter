@@ -11,6 +11,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@biomejs/biome": "^1.7.3",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.4.0",
@@ -20,7 +21,6 @@
     "@mui/icons-material": "^5.2.5",
     "@mui/lab": "^5.0.0-alpha.111",
     "@mui/material": "^5.10.17",
-    "@next/font": "^13.0.5",
     "@types/cloudflare": "^2.7.8",
     "algoliasearch": "^4.14.1",
     "array-move": "^2.1.0",
@@ -86,7 +86,6 @@
     "@types/sanitize-html": "^2.6.2",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^8.3.0",
-    "biome": "^0.3.3",
     "eslint": "8.6.0",
     "eslint-config-next": "12.0.7",
     "eslint-plugin-storybook": "^0.6.8",
