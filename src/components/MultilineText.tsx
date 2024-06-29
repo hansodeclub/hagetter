@@ -1,14 +1,21 @@
-import React from 'react'
+import React from "react"
 
-export const MultilineText = ({ text }) => {
-  const texts = text.split(/(\n)/).map((item, index) => {
-    return (
-      <React.Fragment key={index}>
-        {item.match(/\n/) ? <br /> : item}
-      </React.Fragment>
-    )
-  })
-  return <>{texts}</>
+export interface MultilineTextProps {
+	text: string
+}
+
+export const MultilineText: React.FC<MultilineTextProps> = ({ text }) => {
+	return (
+		<>
+			{text.split(/(\n)/).map((item) => {
+				return (
+					<React.Fragment key={item}>
+						{item.match(/\n/) ? <br /> : item}
+					</React.Fragment>
+				)
+			})}
+		</>
+	)
 }
 
 export default MultilineText

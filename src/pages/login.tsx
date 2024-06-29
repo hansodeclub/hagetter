@@ -1,95 +1,86 @@
-import React from 'react'
+import React from "react"
 
-import { GetServerSideProps, NextPage } from 'next'
-import Head from 'next/head'
-import Select from 'react-select'
+import { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
+import Select from "react-select"
 
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
+import { Button } from "@/components/ui/button"
 
-import Header from '@/components/header'
+import Header from "@/components/header"
 
-import { HagetterApiClient } from '@/lib/hagetterApiClient'
-import getHost from '@/lib/utils/url'
+import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import getHost from "@/lib/utils/url"
 
-import { listInstances } from '@/features/instances/api'
-import { InstanceInfo } from '@/features/instances/types'
+import { listInstances } from "@/features/instances/api"
+import { InstanceInfo } from "@/features/instances/types"
 
 interface PageProps {
-  code: number
-  instances: InstanceInfo[]
-  error: Error | null
+	code: number
+	instances: InstanceInfo[]
+	error: Error | null
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  ctx
+	ctx,
 ) => {
-  try {
-    const instances = await listInstances()
+	try {
+		const instances = await listInstances()
 
-    return {
-      props: { code: 200, instances, error: null },
-    }
-  } catch (err) {
-    return {
-      props: {
-        code: err.code ?? 500,
-        instances: [],
-        error: err.message,
-      },
-    }
-  }
+		return {
+			props: { code: 200, instances, error: null },
+		}
+	} catch (err) {
+		return {
+			props: {
+				code: err.code ?? 500,
+				instances: [],
+				error: err.message,
+			},
+		}
+	}
 }
 
 const LoginPage: NextPage<PageProps> = ({ instances, error }) => {
-  const [instance, setInstance] = React.useState<InstanceInfo>()
+	const [instance, setInstance] = React.useState<InstanceInfo>()
 
-  const handleInstanceChange = ({ value }: { value: InstanceInfo }) => {
-    setInstance(value)
-  }
+	const handleInstanceChange = ({ value }: { value: InstanceInfo }) => {
+		setInstance(value)
+	}
 
-  const selectOptions = instances.map((instance) => ({
-    label: instance.name,
-    value: instance,
-  }))
+	const handleSubmit = (instance?: InstanceInfo) => {
+		if (!instance) return
+		const client = new HagetterApiClient()
+		const callbackUri = `${getHost(window)}/auth/${instance.id}`
+		location.href = client.getOAuthUrl(instance, callbackUri)
+	}
 
-  return (
-    <div>
-      <Head>
-        <title>Hagetter - ログイン</title>
-      </Head>
-      <Header />
-      <Container>
-        <Box p={1}>
-          <Typography>
-            ログインするインスタンスを選択してください。
-            <br />
-          </Typography>
-          <div style={{ maxWidth: 500 }}>
-            <Select options={selectOptions} onChange={handleInstanceChange} />
-          </div>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ marginTop: 20 }}
-            onClick={() => onClickButton(instance)}
-          >
-            認証
-          </Button>
-          {error && <p>{error.message}</p>}
-        </Box>
-      </Container>
-    </div>
-  )
-}
+	const selectOptions = instances.map((instance) => ({
+		label: instance.name,
+		value: instance,
+	}))
 
-const onClickButton = (instance?: InstanceInfo) => {
-  if (!instance) return
-  const client = new HagetterApiClient()
-  const callbackUri = `${getHost(window)}/auth/${instance.id}`
-  location.href = client.getOAuthUrl(instance, callbackUri)
+	return (
+		<div>
+			<Head>
+				<title>Hagetter - ログイン</title>
+			</Head>
+			<Header />
+			<div className="container p-2 mx-auto">
+				<p>ログインするインスタンスを選択してください。</p>
+				<div style={{ maxWidth: 500 }}>
+					<Select options={selectOptions} onChange={handleInstanceChange} />
+				</div>
+				<Button
+					variant="default"
+					style={{ marginTop: 20 }}
+					onClick={() => handleSubmit(instance)}
+				>
+					認証
+				</Button>
+				{error && <p>{error.message}</p>}
+			</div>
+		</div>
+	)
 }
 
 export default LoginPage

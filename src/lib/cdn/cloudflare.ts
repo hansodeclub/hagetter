@@ -1,4 +1,4 @@
-import type { ServerResponse } from "http"
+import { ServerResponse } from "http"
 
 const cf = require("cloudflare")({
 	token: process.env.CLOUDFLARE_API_TOKEN,
