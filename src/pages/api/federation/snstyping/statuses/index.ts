@@ -1,18 +1,18 @@
-import { withApi } from '@/features/api/server'
-import { getRecentPublicPost } from '@/features/posts/api'
+import { withApi } from "@/features/api/server"
+import { getRecentPublicPosts } from "@/features/posts/api"
 
 const getPosts = withApi(async ({ res }) => {
-  const posts = await getRecentPublicPost({ limit: 10 })
-  const tasks = posts.items.map((post) => ({
-    id: post.id,
-    title: post.title,
-    username: post.owner.acct,
-  }))
+	const posts = await getRecentPublicPosts({ limit: 10 })
+	const tasks = posts.items.map((post) => ({
+		id: post.id,
+		title: post.title,
+		username: post.owner.acct,
+	}))
 
-  res.status(200).json({
-    count: posts.count,
-    items: tasks,
-  })
+	res.status(200).json({
+		count: posts.count,
+		items: tasks,
+	})
 })
 
 export default getPosts
