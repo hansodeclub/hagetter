@@ -1,70 +1,34 @@
-import type * as React from "react"
+import React from "react"
 
 import { useRouter } from "next/router"
 
-import SearchIcon from "@mui/icons-material/Search"
-import IconButton from "@mui/material/IconButton"
-import InputBase from "@mui/material/InputBase"
-import Paper from "@mui/material/Paper"
-import type { SxProps, Theme } from "@mui/material/styles"
+import { Search as SearchIcon } from "lucide-react"
 
-import TextField from "@mui/material/TextField"
-import { Controller, type SubmitHandler, useForm } from "react-hook-form"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 export interface SearchBoxProps {
-	sx?: SxProps<Theme>
+	className?: string
 }
 
-const SearchField: React.FC<SearchBoxProps> = ({ sx }) => (
-	<Paper
-		elevation={0}
-		sx={[
-			{ p: "2px 4px", display: "flex", alignItems: "center", width: 300 },
-			...(Array.isArray(sx) ? sx : [sx]),
-		]}
-	>
-		<InputBase
-			sx={{ ml: 1, flex: 1 }}
-			placeholder="検索"
-			inputProps={{ "aria-label": "search google maps" }}
-		/>
-	</Paper>
-)
-
-const SearchBox: React.FC<SearchBoxProps> = ({ sx }) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ className }) => {
 	const router = useRouter()
-	const { control, handleSubmit } = useForm<{ q: string }>()
+	const inputRef = React.useRef<HTMLInputElement | null>(null)
 
-	const onSubmit: SubmitHandler<{ q: string }> = (data) => {
-		router.push("/search?q=" + data.q)
+	const onSubmit = (e) => {
+		const keyword = inputRef.current?.value
+		if (keyword) {
+			router.push(`/search?q=${keyword}`)
+		}
+		e.preventDefault()
 	}
 
 	return (
-		<form method="GET" action="search" onSubmit={handleSubmit(onSubmit)}>
-			<Controller
-				name="q"
-				control={control}
-				render={({ field }) => (
-					<TextField
-						{...field}
-						sx={[
-							{ backgroundColor: "white" },
-							...(Array.isArray(sx) ? sx : [sx]),
-						]}
-						InputProps={{
-							endAdornment: (
-								<IconButton
-									type="submit"
-									sx={{ p: "10px" }}
-									aria-label="search"
-								>
-									<SearchIcon />
-								</IconButton>
-							),
-						}}
-					/>
-				)}
-			/>
+		<form method="GET" onSubmit={onSubmit}>
+			<div className={cn("relative", className)}>
+				<SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+				<Input placeholder="検索" className="pl-8" ref={inputRef} />
+			</div>
 		</form>
 	)
 }

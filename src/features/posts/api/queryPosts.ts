@@ -1,44 +1,49 @@
-import { QueryResult, makeResult } from '@/features/api/types/QueryResult'
+import { QueryResult, makeResult } from "@/features/api/types/QueryResult"
 import {
-  HagetterPostInfo,
-  PostVisibility,
-  parseHagetterPostInfo,
-} from '@/features/posts/types/HagetterPost'
-import { firestore } from '@/lib/firebase/admin'
+	HagetterPostInfo,
+	PostVisibility,
+	parseHagetterPostInfo,
+} from "@/features/posts/types/HagetterPost"
+import { firestore } from "@/lib/firebase/admin"
 
 export interface QueryPostsParams {
-  limit?: number
-  cursor?: string
-  username?: string
-  visibility?: PostVisibility
+	limit?: number
+	cursor?: string
+	username?: string
+	visibility?: PostVisibility
 }
 /**
  * ポスト一覧情報を取得する
  * @param options
  */
 export const queryPosts = async (
-  options?: QueryPostsParams
+	options?: QueryPostsParams,
 ): Promise<QueryResult<HagetterPostInfo>> => {
-  let query: any = firestore.collection('posts')
+	let query: any = firestore.collection("posts")
 
-  if (options?.visibility)
-    query = query.where('visibility', '==', options.visibility)
-  if (options?.username)
-    query = query.where('owner.acct', '==', options.username)
+	if (options?.visibility) {
+		query = query.where("visibility", "==", options.visibility)
+	}
 
-  if (options?.limit) query = query.limit(options.limit + 1)
+	if (options?.username) {
+		query = query.where("owner.acct", "==", options.username)
+	}
 
-  query = query.orderBy('created_at', 'desc')
+	if (options?.limit) {
+		query = query.limit(options.limit + 1)
+	}
 
-  if (options?.cursor) query = query.startAfter(options.cursor)
+	query = query.orderBy("created_at", "desc")
 
-  const result = await query.get()
-  const items: HagetterPostInfo[] = result.docs.map((doc) => {
-    return parseHagetterPostInfo({
-      id: doc.id,
-      ...doc.data(),
-    })
-  })
+	if (options?.cursor) query = query.startAfter(options.cursor)
 
-  return makeResult(items, 'createdAt')
+	const result = await query.get()
+	const items: HagetterPostInfo[] = result.docs.map((doc) => {
+		return parseHagetterPostInfo({
+			id: doc.id,
+			...doc.data(),
+		})
+	})
+
+	return makeResult(items, "createdAt")
 }
