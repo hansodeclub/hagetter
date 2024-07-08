@@ -1,8 +1,8 @@
 import React from "react"
 
-import moment from "moment"
 import { useRouter } from "next/router"
 
+import { Timestamp } from "@/components/Timestamp"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import EditIcon from "@mui/icons-material/Edit"
 import Box from "@mui/material/Box"
@@ -151,8 +151,25 @@ const EntriesPage = observer(() => {
 													</Label>
 												)}
 												<Box sx={{ ml: 2 }}>
-													{moment(item.created_at).format(
-														"YYYY-MM-DD hh:mm:ss",
+													<Timestamp
+														value={item.createdAt}
+														className="text-base text-gray-500"
+														showSeconds={true}
+													/>
+													{item.updatedAt && (
+														<>
+															<span className="text-base text-gray-500">
+																{" ("}
+															</span>
+															<Timestamp
+																value={item.createdAt}
+																className="text-base text-gray-500"
+																showSeconds={true}
+															/>{" "}
+															<span className="text-base text-gray-500">
+																更新)
+															</span>
+														</>
 													)}
 												</Box>
 											</Box>
@@ -167,7 +184,7 @@ const EntriesPage = observer(() => {
 										>
 											<IconButton
 												sx={{ mr: 2 }}
-												onClick={() => router.push(`/edit/beta/${item.id}`)}
+												onClick={() => router.push(`/edit/${item.id}`)}
 											>
 												<EditIcon />
 											</IconButton>

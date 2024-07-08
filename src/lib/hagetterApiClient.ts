@@ -21,10 +21,13 @@ export interface GetPostsOptions {
 	limit?: number
 }
 
-export class HagetterApiClient {
-	readonly apiRoot: string
+export type HagetterApiClientOptions = {
+	baseUrl?: string
+	token?: string
+}
 
-	constructor(apiRoot = "/api/") {
+export class HagetterApiClient {
+	constructor(readonly apiRoot = "/api/") {
 		this.apiRoot = apiRoot.endsWith("/") ? apiRoot : `${apiRoot}/`
 	}
 
@@ -71,7 +74,7 @@ export class HagetterApiClient {
 		return fromJsonObject<ApiResponse<T>>(await res.json())
 	}
 
-	private async postAuth<T>(path, token: string, body: object) {
+	private async authPost<T>(path, token: string, body: object) {
 		const options = {
 			method: "POST",
 			headers: {
@@ -178,7 +181,7 @@ export class HagetterApiClient {
 	 * @param token セッショントークン
 	 */
 	async getVerifiablePost(id: string, token: string): Promise<HagetterPost> {
-		const res = await this.authGet(`post`, token, {
+		const res = await this.authGet("post", token, {
 			id,
 			action: "edit",
 		})
@@ -213,7 +216,7 @@ export class HagetterApiClient {
 			body.hid = hid
 		}
 
-		const res = await this.postAuth(`post`, token, body)
+		const res = await this.authPost("post", token, body)
 		const data = this.getData<{ key: string }>(res)
 		return data.key
 	}
@@ -303,7 +306,7 @@ export class HagetterApiClient {
 	 * @param urls ステータスのURL
 	 */
 	async getUrlTimeline(token: string, urls: string[]) {
-		const res = await this.postAuth<Status[]>("mastodon/urls", token, { urls })
+		const res = await this.authPost<Status[]>("mastodon/urls", token, { urls })
 		return this.getData(res)
 	}
 

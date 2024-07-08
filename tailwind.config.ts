@@ -2,11 +2,12 @@ import type { Config } from "tailwindcss"
 
 const config = {
 	corePlugins: {
-		preflight: false,
+		// preflight: false,
 	},
 	darkMode: ["class"],
 	content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
 	prefix: "",
+	// important: "#__next",
 	theme: {
 		container: {
 			center: true,
@@ -52,6 +53,7 @@ const config = {
 				},
 			},
 			borderRadius: {
+				xl: "calc(var(--radius) + 4px)",
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",

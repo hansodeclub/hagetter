@@ -3,9 +3,17 @@ import React from "react"
 import { QueryResult } from "features/api/types"
 import { GetServerSideProps, NextPage } from "next"
 
-import head from "@/lib/utils/head"
-import { JsonString } from "@/lib/utils/serializer"
+import UserEntriesPage from "@/components/pages/user-entries"
 
+import head from "@/lib/utils/head"
+import {
+	JsonString,
+	fromJson,
+	toJson,
+	toJsonObject,
+} from "@/lib/utils/serializer"
+
+import { queryPosts } from "@/features/posts/api"
 import { HagetterPostInfo } from "@/features/posts/types"
 
 interface PageProps {
@@ -16,26 +24,24 @@ interface PageProps {
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
 	context,
 ) => {
-	/* 旧仕様のURL。
-	 * /user/[username]/posts から /users/[username] にリダイレクトする。
-	 */
-	const username = head(context.query.username)
+	const username = head(context.query.uid)
 	if (!username) {
 		return {
 			notFound: true,
 		}
 	}
-
+	const posts = await queryPosts({ username, visibility: "public" })
 	return {
-		redirect: {
-			destination: `/users/${username}`,
-			permanent: true,
+		props: {
+			username: username,
+			posts: toJson(posts),
 		},
 	}
 }
 
 export const UserEntries: NextPage<PageProps> = (props) => {
-	return <div>moved</div>
+	const username = props.username
+	const posts = fromJson<QueryResult<HagetterPostInfo>>(props.posts)
+	return <UserEntriesPage username={username} posts={posts.items} />
 }
-
 export default UserEntries
