@@ -1,3 +1,3 @@
-import EditPage from './EditPage'
+import EditPage from "./edit-page"
 
 export default EditPage

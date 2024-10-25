@@ -1,6 +1,6 @@
 import React from "react"
 
-import path from "path"
+import path from "node:path"
 
 import Avatar from "@mui/material/Avatar"
 import { SxProps } from "@mui/material/styles"

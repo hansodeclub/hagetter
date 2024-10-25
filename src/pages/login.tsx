@@ -6,13 +6,13 @@ import Select from "react-select"
 
 import { Button } from "@/components/ui/button"
 
-import Header from "@/components/header"
+import { Header } from "@/components/header"
 
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import getHost from "@/lib/utils/url"
 
-import { listInstances } from "@/features/instances/api"
-import { InstanceInfo } from "@/features/instances/types"
+import { InstanceInfo } from "@/entities/instance"
+import { listInstances } from "@/features/instances/actions"
 
 interface PageProps {
 	code: number
@@ -65,7 +65,7 @@ const LoginPage: NextPage<PageProps> = ({ instances, error }) => {
 				<title>Hagetter - ログイン</title>
 			</Head>
 			<Header />
-			<div className="container p-2 mx-auto">
+			<div className="container mx-auto p-2">
 				<p>ログインするインスタンスを選択してください。</p>
 				<div style={{ maxWidth: 500 }}>
 					<Select options={selectOptions} onChange={handleInstanceChange} />

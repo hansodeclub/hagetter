@@ -4,15 +4,15 @@ import { GetServerSideProps, NextPage } from "next"
 import NextError from "next/error"
 import Head from "next/head"
 
-import Header from "@/components/header"
-import PostContent from "@/components/pages/post/PostContent"
-import { AnyPost } from "@/components/social/AnyPost"
+import { Header } from "@/components/header"
+import PostContent from "@/components/pages/post/post-content"
+import { AnyPost } from "@/components/social/any-post"
 
 import { sendCacheControl } from "@/lib/cdn/cloudflare"
+import { JsonString, fromJson, toJson } from "@/lib/serializer"
 import head from "@/lib/utils/head"
-import { JsonString, fromJson, toJson } from "@/lib/utils/serializer"
 
-import { getPost } from "@/features/posts/api"
+import { getPost } from "@/features/posts/actions"
 import { HagetterPost } from "@/features/posts/types"
 
 interface Props {
@@ -80,10 +80,10 @@ const PostPage: NextPage<Props> = (props) => {
 			</Head>
 			<Header />
 			<div className="flex">
-				<div className="hidden sm:block sm:ml-2 sm:mt-10">
+				<div className="hidden sm:mt-10 sm:ml-2 sm:block">
 					<AnyPost />
 				</div>
-				<div className="p-2 mt-2 bg-white w-full sm:border sm:max-w-screen-sm sm:m-2 sm:rounded">
+				<div className="mt-2 w-full bg-white p-2 sm:m-2 sm:max-w-screen-sm sm:rounded sm:border">
 					{code === 404 && <NextError statusCode={404} />}
 					{code === 200 && <PostContent post={post} />}
 					{code !== 200 && code !== 404 && (

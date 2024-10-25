@@ -1,20 +1,14 @@
 //https://github.com/mui-org/material-ui/blob/master/examples/nextjs
-import React, { useEffect } from "react"
+import React from "react"
 
+import { ErrorNotification } from "@/components/error-notification"
+import createEmotionCache from "@/lib/createEmotionCache"
+import { StoreProvider, useSession } from "@/stores"
 import { CacheProvider, type EmotionCache } from "@emotion/react"
-import type { AppProps } from "next/app"
-import Head from "next/head"
-import { useRouter } from "next/router"
-
 import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
-
-import ErrorNotification from "@/components/ErrorNotification"
-
-import createEmotionCache from "@/lib/createEmotionCache"
-import { analytics, logEvent } from "@/lib/firebase/client"
-
-import { StoreProvider, useSession } from "@/stores"
+import type { AppProps } from "next/app"
+import Head from "next/head"
 import "@/styles.css"
 import theme from "@/theme"
 
@@ -28,19 +22,7 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props) {
-	const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-	const router = useRouter()
-	useEffect(() => {
-		const handleRouteChange = (url) => {
-			logEvent(analytics, "pageview", {
-				url: url,
-			})
-		}
-		router.events.on("routeChangeComplete", handleRouteChange)
-		return () => {
-			router.events.off("routeChangeComplete", handleRouteChange)
-		}
-	}, [router.events])
+	const { emotionCache = clientSideEmotionCache } = props
 
 	return (
 		<CacheProvider value={emotionCache}>
@@ -69,11 +51,11 @@ const MyComponent = ({ Component, pageProps }) => {
 		// useEffect内はクライアントサイドで呼ばれる
 		session
 			.getAccount()
-			.then((account) => {})
+			.then((_account) => {})
 			.catch((err) => {
 				console.error(err)
 			})
-	}, [])
+	}, [session])
 
 	return <Component {...pageProps} />
 }

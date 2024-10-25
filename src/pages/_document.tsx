@@ -4,7 +4,7 @@ import React from "react"
 import createEmotionServer from "@emotion/server/create-instance"
 import Document, { Head, Html, Main, NextScript } from "next/document"
 
-import { ResponsiveIndicator } from "@/components/ResponsiveIndicator"
+import { ResponsiveIndicator } from "@/components/responsive-indicator"
 
 import createEmotionCache from "@/lib/createEmotionCache"
 
@@ -61,7 +61,7 @@ MyDocument.getInitialProps = async (ctx) => {
 	// You can consider sharing the same emotion cache between all the SSR requests to speed up performance.
 	// However, be aware that it can have global side effects.
 	const cache = createEmotionCache()
-	const { extractCriticalToChunks } = createEmotionServer(cache)
+	const { extractCriticalToChunks } = createEmotionServer(cache as any) // TODO: なんかこれがanyになる
 
 	ctx.renderPage = () =>
 		originalRenderPage({

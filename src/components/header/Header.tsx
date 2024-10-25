@@ -1,157 +1,53 @@
 "use client"
 
+import { UserMenu } from "@/components/header/user-menu"
+import Logo from "@/components/logo"
+import { Button } from "@/components/ui/button"
+import { useScrollState } from "@/hooks/useScrollState"
+import { cn } from "@/lib/utils"
+import { useSession } from "@/stores"
+import { observer } from "mobx-react-lite"
+import Link from "next/link"
 import React from "react"
 
-import { observer } from "mobx-react-lite"
-import { Roboto_Condensed } from "next/font/google"
-import Link from "next/link"
-
-import type { SxProps } from "@mui/material"
-import AppBar from "@mui/material/AppBar"
-import Avatar from "@mui/material/Avatar"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
-import Popover from "@mui/material/Popover"
-import Slide from "@mui/material/Slide"
-import Toolbar from "@mui/material/Toolbar"
-import type { Theme } from "@mui/material/styles"
-import useScrollTrigger from "@mui/material/useScrollTrigger"
-
-import Logo from "@/components/Logo"
-import UserMenu from "@/components/header/UserMenu"
-
-import { useSession } from "@/stores"
-
-const robotoCondensedBold = Roboto_Condensed({
-	weight: "700",
-	subsets: ["latin"],
-})
-
-const styles: { [key: string]: SxProps<Theme> } = {
-	appbar: {
-		color: "#000000",
-		backgroundColor: (theme: Theme) => theme.header.light,
-		borderBottom: "1px solid #aaa",
-	},
-	toolbar: {
-		justifyContent: "space-between",
-	},
-
-	/* Left side of AppBar */
-	left: {
-		flex: 1,
-	},
-	title: {
-		fontSize: 24,
-		//fontFamily: "'Roboto Condensed', sans-serif",
-		fontWeight: 700,
-		//textTransform: 'uppercase',
-	},
-	a: {
-		textDecoration: "none",
-		color: "black",
-		fontSize: 24,
-		//fontFamily: "'Roboto Condensed', sans-serif",
-		fontWeight: 700,
-	},
-
-	/* Right side of AppBar */
-	right: {
-		//flex: 1,
-		//display: 'flex',
-		justifyContent: "flex-end",
-		alignItems: "center",
-	},
-	username: {
-		marginRight: 5,
-	},
-	matomeButton: {
-		marginRight: 2,
-	},
-	menuButton: {
-		marginRight: 2,
-	},
-}
-
-const Header: React.FC = observer(() => {
-	const trigger = useScrollTrigger({})
+export const Header: React.FC = observer(() => {
 	const session = useSession()
-	const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorEl(event.currentTarget)
-	}
-
-	const handleClose = () => {
-		setAnchorEl(null)
-	}
-
-	const showPop = Boolean(anchorEl)
+	const scrollState = useScrollState()
 
 	return (
-		<>
-			<Slide appear={false} in={!trigger}>
-				<AppBar sx={styles.appbar} elevation={0}>
-					<Toolbar sx={styles.toolbar}>
-						<Box sx={styles.left}>
-							<Logo />
-						</Box>
-						<Box sx={styles.right}>
-							{!session.loading && !session.account && (
-								<Link href="/login">
-									<Button>ログイン</Button>
-								</Link>
-							)}
-							{!session.loading && session.account && (
-								<>
-									<Link href="/edit">
-										<Button
-											variant="contained"
-											color="primary"
-											sx={styles.matomeButton}
-											disableElevation
-										>
-											まとめを作る
-										</Button>
-									</Link>
-
-									<IconButton
-										onClick={handleClick}
-										disableFocusRipple={true}
-										disableRipple={true}
-										style={{ backgroundColor: "transparent", padding: 0 }}
-									>
-										<Avatar src={session.account.avatar} />
-									</IconButton>
-
-									<Popover
-										open={showPop}
-										anchorEl={anchorEl}
-										onClose={handleClose}
-										anchorOrigin={{
-											vertical: "bottom",
-											horizontal: "center",
-										}}
-										transformOrigin={{
-											vertical: "top",
-											horizontal: "center",
-										}}
-									>
-										<UserMenu
-											displayName={session.account.displayName}
-											acct={session.account.acct}
-											onLogout={session.logout}
-										/>
-									</Popover>
-								</>
-							)}
-						</Box>
-					</Toolbar>
-				</AppBar>
-			</Slide>
-			<Toolbar />
-		</>
+		<div className="sticky top-0 right-0 z-50 h-16">
+			<div
+				className={cn(
+					"flex h-full w-full items-center space-x-2 border-b bg-white px-4 transition-transform",
+					scrollState === "scrolling-down" && "-translate-y-16 transform",
+				)}
+			>
+				<div className="flex-1">
+					<Logo />
+				</div>
+				<div className="flex-1 grow" />
+				{!session.loading && !session.account && (
+					<Link href="/login">
+						<Button>ログイン</Button>
+					</Link>
+				)}
+				{!session.loading && session.account && (
+					<>
+						<Link href="/edit">
+							<Button color="primary">まとめを作る</Button>
+						</Link>
+						<UserMenu
+							avatar={session.account.avatar}
+							displayName={
+								session.account.displayName || session.account.username
+							}
+							acct={session.account.acct}
+							onLogout={session.logout}
+						/>
+					</>
+				)}
+			</div>
+		</div>
 	)
 })
 

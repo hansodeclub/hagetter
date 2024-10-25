@@ -1,1 +1,1 @@
-export * from './ErrorReport'
+export * from "../../../entities/error-report"

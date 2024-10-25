@@ -6,18 +6,18 @@ import DeleteIcon from "@mui/icons-material/DeleteRounded"
 import EditIcon from "@mui/icons-material/EditRounded"
 import IconButton from "@mui/material/IconButton"
 
-import { ItemActionCallback } from "../PostEditor"
+import { ItemActionCallback } from "@/components/pages/editor/post-editor"
 
-import { THagetterItem } from "@/stores/hagetterItem"
+import { EditorItemType } from "@/stores/editor-item"
 
 export const DeleteItemButton: React.FC<{
-	item: THagetterItem
+	item: EditorItemType
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
 		<IconButton
 			aria-label="delete"
-			onClick={() => onAction && onAction(item, { type: "delete" })}
+			onClick={() => onAction?.(item, { type: "delete" })}
 			size="small"
 			sx={{ color: "#888", border: "1px solid #aaa" }}
 		>
@@ -27,13 +27,13 @@ export const DeleteItemButton: React.FC<{
 }
 
 export const EditItemButton: React.FC<{
-	item: THagetterItem
+	item: EditorItemType
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
 		<IconButton
 			aria-label="edit"
-			onClick={() => onAction && onAction(item, { type: "edit" })}
+			onClick={() => onAction?.(item, { type: "edit" })}
 			size="small"
 			sx={{ color: "#888", border: "1px solid #aaa", backgroundColor: "white" }}
 		>
@@ -43,13 +43,13 @@ export const EditItemButton: React.FC<{
 }
 
 export const MoveUpItemButton: React.FC<{
-	item: THagetterItem
+	item: EditorItemType
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
 		<IconButton
 			aria-label="delete"
-			onClick={() => onAction && onAction(item, { type: "moveUp" })}
+			onClick={() => onAction?.(item, { type: "moveUp" })}
 			size="small"
 			sx={{ color: "#888", border: "1px solid #aaa" }}
 		>
@@ -59,13 +59,13 @@ export const MoveUpItemButton: React.FC<{
 }
 
 export const MoveDownItemButton: React.FC<{
-	item: THagetterItem
+	item: EditorItemType
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
 		<IconButton
 			aria-label="delete"
-			onClick={() => onAction && onAction(item, { type: "moveDown" })}
+			onClick={() => onAction?.(item, { type: "moveDown" })}
 			size="small"
 			sx={{ color: "#888", border: "1px solid #aaa" }}
 		>

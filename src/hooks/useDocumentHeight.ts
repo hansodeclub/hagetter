@@ -1,30 +1,36 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
-export const useDocumentHeight = () => {
-	const getHeight = useCallback(
-		() =>
-			window.visualViewport ? window.visualViewport.height : window.innerHeight,
-		[],
-	)
-	const [height, setHeight] = useState<string>("100vh")
+const getHeight = () =>
+	window.visualViewport ? window.visualViewport.height : window.innerHeight
+const getWidth = () =>
+	window.visualViewport ? window.visualViewport.width : window.innerWidth
+
+export const useDocumentRect = () => {
+	const [height, setHeight] = useState<number>()
+	const [width, setWidth] = useState<number>()
 
 	useEffect(() => {
 		const handleResize = (e: Event) => {
-			setHeight(`${getHeight()}px`)
+			setHeight(getHeight())
+			setWidth(getWidth())
 		}
 
-		window.addEventListener("resize", handleResize)
-		window.addEventListener("orientationchange", handleResize)
-		window.visualViewport?.addEventListener("resize", handleResize)
+		window.addEventListener("resize", handleResize, { passive: true })
+		window.addEventListener("orientationchange", handleResize, {
+			passive: true,
+		})
+		window.visualViewport?.addEventListener("resize", handleResize, {
+			passive: true,
+		})
 
 		return () => {
 			window.removeEventListener("resize", handleResize)
 			window.removeEventListener("orientationchange", handleResize)
 			window.visualViewport?.removeEventListener("resize", handleResize)
 		}
-	}, [getHeight])
+	}, [])
 
-	return height
+	return { height, width }
 }
 
-export default useDocumentHeight
+export default useDocumentRect

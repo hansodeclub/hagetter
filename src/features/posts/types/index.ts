@@ -1,3 +1,2 @@
-export * from './HagetterPost'
-export * from './Status'
-export * from './VerifiableStatus'
+export * from "../../../entities/post"
+export * from "../../../entities/status"

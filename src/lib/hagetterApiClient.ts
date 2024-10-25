@@ -2,17 +2,19 @@ import type { QueryResult } from "features/api/types"
 import fetch from "isomorphic-unfetch"
 import { v4 as uuidv4 } from "uuid"
 
-import type { ApiResponse, Links } from "@/features/api/types/ApiResponse"
-import type { ErrorReport } from "@/features/error-reports/types"
-import type { InstanceInfo } from "@/features/instances/types"
+import type { InstanceInfo } from "@/entities/instance"
 import type {
-	Account,
+	HagetterItem,
 	HagetterPost,
 	HagetterPostInfo,
-	Status,
-} from "@/features/posts/types"
-import { fromJsonObject, toJson } from "@/lib/utils/serializer"
-import type { TextItem } from "@/stores/editorStore"
+	PostVisibility,
+	VerifiableHagetterPost,
+} from "@/entities/post"
+
+import type { Account, Status } from "@/entities/status"
+import type { ApiResponse, Links } from "@/features/api/types/ApiResponse"
+import type { ErrorReport } from "@/features/error-reports/types"
+import { fromJsonObject, toJson } from "@/lib/serializer"
 
 export interface GetPostsOptions {
 	visibility?: "public" | "unlisted" | "private" | "draft"
@@ -170,7 +172,7 @@ export class HagetterApiClient {
 	): Promise<QueryResult<HagetterPostInfo>> {
 		const res = await this.authGet("posts", token, {
 			user,
-			visibility: "unlisted",
+			visibility: "public,unlisted,private,draft",
 		})
 		return this.getData<QueryResult<HagetterPostInfo>>(res)
 	}
@@ -180,12 +182,15 @@ export class HagetterApiClient {
 	 * @param id まとめID
 	 * @param token セッショントークン
 	 */
-	async getVerifiablePost(id: string, token: string): Promise<HagetterPost> {
+	async getVerifiablePost(
+		id: string,
+		token: string,
+	): Promise<VerifiableHagetterPost> {
 		const res = await this.authGet("post", token, {
 			id,
 			action: "edit",
 		})
-		return this.getData<HagetterPost>(res)
+		return this.getData<VerifiableHagetterPost>(res)
 	}
 
 	/**
@@ -201,8 +206,8 @@ export class HagetterApiClient {
 		token: string,
 		title: string,
 		description: string,
-		visibility: "draft" | "unlisted" | "public",
-		items: (TextItem | Status)[],
+		visibility: PostVisibility,
+		items: HagetterItem[],
 		hid?: string,
 	): Promise<string> {
 		const body = {

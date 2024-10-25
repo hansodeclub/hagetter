@@ -1,23 +1,12 @@
 import React from "react"
 
-import { QueryResult } from "features/api/types"
 import { GetServerSideProps, NextPage } from "next"
 
 import head from "@/lib/utils/head"
-import { JsonString } from "@/lib/utils/serializer"
 
-import { HagetterPostInfo } from "@/features/posts/types"
-
-interface PageProps {
-	username: string
-	posts: JsonString<QueryResult<HagetterPostInfo>>
-}
-
-export const getServerSideProps: GetServerSideProps<PageProps> = async (
-	context,
-) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	/* 旧仕様のURL。
-	 * /user/[username]/posts から /users/[username] にリダイレクトする。
+	 * /user/[username]/posts から /[username] にリダイレクトする。
 	 */
 	const username = head(context.query.username)
 	if (!username) {
@@ -28,13 +17,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 	return {
 		redirect: {
-			destination: `/users/${username}`,
+			destination: `/${username}`,
 			permanent: true,
 		},
 	}
 }
 
-export const UserEntries: NextPage<PageProps> = (props) => {
+export const UserEntries: NextPage = () => {
 	return <div>moved</div>
 }
 

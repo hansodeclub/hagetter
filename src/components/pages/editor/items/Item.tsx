@@ -7,25 +7,27 @@ import { Stack } from "@mui/material"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
 
-import Toot from "@/components/Toot/Toot"
-import TextFormatSelector from "@/components/pages/editor/TextFormatSelector"
-import { ItemActionCallback, leftColumnWidth } from "../PostEditor"
-import TextEdit from "../edit-items/TextEdit"
+import {
+	ItemActionCallback,
+	leftColumnWidth,
+} from "@/components/pages/editor/post-editor"
+import TextFormatSelector from "@/components/pages/editor/text-format-selector"
+import { Toot } from "@/components/toot"
+import TextEdit from "../edit-items/text-edit"
 import {
 	DeleteItemButton,
 	EditItemButton,
 	MoveDownItemButton,
 	MoveUpItemButton,
-} from "../menus/Buttons"
+} from "../menus/buttons"
 
-import { Status } from "@/features/posts/types"
-import { THagetterItem } from "@/stores/hagetterItem"
+import { EditorItemType } from "@/stores/editor-item"
 
-import { TextItem } from "./TextItem"
+import { TextItem } from "./text-item"
 
 export interface ItemProps {
-	item: THagetterItem
-	onClick?: (item: THagetterItem) => any
+	item: EditorItemType
+	onClick?: (item: EditorItemType) => any
 	preferOriginal?: boolean
 	onAction?: ItemActionCallback
 	isMobile?: boolean
@@ -38,28 +40,15 @@ const PopupMenu: React.FC<{ children?: React.ReactNode; show: boolean }> = ({
 	<Box sx={{ position: "absolute", left: 0, top: 0 }}>{show && children}</Box>
 )
 
-const FormatEdit: React.FC<{ item: THagetterItem }> = observer(({ item }) => {
-	const [size, setSize] = React.useState<string | false>(item.size)
-	const [color, setColor] = React.useState(item.color)
-
-	const onSizeChange = (size) => {
-		setSize(size)
-		item.setFormat(size)
-	}
-
-	const onColorChange = (color) => {
-		setColor(color)
-		item.setFormat(undefined, color)
-	}
-
+const FormatEdit: React.FC<{ item: EditorItemType }> = observer(({ item }) => {
 	return (
 		<Box sx={{ display: "flex", alignItems: "center" }}>
 			<Box sx={{ ml: 2, pt: 1, pb: 2 }}>
 				<TextFormatSelector
-					size={size}
-					onSizeChange={onSizeChange}
-					color={color}
-					onColorChange={onColorChange}
+					size={item.size ?? false}
+					onSizeChange={(size) => item.setSize(size)}
+					color={item.color ?? false}
+					onColorChange={(color) => item.setColor(color)}
 				/>
 			</Box>
 			<Box>
@@ -76,14 +65,15 @@ const FormatEdit: React.FC<{ item: THagetterItem }> = observer(({ item }) => {
 
 const Item: React.FC<ItemProps> = observer(
 	({ item, onClick, preferOriginal, onAction, isMobile }) => {
+		const data = item.data
+
 		const onChangeText = (item, text, size, color) => {
 			item.setFormat(size, color)
 			item.setText(text)
 			item.setEditMode(false)
 		}
 
-		if (item.type === "status") {
-			const status: Status = item.data as Status
+		if (data.type === "status") {
 			return (
 				<>
 					<PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
@@ -105,15 +95,14 @@ const Item: React.FC<ItemProps> = observer(
 							color={item.color}
 							onClick={onClick && (() => onClick(item))}
 							selected={item.selected}
-							status={status}
+							status={data.data}
 							preferOriginal={preferOriginal}
 						/>
 					</li>
-					<Box></Box>
+					<div />
 				</>
 			)
-		} else if (item.type === "text") {
-			const textItem: any = item.data as any
+		} else if (data.type === "text") {
 			return (
 				<>
 					<PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
@@ -134,17 +123,17 @@ const Item: React.FC<ItemProps> = observer(
 								onChangeText(item, text, size, color)
 							}}
 							onCancel={() => item.setEditMode(false)}
-							initialSize={item.size}
-							initialColor={item.color}
-							initialText={textItem.text}
+							initialSize={data.size}
+							initialColor={data.color}
+							initialText={data.data.text}
 						/>
 					)}
 					{!item.editMode && (
 						<Box sx={{ position: "relative" }}>
 							<TextItem
-								text={textItem.text}
-								variant={item.size}
-								color={item.color}
+								text={data.data.text}
+								variant={data.size}
+								color={data.color}
 								selected={item.selected}
 								onClick={onClick && (() => onClick(item))}
 							/>

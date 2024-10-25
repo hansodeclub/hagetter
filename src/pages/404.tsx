@@ -4,7 +4,7 @@ import { NextPage } from "next"
 
 const NotFoundPage: NextPage = () => {
 	return (
-		<p style={{ textAlign: "center", margin: "auto" }}>
+		<p className="flex h-full w-full items-center justify-center">
 			<img src="/images/donmi404s.png" alt="Page not found" />
 		</p>
 	)
