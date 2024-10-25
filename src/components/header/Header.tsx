@@ -1,5 +1,3 @@
-"use client"
-
 import { UserMenu } from "@/components/header/user-menu"
 import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"

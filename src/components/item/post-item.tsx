@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite"
 import Typography from "@mui/material/Typography"
 import { SxProps, Theme } from "@mui/material/styles"
 
-import { Status, TextSize } from "@/features/posts/types"
+import { TextSize } from "@/features/posts/types"
 import { EditorItemType } from "@/stores/editor-item"
 
 import { Toot } from "@/components/toot"
