@@ -1,12 +1,12 @@
+import { RotateCw as RotateCwIcon } from "lucide-react"
+import { observer } from "mobx-react-lite"
 import React from "react"
+import SearchTimeline from "./search-timeline"
 
 import { Button } from "@/components/ui/button"
 import { TimelineName } from "@/entities/timeline"
 import { cn } from "@/lib/utils"
 import { useStore } from "@/stores"
-import { RotateCw as RotateCwIcon } from "lucide-react"
-import { observer } from "mobx-react-lite"
-import SearchTimeline from "./search-timeline"
 import Timeline from "./timeline"
 import UrlSearchTimeline from "./url-search-timeline"
 

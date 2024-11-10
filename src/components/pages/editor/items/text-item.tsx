@@ -1,15 +1,13 @@
-import React from "react"
-
 import DeleteIcon from "@mui/icons-material/DeleteRounded"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
+import React from "react"
 
 import MultilineText from "@/components/multiline-text"
-import { ItemActionCallback } from "../post-editor"
-
 import { TextSize } from "@/features/posts/types"
 import { EditorItemType } from "@/stores/editor-item"
+import { ItemActionCallback } from "../post-editor"
 
 export const TextItemMenu: React.FC<{
 	item: EditorItemType

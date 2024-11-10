@@ -1,7 +1,6 @@
-import React from "react"
-
 import { Roboto_Condensed } from "next/font/google"
 import Link from "next/link"
+import React from "react"
 
 const robotoCondensedBold = Roboto_Condensed({
 	weight: "900",

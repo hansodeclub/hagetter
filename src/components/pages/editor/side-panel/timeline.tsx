@@ -1,13 +1,13 @@
-import React from "react"
-
-import { Toot, isPublic } from "@/components/toot"
-import { Status } from "@/features/posts/types"
-import { observer, useEditor, useTimeline } from "@/stores"
 import Box from "@mui/material/Box"
 import LinearProgress from "@mui/material/LinearProgress"
 import TextField from "@mui/material/TextField"
 import { Theme } from "@mui/material/styles"
 import { SystemStyleObject } from "@mui/system"
+import React from "react"
+
+import { Toot, isPublic } from "@/components/toot"
+import { Status } from "@/features/posts/types"
+import { observer, useEditor, useTimeline } from "@/stores"
 import styles from "../editorStyles"
 import PullNotch from "./pull-notch"
 

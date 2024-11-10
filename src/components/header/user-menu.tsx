@@ -1,3 +1,5 @@
+import { FileText as FileTextIcon, LogOut as LogOutIcon } from "lucide-react"
+import { useRouter } from "next/router"
 import React from "react"
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
@@ -10,8 +12,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { FileText as FileTextIcon, LogOut as LogOutIcon } from "lucide-react"
-import { useRouter } from "next/router"
 
 interface UserMenuProps {
 	avatar: string

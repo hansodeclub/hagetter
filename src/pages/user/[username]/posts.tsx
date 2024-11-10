@@ -1,6 +1,5 @@
-import React from "react"
-
 import { GetServerSideProps, NextPage } from "next"
+import React from "react"
 
 import head from "@/lib/utils/head"
 

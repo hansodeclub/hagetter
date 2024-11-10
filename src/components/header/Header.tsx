@@ -1,12 +1,13 @@
-import { UserMenu } from "@/components/header/user-menu"
+import { observer } from "mobx-react-lite"
+import Link from "next/link"
+import React from "react"
+
 import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { useScrollState } from "@/hooks/useScrollState"
 import { cn } from "@/lib/utils"
 import { useSession } from "@/stores"
-import { observer } from "mobx-react-lite"
-import Link from "next/link"
-import React from "react"
+import { UserMenu } from "./user-menu"
 
 export const Header: React.FC = observer(() => {
 	const session = useSession()

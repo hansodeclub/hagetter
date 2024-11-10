@@ -1,7 +1,3 @@
-import React from "react"
-
-import { Button } from "@/components/ui/button"
-import { TimelineName } from "@/entities/timeline"
 import BookmarkIcon from "@mui/icons-material/BookmarkOutlined"
 import HomeIcon from "@mui/icons-material/HomeRounded"
 import LinkIcon from "@mui/icons-material/LinkRounded"
@@ -11,6 +7,10 @@ import SearchIcon from "@mui/icons-material/SearchRounded"
 import StarIcon from "@mui/icons-material/StarRounded"
 import { ListItemIcon } from "@mui/material"
 import { ChevronsLeft, ChevronsRight } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { TimelineName } from "@/entities/timeline"
 
 interface ItemProps {
 	icon: React.ReactNode

@@ -1,9 +1,7 @@
-import React from "react"
-
-import path from "node:path"
-
+import path from "path"
 import Avatar from "@mui/material/Avatar"
 import { SxProps } from "@mui/material/styles"
+import React from "react"
 
 interface AvatarProps {
 	src: string

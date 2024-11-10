@@ -1,12 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react"
-
 import { fromMastoStatus } from "@/entities/status"
-import Toot, { StatusProps } from "./toot"
-
+import { Meta, StoryObj } from "@storybook/react"
 import linkStatus from "./testdata/link.json"
 import mediaStatus from "./testdata/media.json"
 import pollStatus from "./testdata/poll.json"
 import unlistedStatus from "./testdata/unlisted.json"
+import Toot, { StatusProps } from "./toot"
 
 const meta: Meta = {
 	title: "Toot",

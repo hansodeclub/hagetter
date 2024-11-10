@@ -1,9 +1,9 @@
-import React from "react"
-
 import { useEditor } from "@/stores"
 import { EditorItemType } from "@/stores/editor-item"
 import TextField from "@mui/material/TextField"
 import { observer } from "mobx-react-lite"
+import React from "react"
+
 import ItemList from "./items/item-list"
 
 const HowTo: React.FC = () => {

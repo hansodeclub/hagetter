@@ -9,7 +9,6 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
-
 import type { HagetterPostInfo } from "@/features/posts/types"
 
 export interface RecentPostsProps extends React.HTMLAttributes<HTMLDivElement> {

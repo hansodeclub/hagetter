@@ -1,3 +1,7 @@
+import type { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
+import React from "react"
+
 import { Header } from "@/components/header"
 import { HomePage } from "@/components/pages/home"
 import type { QueryResult } from "@/features/api/types"
@@ -5,9 +9,6 @@ import { getRecentPublicPosts } from "@/features/posts/actions"
 import type { HagetterPostInfo } from "@/features/posts/types"
 import { sendCacheControl } from "@/lib/cdn/cloudflare"
 import { type JsonString, fromJson, toJson } from "@/lib/serializer"
-import type { GetServerSideProps, NextPage } from "next"
-import Head from "next/head"
-import React from "react"
 
 interface PageProps {
 	code: number

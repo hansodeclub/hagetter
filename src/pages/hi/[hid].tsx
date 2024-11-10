@@ -1,19 +1,16 @@
-import React from "react"
-
 import { GetServerSideProps, NextPage } from "next"
 import NextError from "next/error"
 import Head from "next/head"
+import React from "react"
 
 import { Header } from "@/components/header"
 import PostContent from "@/components/pages/post/post-content"
 import { AnyPost } from "@/components/social/any-post"
-
+import { getPost } from "@/features/posts/actions"
+import { HagetterPost } from "@/features/posts/types"
 import { sendCacheControl } from "@/lib/cdn/cloudflare"
 import { JsonString, fromJson, toJson } from "@/lib/serializer"
 import head from "@/lib/utils/head"
-
-import { getPost } from "@/features/posts/actions"
-import { HagetterPost } from "@/features/posts/types"
 
 interface Props {
 	code: number
@@ -29,7 +26,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 	try {
 		const post = await getPost(hid)
 
-		sendCacheControl(context.res)
+		if (post?.visibility !== "draft") {
+			sendCacheControl(context.res)
+		}
 
 		return {
 			props: {

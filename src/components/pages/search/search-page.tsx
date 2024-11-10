@@ -1,16 +1,15 @@
+import React from "react"
+
 import { FallbackAvatar } from "@/components/avatar"
 import { Header } from "@/components/header"
 import { JapaneseDate, getJapaneseDate } from "@/components/timestamp"
-import { HagetterPostInfo } from "@/features/posts/types"
-import Head from "next/head"
-import React from "react"
-
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { HagetterPostInfo } from "@/features/posts/types"
 
 export interface HitItem {
 	hid: string

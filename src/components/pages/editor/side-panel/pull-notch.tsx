@@ -1,5 +1,4 @@
 import React, { HTMLAttributes } from "react"
-
 import {
 	PullDownContent,
 	PullToRefresh,
@@ -21,7 +20,7 @@ export const Notch: React.FC<NotchProps> = ({
 }) => {
 	return (
 		<div
-			className="rounded-[3px] mt-1 mx-auto bg-[#aaa]"
+			className="mx-auto mt-1 rounded-[3px] bg-[#aaa]"
 			style={{ width, height }}
 			{...rest}
 		/>
@@ -56,7 +55,7 @@ export const PullNotch: React.FC<PullNotchProps> = ({
 				{children}
 				{loadMore && (
 					<>
-						<div className="text-center justify-center w-full p-[30px]">
+						<div className="w-full justify-center p-[30px] text-center">
 							<Button onClick={loadMore}>もっと読み込む</Button>
 						</div>
 					</>

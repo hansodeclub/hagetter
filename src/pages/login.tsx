@@ -1,18 +1,14 @@
-import React from "react"
-
 import { GetServerSideProps, NextPage } from "next"
 import Head from "next/head"
+import React from "react"
 import Select from "react-select"
 
-import { Button } from "@/components/ui/button"
-
 import { Header } from "@/components/header"
-
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
-import getHost from "@/lib/utils/url"
-
+import { Button } from "@/components/ui/button"
 import { InstanceInfo } from "@/entities/instance"
 import { listInstances } from "@/features/instances/actions"
+import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import getHost from "@/lib/utils/url"
 
 interface PageProps {
 	code: number

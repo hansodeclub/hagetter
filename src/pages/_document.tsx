@@ -1,13 +1,10 @@
+import createEmotionServer from "@emotion/server/create-instance"
+import Document, { Head, Html, Main, NextScript } from "next/document"
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs
 import React from "react"
 
-import createEmotionServer from "@emotion/server/create-instance"
-import Document, { Head, Html, Main, NextScript } from "next/document"
-
 import { ResponsiveIndicator } from "@/components/responsive-indicator"
-
 import createEmotionCache from "@/lib/createEmotionCache"
-
 import theme from "@/theme"
 
 class MyDocument extends Document {

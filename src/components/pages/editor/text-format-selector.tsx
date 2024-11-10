@@ -1,14 +1,13 @@
-import React from "react"
-
 import TButton from "@mui/icons-material/Title"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
 import ToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+import { SxProps, Theme } from "@mui/material/styles"
+import React from "react"
 import { GithubPicker } from "react-color"
 
 import { TextSize, isTextSize } from "@/entities/post"
-import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
-import { SxProps, Theme } from "@mui/material/styles"
 
 const styles: { [key: string]: SxProps<Theme> } = {
 	color: {

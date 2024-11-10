@@ -1,7 +1,6 @@
-import React from "react"
-
 import { observer } from "mobx-react-lite"
 import { useRouter } from "next/router"
+import React from "react"
 
 import Avatar from "@/components/avatar"
 import { TextItem } from "@/components/item/post-item"
@@ -9,7 +8,6 @@ import Timestamp from "@/components/timestamp"
 import { Toot } from "@/components/toot"
 import { Button } from "@/components/ui/button"
 import { HagetterItem } from "@/features/posts/types"
-
 import { HagetterPost, Status } from "@/features/posts/types"
 import { useSession } from "@/stores"
 

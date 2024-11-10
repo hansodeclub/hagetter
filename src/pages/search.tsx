@@ -1,13 +1,13 @@
+import { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
 import React from "react"
+import sanitizeHtml from "sanitize-html"
 
 import { Header } from "@/components/header"
 import { HitItem, SearchPage } from "@/components/pages/search"
 import { getHitString, search } from "@/features/search/algolia"
 import { JsonString, fromJson, toJson } from "@/lib/serializer"
 import head from "@/lib/utils/head"
-import { GetServerSideProps, NextPage } from "next"
-import Head from "next/head"
-import sanitizeHtml from "sanitize-html"
 
 const sanitizer = (text) =>
 	sanitizeHtml(text, {

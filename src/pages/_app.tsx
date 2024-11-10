@@ -1,14 +1,14 @@
+import { CacheProvider, type EmotionCache } from "@emotion/react"
+import CssBaseline from "@mui/material/CssBaseline"
+import { ThemeProvider } from "@mui/material/styles"
+import type { AppProps } from "next/app"
+import Head from "next/head"
 //https://github.com/mui-org/material-ui/blob/master/examples/nextjs
 import React from "react"
 
 import { ErrorNotification } from "@/components/error-notification"
 import createEmotionCache from "@/lib/createEmotionCache"
 import { StoreProvider, useSession } from "@/stores"
-import { CacheProvider, type EmotionCache } from "@emotion/react"
-import CssBaseline from "@mui/material/CssBaseline"
-import { ThemeProvider } from "@mui/material/styles"
-import type { AppProps } from "next/app"
-import Head from "next/head"
 import "@/styles.css"
 import theme from "@/theme"
 

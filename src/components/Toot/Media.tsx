@@ -1,6 +1,5 @@
-import React from "react"
-
 import dynamic from "next/dynamic"
+import React from "react"
 import { Lightbox } from "react-modal-image"
 
 import { Attachment } from "@/features/posts/types"

@@ -1,15 +1,13 @@
-import React from "react"
-
 import Box from "@mui/material/Box"
 import LinearProgress from "@mui/material/LinearProgress"
 import TextField from "@mui/material/TextField"
 import { Theme } from "@mui/material/styles"
 import { SystemStyleObject } from "@mui/system"
-
-import { Status } from "@/features/posts/types"
-import { observer, useEditor, useSearchTimeline } from "@/stores"
+import React from "react"
 
 import { Toot, isPublic } from "@/components/toot"
+import { Status } from "@/features/posts/types"
+import { observer, useEditor, useSearchTimeline } from "@/stores"
 import styles from "../editorStyles"
 
 const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(

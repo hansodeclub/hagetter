@@ -1,3 +1,11 @@
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import SortIcon from "@mui/icons-material/Sort"
+import LoadingButton from "@mui/lab/LoadingButton"
+import { ListItemIcon, Menu, MenuItem } from "@mui/material"
+import AppBar from "@mui/material/AppBar"
+import IconButton from "@mui/material/IconButton"
+import Toolbar from "@mui/material/Toolbar"
+import { InfoCircledIcon } from "@radix-ui/react-icons"
 import React from "react"
 
 import {
@@ -12,15 +20,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select"
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
-import SortIcon from "@mui/icons-material/Sort"
-import LoadingButton from "@mui/lab/LoadingButton"
-import { ListItemIcon, Menu, MenuItem } from "@mui/material"
-import AppBar from "@mui/material/AppBar"
-import IconButton from "@mui/material/IconButton"
-import Toolbar from "@mui/material/Toolbar"
-import { InfoCircledIcon } from "@radix-ui/react-icons"
-
 import { observer, useEditor, useSession } from "@/stores"
 import { VisibilityTooltip } from "./visibility-tooltip"
 

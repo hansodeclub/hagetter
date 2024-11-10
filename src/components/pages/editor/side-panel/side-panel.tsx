@@ -1,8 +1,8 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 
 import { cn } from "@/lib/utils"
 import { useStore } from "@/stores"
-import { observer } from "mobx-react-lite"
 import { StatusSelector } from "./status-selector"
 import { TimelinePicker } from "./timeline-picker"
 

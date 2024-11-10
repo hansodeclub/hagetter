@@ -1,17 +1,12 @@
-import React from "react"
-
 import { observer } from "mobx-react-lite"
-
-import Box from "@mui/material/Box"
+import React from "react"
 
 import {
 	ItemActionCallback,
 	leftColumnWidth,
 } from "@/components/pages/editor/post-editor"
-import InsertDivider from "./insert-divider"
-
 import { EditorItemType } from "@/stores/editor-item"
-
+import InsertDivider from "./insert-divider"
 import Item from "./item"
 
 export interface ItemListProps {
@@ -30,9 +25,9 @@ const ItemList: React.FC<ItemListProps> = observer(
 				{items.map((item, index) => (
 					<>
 						<InsertDivider anchor={item.id} isMobile={isMobile} />
-						<Box
+						<div
 							key={item.id}
-							sx={{
+							style={{
 								paddingLeft: isMobile ? 0 : `${leftColumnWidth}px`,
 								position: "relative",
 							}}
@@ -42,6 +37,8 @@ const ItemList: React.FC<ItemListProps> = observer(
 							onMouseOut={
 								isMobile ? undefined : () => onShowItemMenu(item, false)
 							}
+							onFocus={() => {}}
+							onBlur={() => {}}
 						>
 							{isMobile}
 							<Item
@@ -51,7 +48,7 @@ const ItemList: React.FC<ItemListProps> = observer(
 								preferOriginal={preferOriginal}
 								isMobile={isMobile}
 							/>
-						</Box>
+						</div>
 					</>
 				))}
 				<InsertDivider anchor={undefined} isMobile={isMobile} />

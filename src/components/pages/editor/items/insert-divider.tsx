@@ -1,14 +1,11 @@
-import React from "react"
-
 import TitleIcon from "@mui/icons-material/Title"
 import { Fade } from "@mui/material"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
+import React from "react"
 
 import { leftColumnWidth } from "@/components/pages/editor/post-editor"
-
 import { observer, useEditor } from "@/stores"
-
 import TextEdit from "../edit-items/text-edit"
 
 export interface InsertDividerProps {

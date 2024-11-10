@@ -1,18 +1,14 @@
+import { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
 import React from "react"
 
-import { QueryResult } from "features/api/types"
-import { GetServerSideProps, NextPage } from "next"
-
+import { Header } from "@/components/header"
 import UserEntriesPage from "@/components/pages/user-entries"
-
-import { JsonString, fromJson, toJson, toJsonObject } from "@/lib/serializer"
-import head from "@/lib/utils/head"
-
+import { QueryResult } from "@/features/api/types"
 import { queryPosts } from "@/features/posts/actions"
 import { HagetterPostInfo } from "@/features/posts/types"
-
-import { Header } from "@/components/header"
-import Head from "next/head"
+import { JsonString, fromJson, toJson, toJsonObject } from "@/lib/serializer"
+import head from "@/lib/utils/head"
 
 interface PageProps {
 	username: string

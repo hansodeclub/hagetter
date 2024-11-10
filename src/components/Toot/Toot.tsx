@@ -1,18 +1,14 @@
-import React from "react"
-
 import LockIcon from "@mui/icons-material/Lock"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import { SxProps, Theme } from "@mui/material/styles"
+import React from "react"
 
 import Avatar from "@/components/avatar"
 import Timestamp from "@/components/timestamp"
-
-import emojify, { buildCustomEmojis } from "@/lib/mastodon/emoji"
-
 import { TextSize } from "@/entities/post"
 import { Status } from "@/features/posts/types"
-
+import emojify, { buildCustomEmojis } from "@/lib/mastodon/emoji"
 import Media from "./media"
 import Poll from "./poll"
 

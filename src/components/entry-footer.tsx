@@ -1,5 +1,6 @@
-import { PostVisibility } from "@/features/posts/types"
 import React from "react"
+
+import { PostVisibility } from "@/features/posts/types"
 import { Timestamp } from "./timestamp"
 import { VisibilityLabel } from "./visibility-label"
 

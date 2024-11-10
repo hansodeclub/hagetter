@@ -1,11 +1,9 @@
-import React from "react"
-
-import { observer } from "mobx-react-lite"
-
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import { Stack } from "@mui/material"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
+import { observer } from "mobx-react-lite"
+import React from "react"
 
 import {
 	ItemActionCallback,
@@ -13,6 +11,7 @@ import {
 } from "@/components/pages/editor/post-editor"
 import TextFormatSelector from "@/components/pages/editor/text-format-selector"
 import { Toot } from "@/components/toot"
+import { EditorItemType } from "@/stores/editor-item"
 import TextEdit from "../edit-items/text-edit"
 import {
 	DeleteItemButton,
@@ -20,9 +19,6 @@ import {
 	MoveDownItemButton,
 	MoveUpItemButton,
 } from "../menus/buttons"
-
-import { EditorItemType } from "@/stores/editor-item"
-
 import { TextItem } from "./text-item"
 
 export interface ItemProps {

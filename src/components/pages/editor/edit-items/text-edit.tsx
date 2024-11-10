@@ -1,8 +1,7 @@
-import React from "react"
-
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import TextField from "@mui/material/TextField"
+import React from "react"
 
 import TextFormatSelector from "@/components/pages/editor/text-format-selector"
 
@@ -10,8 +9,8 @@ export interface TextEditProps {
 	initialSize?: string
 	initialColor?: string
 	initialText?: string
-	onSubmit: (text: string, size: string, color: string) => any
-	onCancel: () => any
+	onSubmit: (text: string, size: string, color: string) => void
+	onCancel: () => void
 }
 
 const TextEdit: React.FC<TextEditProps> = ({

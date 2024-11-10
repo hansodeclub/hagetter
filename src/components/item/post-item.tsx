@@ -1,14 +1,11 @@
-import React from "react"
-
-import { observer } from "mobx-react-lite"
-
 import Typography from "@mui/material/Typography"
 import { SxProps, Theme } from "@mui/material/styles"
-
-import { TextSize } from "@/features/posts/types"
-import { EditorItemType } from "@/stores/editor-item"
+import { observer } from "mobx-react-lite"
+import React from "react"
 
 import { Toot } from "@/components/toot"
+import { TextSize } from "@/features/posts/types"
+import { EditorItemType } from "@/stores/editor-item"
 
 const styles: { [key: string]: SxProps<Theme> } = {
 	toot: {
