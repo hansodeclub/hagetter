@@ -33,3 +33,6 @@ firebase-key.json
 # firebase
 **/.firebaserc
 .firebase/
+
+# Claude Code
+.claude/settings.local.json
