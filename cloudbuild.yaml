@@ -1,19 +1,43 @@
 steps:
   # create .env file
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: "gcr.io/cloud-builders/docker"
     entrypoint: bash
-    args: ['-c', 'echo ${_B64_ENV} | base64 -d > .env']
+    args: ["-c", "echo ${_B64_ENV} | base64 -d > .env"]
   # build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '.']
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA",
+        ".",
+      ]
     env:
-      - 'NEXT_TELEMETRY_DISABLED=1'
-  # push the container image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA']
+      - "NEXT_TELEMETRY_DISABLED=1"
+  # push the container image to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
+      ]
     # Deploy container image to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'run', 'deploy', 'hagetter-$BRANCH_NAME', '--image', 'asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA', '--region', 'asia-northeast1', '--platform', 'managed', '--allow-unauthenticated', '--quiet']
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "hagetter-$BRANCH_NAME",
+        "--image",
+        "asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
+        "--region",
+        "asia-northeast1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+        "--quiet",
+      ]
 images:
-  - asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA
+  - asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA
 timeout: 1800s
