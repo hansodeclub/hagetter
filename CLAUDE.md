@@ -38,7 +38,7 @@ Hagetter は Mastodon 向けの Togetter ライクなポストまとめプラッ
 ```
 src/
 ├── components/           # UIコンポーネント
-│   ├── ui/              # 汎用UIコンポーネント (Tailwind + Radix)
+│   ├── ui/              # 汎用UIコンポーネント (Tailwind + Radix). never edit files in this directory.
 │   ├── pages/           # ページ固有コンポーネント
 │   ├── icons/           # アイコンコンポーネント
 │   └── ...
@@ -67,6 +67,7 @@ src/
 - ✅ `src/components/pages/editor/editor-items/text-edit.tsx` (TextField, Button, Box 削除)
 - ✅ `src/components/pages/editor/editor-items/item.tsx` (Stack, Box, IconButton 削除)
 - ✅ `src/components/pages/editor/menus/buttons.tsx` (IconButton, Material icons 削除)
+- ✅ `src/components/pages/editor/menus/multi-select-menu.tsx` (Box, Slide 削除)
 
 ### 進行中 (Material UI 残存箇所)
 
@@ -74,9 +75,7 @@ src/
 
 1. **テキストフォーマット関連** - 完了
 
-2. **エディター機能**
-
-   - `src/components/pages/editor/menus/multi-select-menu.tsx`
+2. **エディター機能** - 完了
 
 3. **サイドパネル**
 

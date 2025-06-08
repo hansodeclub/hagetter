@@ -1,14 +1,13 @@
-import Box from "@mui/material/Box"
-import LinearProgress from "@mui/material/LinearProgress"
-import TextField from "@mui/material/TextField"
-import { Theme } from "@mui/material/styles"
-import { SystemStyleObject } from "@mui/system"
 import React from "react"
 
 import { Toot } from "@/components/toot"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { ProgressLinear } from "@/components/ui/progress-linear"
 import { Status } from "@/features/posts/types"
+import { cn } from "@/lib/utils"
 import { observer, useEditor, useSearchTimeline } from "@/stores"
-import styles from "../editorStyles"
 
 const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 	({ invisible }) => {
@@ -38,35 +37,47 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 							onSearch(keyword)
 							return false
 						}}
+						className="space-y-2"
 					>
-						<TextField
-							id="filter-input"
-							label={"検索"}
-							variant="outlined"
-							onChange={(event) => setKeyword(event.target.value)}
-							fullWidth
-						/>
+						<div>
+							<Label htmlFor="search-input">検索</Label>
+							<Input
+								id="search-input"
+								placeholder="検索キーワード"
+								value={keyword}
+								onChange={(event) => setKeyword(event.target.value)}
+								className="w-full"
+							/>
+						</div>
+						<Button type="submit" className="w-full">
+							検索
+						</Button>
 					</form>
 				</div>
 				<div className="mx-1 mt-1">
-					<TextField
+					<Label htmlFor="filter-input">フィルタ</Label>
+					<Input
 						id="filter-input"
-						label={"フィルタ"}
-						variant="outlined"
+						placeholder="フィルタ"
 						onChange={onChangeFilter}
-						fullWidth
+						className="w-full"
 					/>
 				</div>
 				<div className="relative mt-1 flex grow">
-					{store.loading && <LinearProgress sx={styles.progress} />}
-					<Box sx={styles.tootSelector}>
+					{store.loading && (
+						<ProgressLinear 
+							indeterminate 
+							className="absolute left-0 top-0 z-10 w-full" 
+						/>
+					)}
+					<div className="-webkit-overflow-scrolling-touch overscroll-behavior-y-none absolute left-0 top-0 h-full w-full grow overflow-y-scroll">
 						{store.filteredStatuses.map((status) => (
-							<Box
+							<div
 								key={status.id}
-								sx={[
-									styles.toot as SystemStyleObject<Theme>,
-									editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
-								]}
+								className={cn(
+									"border-b border-gray-200 pb-1",
+									editor.itemIds.has(status.id) ? "opacity-60" : ""
+								)}
 							>
 								<Toot
 									onClick={onStatusSelect}
@@ -74,9 +85,9 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 									status={status}
 									preferOriginal
 								/>
-							</Box>
+							</div>
 						))}
-					</Box>
+					</div>
 				</div>
 			</div>
 		)

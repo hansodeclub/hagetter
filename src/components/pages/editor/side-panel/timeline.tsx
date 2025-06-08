@@ -1,13 +1,12 @@
-import LinearProgress from "@mui/material/LinearProgress"
 import React from "react"
 
 import { Toot } from "@/components/toot"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ProgressLinear } from "@/components/ui/progress-linear"
 import { Status } from "@/features/posts/types"
 import { cn } from "@/lib/utils"
 import { observer, useEditor, useTimeline } from "@/stores"
-import styles from "../editorStyles"
 export interface TimelineProps extends React.HTMLAttributes<HTMLDivElement> {
 	name: string
 	invisible?: boolean
@@ -56,7 +55,12 @@ const Timeline: React.FC<TimelineProps> = observer(
 					/>
 				</div>
 				<div className="relative mt-1 grow">
-					{store.loading && <LinearProgress sx={styles.progress} />}
+					{store.loading && (
+						<ProgressLinear 
+							indeterminate 
+							className="absolute left-0 top-0 z-10 w-full" 
+						/>
+					)}
 					<div className="-webkit-overflow-scrolling-touch overscroll-behavior-y-none absolute top-0 left-0 h-full w-full overflow-y-scroll">
 						{store.filteredStatuses.map((status) => (
 							<div

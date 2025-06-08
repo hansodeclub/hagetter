@@ -1,15 +1,13 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import LinearProgress from "@mui/material/LinearProgress"
-import TextField from "@mui/material/TextField"
-import { Theme } from "@mui/material/styles"
-import { SystemStyleObject } from "@mui/system"
 import React from "react"
 
-import { Toot, isPublic } from "@/components/toot"
+import { Toot } from "@/components/toot"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { ProgressLinear } from "@/components/ui/progress-linear"
+import { Textarea } from "@/components/ui/textarea"
 import { Status } from "@/features/posts/types"
+import { cn } from "@/lib/utils"
 import { observer, useEditor, useStore, useUrlSearchTimeline } from "@/stores"
-import styles from "../editorStyles"
 
 const UrlSearchTimeline: React.FC = observer(() => {
 	const store = useUrlSearchTimeline()
@@ -34,52 +32,44 @@ const UrlSearchTimeline: React.FC = observer(() => {
 	}
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				width: "100%",
-				height: "100%",
-			}}
-		>
-			<Box sx={{ marginTop: 1, mx: 1 }}>
-				<TextField
-					id="filter-input"
-					label={"URL"}
-					variant="outlined"
-					onChange={(event) => setKeyword(event.target.value)}
-					fullWidth
-					multiline
-					rows={2}
-					style={{ backgroundColor: "white", marginTop: 5 }}
-				/>
-				<Button
-					variant="contained"
-					color="primary"
-					sx={{ mt: 1 }}
-					style={{ float: "right" }}
-					onClick={() => onSearch(keyword)}
-				>
-					検索
-				</Button>
-			</Box>
-			<Box
-				sx={{
-					position: "relative",
-					flexGrow: 1,
-					marginTop: 1,
-				}}
-			>
-				{store.loading && <LinearProgress sx={styles.progress} />}
-				<Box sx={styles.tootSelector}>
+		<div className="flex h-full w-full flex-col">
+			<div className="mx-1 mt-1">
+				<div className="space-y-2">
+					<div>
+						<Label htmlFor="url-input">URL</Label>
+						<Textarea
+							id="url-input"
+							placeholder="URLを入力してください"
+							value={keyword}
+							onChange={(event) => setKeyword(event.target.value)}
+							rows={2}
+							className="w-full bg-white"
+						/>
+					</div>
+					<Button 
+						onClick={() => onSearch(keyword)}
+						className="w-full"
+					>
+						検索
+					</Button>
+				</div>
+			</div>
+			<div className="relative mt-1 flex grow">
+				{store.loading && (
+					<ProgressLinear 
+						indeterminate 
+						className="absolute left-0 top-0 z-10 w-full" 
+					/>
+				)}
+				<div className="-webkit-overflow-scrolling-touch overscroll-behavior-y-none absolute left-0 top-0 h-full w-full grow overflow-y-scroll">
 					<div id="basic-container">
 						{store.statuses.map((status) => (
-							<Box
+							<div
 								key={status.id}
-								sx={[
-									styles.toot as SystemStyleObject<Theme>,
-									editor.itemIds.has(status.id) ? { opacity: 0.8 } : {},
-								]}
+								className={cn(
+									"border-b border-gray-200 pb-1",
+									editor.itemIds.has(status.id) ? "opacity-60" : ""
+								)}
 							>
 								<Toot
 									onClick={onStatusSelect}
@@ -87,12 +77,12 @@ const UrlSearchTimeline: React.FC = observer(() => {
 									status={status}
 									preferOriginal
 								/>
-							</Box>
+							</div>
 						))}
 					</div>
-				</Box>
-			</Box>
-		</Box>
+				</div>
+			</div>
+		</div>
 	)
 })
 
