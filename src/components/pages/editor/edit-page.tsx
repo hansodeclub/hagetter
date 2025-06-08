@@ -1,13 +1,11 @@
-import CircularProgress from "@mui/material/CircularProgress"
-import useMediaQuery from "@mui/material/useMediaQuery"
+import { Spinner } from "@/components/spinner"
 import { observer } from "mobx-react-lite"
-import NextError from "next/error"
 import { useRouter } from "next/router"
 import React from "react"
 
 import Logo from "@/components/logo"
-import { useDocumentRect } from "@/hooks/useDocumentHeight"
-import { usePageLeaveConfirmation } from "@/hooks/usePageLeaveConfirmation"
+import { useDocumentRect } from "@/hooks/use-document-height"
+import { usePageLeaveConfirmation } from "@/hooks/use-page-leave-confirmation"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import head from "@/lib/utils/head"
 import { useEditor, useSession, useStore } from "@/stores"
@@ -33,8 +31,8 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 
 	const { width, height } = useDocumentRect()
 
-	const isMobile = !useMediaQuery("(min-width:768px)") // md = 768px
-	const isTablet = !useMediaQuery("(min-width:1024px)") // lg = 1024px
+	const isMobile = typeof width !== "undefined" && width < 768 //!useMediaQuery("(min-width:768px)") // md = 768px
+	const isTablet = typeof width !== "undefined" && width < 1024 //!useMediaQuery("(min-width:1024px)") // lg = 1024px
 	const foldSidePanel =
 		(showTimeline === undefined && overlapped) || showTimeline === false
 
@@ -128,7 +126,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 		return <p>{error}</p>
 	}
 	if (code === 404) {
-		return <NextError statusCode={404} />
+		return <p>Not found</p>
 	}
 
 	return (
@@ -138,13 +136,13 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 			</div>
 
 			<div
-				className="mt-1 mr-6 mb-80 ml-0 border bg-white p-2 shadow sm:border md:mr-7 md:ml-1"
+				className="mt-1 mr-14 mb-80 ml-0 border-0 bg-white p-2 sm:border sm:shadow md:mr-7 md:ml-1"
 				style={{
 					maxWidth: 632 + leftColumnWidth,
 				}}
 				ref={editAreaRef}
 			>
-				{loading && <CircularProgress />}
+				{loading && <Spinner />}
 				{!loading && code === 200 && <PostEditor isMobile={isMobile} />}
 			</div>
 			<SidePanel

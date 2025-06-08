@@ -12,7 +12,7 @@ export const encrypt = (token: string) => {
 	const cipher = crypto.createCipheriv("aes-256-cbc", key, iv)
 	let encrypted = cipher.update(token, "utf8", "hex")
 	encrypted += cipher.final("hex")
-	return iv.toString("hex") + ":" + encrypted
+	return `${iv.toString("hex")}:${encrypted}`
 }
 
 export const decrypt = (token: string) => {
@@ -57,7 +57,7 @@ export const OAuthSignIn = async (
 
 	const profile = profileRes.data
 
-	profile.acct = profile.username + "@" + instance
+	profile.acct = `${profile.username}@${instance}`
 
 	const token = generateToken(profile.username, instance, userToken.accessToken)
 
@@ -139,7 +139,7 @@ export const verifyToken = (token: string) => {
 export const verifyAuthorization = (authorization: string) => {
 	try {
 		const [typ, token] = authorization.split(" ")
-		if (typ === "jwt" || typ === "JWT" || typ == "Bearer") {
+		if (typ === "jwt" || typ === "JWT" || typ === "Bearer") {
 			return verifyToken(token)
 		}
 	} catch (err) {

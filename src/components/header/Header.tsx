@@ -4,7 +4,7 @@ import React from "react"
 
 import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"
-import { useScrollState } from "@/hooks/useScrollState"
+import { useScrollState } from "@/hooks/use-scroll-state"
 import { cn } from "@/lib/utils"
 import { useSession } from "@/stores"
 import { UserMenu } from "./user-menu"

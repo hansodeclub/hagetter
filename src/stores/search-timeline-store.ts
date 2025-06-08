@@ -1,7 +1,8 @@
+import { Instance, cast, types } from "mobx-state-tree"
+
 import { Status } from "@/features/posts/types"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
-import { Instance, cast, types } from "mobx-state-tree"
-import SessionStore from "./sessionStore"
+import SessionStore from "./session-store"
 
 const filterStatus = (statuses: Status[], filter: string) => {
 	return statuses.filter(
@@ -48,13 +49,19 @@ const SearchTimelineStore = types
 				return
 			}
 
+			const token = self.session.token
+			if (!token) {
+				console.error("token is not set")
+				return
+			}
+
 			this.setLoading(true)
 
 			self.keyword = keyword
 
 			const hagetterClient = new HagetterApiClient()
 			const statuses = await hagetterClient.getSearchTimeline(
-				self.session.token!,
+				token,
 				self.keyword,
 			)
 

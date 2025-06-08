@@ -1,21 +1,16 @@
-FROM node
+FROM node:21-slim as base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm
+WORKDIR /app
 
-# Setting working directory. All the path will be relative to WORKDIR
-WORKDIR /usr/src/app
-
-# Installing dependencies
-COPY package.json yarn.lock ./
-RUN yarn
-
-# Copying source files
+FROM base as builder
+WORKDIR /app
 COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
-# Building app
-RUN yarn build
+FROM base as runner
+COPY --from=builder /app/build /app
+CMD pnpm run start --port $PORT
 
-# for local development or CI
-# COPY key.json key.json
-# ENV GOOGLE_APPLICATION_CREDENTIALS key.json
-
-# Running the app
-CMD yarn start --port $PORT

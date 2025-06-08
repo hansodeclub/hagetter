@@ -1,5 +1,3 @@
-import Box from "@mui/material/Box"
-import { grey } from "@mui/material/colors"
 import React from "react"
 
 export const ResponsiveIndicator: React.FC = () => {
@@ -8,49 +6,12 @@ export const ResponsiveIndicator: React.FC = () => {
 	}
 
 	return (
-		<Box
-			sx={{
-				position: "fixed",
-				bottom: 1,
-				left: 1,
-				zIndex: 10000,
-				display: "flex",
-				height: "1rem",
-				width: "1.5rem",
-				alignItems: "center",
-				justifyContent: "center",
-				backgroundColor: grey[800],
-				color: "white",
-				fontWeight: "bold",
-				fontSize: "small",
-				p: 2,
-				borderRadius: 4,
-			}}
-		>
-			<Box sx={{ display: { xs: "block", sm: "none" } }}>xs</Box>
-			<Box sx={{ display: { xs: "none", sm: "block", md: "none" } }}>sm</Box>
-			<Box sx={{ display: { xs: "none", md: "block", lg: "none" } }}>md</Box>
-			<Box
-				sx={{
-					display: {
-						xs: "none",
-						lg: "block",
-						xl: "none",
-					},
-				}}
-			>
-				lg
-			</Box>
-			<Box
-				sx={{
-					display: {
-						xs: "none",
-						xl: "block",
-					},
-				}}
-			>
-				xl
-			</Box>
-		</Box>
+		<div className="fixed bottom-1 left-1 z-[9999] flex h-4 w-6 items-center justify-center rounded bg-gray-800 p-2 font-bold text-white text-xs">
+			<div className="block sm:hidden">xs</div>
+			<div className="hidden sm:block md:hidden">sm</div>
+			<div className="hidden md:block lg:hidden">md</div>
+			<div className="hidden lg:block xl:hidden">lg</div>
+			<div className="hidden xl:block">xl</div>
+		</div>
 	)
 }

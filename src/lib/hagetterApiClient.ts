@@ -17,7 +17,7 @@ import type { ErrorReport } from "@/features/error-reports/types"
 import { fromJsonObject, toJson } from "@/lib/serializer"
 
 export interface GetPostsOptions {
-	visibility?: "public" | "unlisted" | "private" | "draft"
+	visibility?: "public" | "noindex" | "unlisted" | "draft"
 	user?: string
 	cursor?: string
 	limit?: number
@@ -148,7 +148,7 @@ export class HagetterApiClient {
 	 * @param id まとめID
 	 */
 	async getPost(id: string): Promise<HagetterPost> {
-		const res = await this.get<HagetterPost>(`post`, { id })
+		const res = await this.get<HagetterPost>("post", { id })
 		if (res.status === "ok") return res.data as HagetterPost
 		else throw Error(res.error.message)
 	}
@@ -164,7 +164,7 @@ export class HagetterApiClient {
 	}
 
 	/**
-	 * 自分のポスト一覧を取得する(public/unlisted含む)
+	 * 自分のポスト一覧を取得する(public/noindex/unlisted/draft含む)
 	 */
 	async getMyPosts(
 		user: string,
@@ -172,7 +172,7 @@ export class HagetterApiClient {
 	): Promise<QueryResult<HagetterPostInfo>> {
 		const res = await this.authGet("posts", token, {
 			user,
-			visibility: "public,unlisted,private,draft",
+			visibility: "public,unlisted,noindex,draft",
 		})
 		return this.getData<QueryResult<HagetterPostInfo>>(res)
 	}

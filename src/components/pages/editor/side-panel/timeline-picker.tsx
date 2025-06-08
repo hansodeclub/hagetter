@@ -1,16 +1,18 @@
-import BookmarkIcon from "@mui/icons-material/BookmarkOutlined"
-import HomeIcon from "@mui/icons-material/HomeRounded"
-import LinkIcon from "@mui/icons-material/LinkRounded"
-import PeopleIcon from "@mui/icons-material/PeopleRounded"
-import PublicIcon from "@mui/icons-material/PublicRounded"
-import SearchIcon from "@mui/icons-material/SearchRounded"
-import StarIcon from "@mui/icons-material/StarRounded"
-import { ListItemIcon } from "@mui/material"
+import {
+	BookmarkIcon,
+	EarthIcon,
+	HomeIcon,
+	Link2Icon as LinkIcon,
+	SearchIcon,
+	StarIcon,
+	UsersRoundIcon,
+} from "lucide-react"
 import { ChevronsLeft, ChevronsRight } from "lucide-react"
 import React from "react"
 
 import { Button } from "@/components/ui/button"
 import { TimelineName } from "@/entities/timeline"
+import { cn } from "@/lib/utils"
 
 interface ItemProps {
 	icon: React.ReactNode
@@ -20,36 +22,36 @@ interface ItemProps {
 
 const items: ItemProps[] = [
 	{
-		icon: <HomeIcon sx={{ fontSize: "28px" }} />,
+		icon: <HomeIcon />,
 		label: "Home",
 		value: "home",
 	},
 	{
-		icon: <PeopleIcon sx={{ fontSize: "28px" }} />,
+		icon: <UsersRoundIcon />,
 		label: "Local",
 		value: "local",
 	},
 	{
-		icon: <PublicIcon sx={{ fontSize: "28px" }} />,
+		icon: <EarthIcon />,
 		label: "Public",
 		value: "public",
 	},
 	{
-		icon: <StarIcon sx={{ fontSize: "28px" }} />,
+		icon: <StarIcon />,
 		label: "Starred",
 		value: "favourites",
 	},
 	{
-		icon: <BookmarkIcon sx={{ fontSize: "28px" }} />,
+		icon: <BookmarkIcon />,
 		label: "Bookmarks",
 		value: "bookmarks",
 	},
 	{
-		icon: <SearchIcon sx={{ fontSize: "28px" }} />,
+		icon: <SearchIcon />,
 		label: "Search",
 		value: "search",
 	},
-	{ icon: <LinkIcon sx={{ fontSize: "28px" }} />, label: "URL", value: "urls" },
+	{ icon: <LinkIcon />, label: "URL", value: "urls" },
 ]
 
 export interface TimelinePickerProps {
@@ -67,11 +69,9 @@ export const TimelinePicker: React.FC<TimelinePickerProps> = ({
 	showTimeline,
 }) => {
 	const onClick = (value: TimelineName) => {
-		if (toggleDrawer) {
-			// 同じタイムラインを選択した場合か、タイムラインが表示されていない場合はドロワーをトグルする
-			if ((showTimeline && value === timeline) || !showTimeline) {
-				toggleDrawer()
-			}
+		if (!showTimeline) {
+			// タイムラインが表示されていない場合はドロワーを開く
+			toggleDrawer?.()
 		}
 
 		setTimeline?.(value)
@@ -94,17 +94,12 @@ export const TimelinePicker: React.FC<TimelinePickerProps> = ({
 					size="icon"
 					key={value}
 					onClick={() => onClick(value)}
-					className="h-[48px] w-[48px]"
+					className={cn(
+						"h-[48px] w-[48px]",
+						value === timeline && "text-blue-500 hover:text-blue-500",
+					)}
 				>
-					<ListItemIcon
-						sx={{
-							minWidth: 0,
-							justifyContent: "center",
-							color: value === timeline ? "#2196f3" : "inherit",
-						}}
-					>
-						{icon}
-					</ListItemIcon>
+					{icon}
 				</Button>
 			))}
 		</div>

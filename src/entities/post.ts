@@ -40,9 +40,28 @@ export interface HagetterPostContent<StatusData = Status> {
 /**
  * ポストの公開設定
  */
-export type PostVisibility = "public" | "unlisted" | "private" | "draft"
+export type PostVisibility = "public" | "noindex" | "unlisted" | "draft"
 export const isPostVisibility = (visibility): visibility is PostVisibility => {
-	return ["public", "unlisted", "private", "draft"].includes(visibility)
+	return ["public", "noindex", "unlisted", "draft"].includes(visibility)
+}
+
+export const postVisibilityLabels: {
+	[key in PostVisibility]: { label: string; description: string }
+} = {
+	public: {
+		label: "公開",
+		description: "トップページの新着とユーザー投稿一覧に表示されます。",
+	},
+	noindex: {
+		label: "未収載",
+		description:
+			"トップページの新着には表示されません。ユーザー投稿一覧には表示されます。",
+	},
+	unlisted: {
+		label: "限定公開",
+		description: "記事のURLを知っている人のみアクセスできます。",
+	},
+	draft: { label: "下書き", description: "本人以外はアクセスできません。" },
 }
 
 export type HagetterItem<StatusData = Status> =

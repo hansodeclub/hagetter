@@ -49,9 +49,9 @@ const Page: NextPage<Props> = ({ token, profile, error }) => {
 	}, [token])
 
 	if (error) {
-		return <p>ログインに失敗しました。({error})</p>
+		return <p className="m-4">ログインに失敗しました。({error})</p>
 	}
-	return <p>ログイン中...</p>
+	return <p className="m-4">ログイン中...</p>
 }
 
 export default Page

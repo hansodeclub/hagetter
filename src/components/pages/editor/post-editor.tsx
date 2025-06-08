@@ -1,9 +1,10 @@
-import { useEditor } from "@/stores"
-import { EditorItemType } from "@/stores/editor-item"
-import TextField from "@mui/material/TextField"
-import { observer } from "mobx-react-lite"
 import React from "react"
 
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { useEditor } from "@/stores"
+import { EditorItemType } from "@/stores/editor-item"
+import { observer } from "mobx-react-lite"
 import ItemList from "./items/item-list"
 
 const HowTo: React.FC = () => {
@@ -66,43 +67,20 @@ const PostEditor: React.FC<PostEditorProps> = observer(
 
 		return (
 			<div {...props}>
-				<div className="flex">
-					<div
-						className="justify-center align-middle font-bold"
-						style={{
-							width: leftColumnWidth,
-						}}
-					>
-						<p>タイトル</p>
-					</div>
-					<div className="grow">
-						<TextField
-							fullWidth
-							style={{ backgroundColor: "white" }}
-							defaultValue={editor.title}
-							onChange={(event) => editor.setTitle(event.target.value)}
-						/>
-					</div>
+				<div>
+					<Input
+						placeholder="タイトル"
+						value={editor.title}
+						onChange={(event) => editor.setTitle(event.target.value)}
+					/>
 				</div>
-				<div className="mt-1 flex">
-					<div
-						className="justify-center align-middle font-bold"
-						style={{
-							width: leftColumnWidth,
-						}}
-					>
-						説明文
-					</div>
-					<div className="grow">
-						<TextField
-							multiline
-							fullWidth
-							rows={4}
-							style={{ backgroundColor: "white" }}
-							defaultValue={editor.description}
-							onChange={(event) => editor.setDescription(event.target.value)}
-						/>
-					</div>
+				<div className="mt-1">
+					<Textarea
+						placeholder="説明文"
+						rows={4}
+						value={editor.description}
+						onChange={(event) => editor.setDescription(event.target.value)}
+					/>
 				</div>
 				<div className="mt-2">
 					<ItemList

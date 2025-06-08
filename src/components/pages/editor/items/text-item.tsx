@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography"
 import React from "react"
 
 import MultilineText from "@/components/multiline-text"
-import { TextSize } from "@/features/posts/types"
+import { TextSize } from "@/entities/post"
 import { EditorItemType } from "@/stores/editor-item"
 import { ItemActionCallback } from "../post-editor"
 
@@ -17,7 +17,7 @@ export const TextItemMenu: React.FC<{
 		<Box>
 			<IconButton
 				aria-label="delete"
-				onClick={() => onAction && onAction(item, { type: "delete" })}
+				onClick={() => onAction?.(item, { type: "delete" })}
 				size="small"
 				sx={{ color: "#888", border: "1px solid #aaa" }}
 			>
@@ -27,33 +27,27 @@ export const TextItemMenu: React.FC<{
 	)
 }
 
-interface TextItemProps {
+interface TextItemProps extends React.HTMLAttributes<HTMLDivElement> {
 	text: string
 	variant: TextSize
 	color: string
-	selected?: boolean
-	onClick?: () => any
+	onClick?: () => void
+	className?: string
 }
 
 export const TextItem: React.FC<TextItemProps> = ({
 	text,
 	variant,
 	color,
-	selected,
 	onClick,
+	className,
 }) => (
-	<li style={{ display: "inline", padding: 0, margin: 0 }}>
-		<Typography
-			variant={variant}
-			onClick={onClick}
-			sx={{
-				margin: 0,
-				padding: "5px 10px",
-				backgroundColor: selected ? "#ffeeee" : "#ffffff",
-				color: color,
-			}}
-		>
-			<MultilineText text={text} />
-		</Typography>
-	</li>
+	<Typography
+		variant={variant}
+		onClick={onClick}
+		color={color}
+		className={className}
+	>
+		<MultilineText text={text} />
+	</Typography>
 )

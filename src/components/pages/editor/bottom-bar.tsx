@@ -1,18 +1,14 @@
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
-import SortIcon from "@mui/icons-material/Sort"
-import LoadingButton from "@mui/lab/LoadingButton"
-import { ListItemIcon, Menu, MenuItem } from "@mui/material"
-import AppBar from "@mui/material/AppBar"
-import IconButton from "@mui/material/IconButton"
-import Toolbar from "@mui/material/Toolbar"
-import { InfoCircledIcon } from "@radix-ui/react-icons"
+import { ClockArrowDownIcon, EllipsisIcon } from "lucide-react"
 import React from "react"
 
+import { Spinner } from "@/components/spinner"
+import { Button } from "@/components/ui/button"
 import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover"
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
 	Select,
 	SelectContent,
@@ -20,13 +16,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select"
-import { observer, useEditor, useSession } from "@/stores"
-import { VisibilityTooltip } from "./visibility-tooltip"
+import { postVisibilityLabels } from "@/entities/post"
+import { observer, useEditor } from "@/stores"
 
-export const BottomBar: React.FC<{ onSubmit: () => any; submitting: boolean }> =
-	observer(({ onSubmit, submitting }) => {
+export interface BottomBarProps {
+	onSubmit: () => void
+	submitting: boolean
+}
+
+export const BottomBar: React.FC<BottomBarProps> = observer(
+	({ onSubmit, submitting }) => {
 		const editor = useEditor()
-		const session = useSession()
 		const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 		const menuOpen = Boolean(anchorEl)
 		const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,118 +43,85 @@ export const BottomBar: React.FC<{ onSubmit: () => any; submitting: boolean }> =
 		React.useEffect(() => {
 			if (
 				editor.hasPrivateStatus &&
-				["public", "unlisted"].includes(editor.visibility)
+				["public", "noindex"].includes(editor.visibility)
 			)
-				editor.setVisibility("private")
-		}, [editor.hasPrivateStatus])
-
-		const handleUnlistedChange = (event) => {
-			if (editor.hasPrivateStatus) {
 				editor.setVisibility("unlisted")
-			} else {
-				editor.setVisibility(event.target.checked ? "unlisted" : "public")
-			}
-		}
+		}, [editor.hasPrivateStatus, editor.visibility])
 
 		return (
-			<AppBar
-				position="fixed"
-				sx={{
-					top: "auto",
-					bottom: 0,
-					backgroundColor: "#fff",
-					color: "#000",
-					borderTop: "1px solid #ddd",
-					boxShadow: "none",
-				}}
-			>
-				<Toolbar>
-					<LoadingButton
-						variant="contained"
+			<div className="fixed right-0 bottom-0 left-0 flex h-[64px] items-center border-gray-200 border-t bg-white px-4 text-black shadow-none">
+				<div>
+					<Button
 						color="primary"
-						size="large"
-						sx={{ borderRadius: "30px", width: 140, fontWeight: 800 }}
-						loadingPosition="start"
-						loading={submitting}
+						className="w-[140px] rounded-full font-bold"
 						onClick={onSubmit}
 					>
+						{submitting && <Spinner className="mr-2 h-4 w-4" />}
 						投稿する
-					</LoadingButton>
-					<div className="ml-4 w-[200px]">
-						<Select
-							value={editor.visibility}
-							onValueChange={handleVisibilityChange}
-						>
-							<SelectTrigger className="rounded-xl">
-								<SelectValue placeholder="公開設定" />
-								<SelectContent className="z-[1200]">
-									<SelectItem value="public" disabled={editor.hasPrivateStatus}>
-										公開
-									</SelectItem>
-									<SelectItem
-										value="unlisted"
-										disabled={editor.hasPrivateStatus}
-									>
-										未収載
-									</SelectItem>
-									<SelectItem value="private">限定公開</SelectItem>
-									<SelectItem value="draft">下書き</SelectItem>
-								</SelectContent>
-							</SelectTrigger>
-						</Select>
-					</div>
-					<div className="ml-2">
-						<Popover>
-							<PopoverTrigger asChild>
-								<InfoCircledIcon className="h-6 w-6 text-gray-800" />
-							</PopoverTrigger>
-							<PopoverContent className="z-[1200]">
-								{/* AppBar has z-index: 1100 */}
-								<VisibilityTooltip
-									username={session.account ? session.account.acct : undefined}
-								/>
-							</PopoverContent>
-						</Popover>
-					</div>
-					<div>
-						<IconButton
-							id="global-menu-button"
-							size="small"
-							sx={{ border: "1px solid #aaa" }}
-							onClick={handleClick}
-							aria-controls={menuOpen ? "global-menu" : undefined}
-							aria-haspopup="true"
-							aria-expanded={menuOpen ? "true" : undefined}
-						>
-							<MoreHorizIcon fontSize="small" />
-						</IconButton>
-						<Menu
-							id="global-menu"
-							open={menuOpen}
-							anchorEl={anchorEl}
-							anchorOrigin={{ vertical: "top", horizontal: "left" }}
-							transformOrigin={{ vertical: "bottom", horizontal: "left" }}
-							onClose={handleClose}
-							MenuListProps={{
-								"aria-labelledby": "global-menu-button",
-							}}
-						>
-							<MenuItem
-								onClick={() => {
-									editor.sort()
-									handleClose()
-								}}
+					</Button>
+				</div>
+				<div className="ml-4 w-[200px]">
+					<Select
+						value={editor.visibility}
+						onValueChange={handleVisibilityChange}
+					>
+						<SelectTrigger className="rounded-xl">
+							<SelectValue placeholder="公開設定">
+								{postVisibilityLabels[editor.visibility].label}
+							</SelectValue>
+						</SelectTrigger>
+						<SelectContent className="z-[1200]">
+							<SelectItem value="public" disabled={editor.hasPrivateStatus}>
+								<p className="font-bold">{postVisibilityLabels.public.label}</p>
+								<p className="w-[250px] text-xs">
+									{postVisibilityLabels.public.description}
+								</p>
+							</SelectItem>
+							<SelectItem value="noindex" disabled={editor.hasPrivateStatus}>
+								<p className="font-bold">
+									{postVisibilityLabels.noindex.label}
+								</p>
+								<p className="w-[250px] text-xs">
+									{postVisibilityLabels.noindex.description}
+								</p>
+							</SelectItem>
+							<SelectItem value="unlisted">
+								<p className="font-bold">
+									{postVisibilityLabels.unlisted.label}
+								</p>
+								<p className="w-[250px] text-xs">
+									{postVisibilityLabels.unlisted.description}
+								</p>
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="ml-2">
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								size="icon"
+								className="rounded-full"
+								//onClick={handleClick}
+								aria-controls={menuOpen ? "global-menu" : undefined}
+								aria-haspopup="true"
+								aria-expanded={menuOpen ? "true" : undefined}
 							>
-								<ListItemIcon>
-									<SortIcon fontSize="small" />
-								</ListItemIcon>
-								全体を時系列順でソート
-							</MenuItem>
-						</Menu>
-					</div>
-				</Toolbar>
-			</AppBar>
+								<EllipsisIcon />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem onSelect={(_e) => editor.sort()}>
+								<ClockArrowDownIcon />
+								<span>全体を時系列順でソート</span>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+			</div>
 		)
-	})
+	},
+)
 
 export default BottomBar

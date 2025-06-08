@@ -20,7 +20,7 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
 		const [insertTextMode, setInsertTextMode] = React.useState(false)
 
 		const onInsertText = (text, size, color) => {
-			editor.addText(text, size, color, anchor)
+			editor.addText(text, anchor, size, color, undefined)
 			setInsertTextMode(false)
 			setMouseOver(false)
 		}

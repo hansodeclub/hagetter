@@ -1,11 +1,10 @@
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import EditIcon from "@mui/icons-material/Edit"
 import CircularProgress from "@mui/material/CircularProgress"
-import IconButton from "@mui/material/IconButton"
+import { Pencil as PencilIcon, Trash2 as TrashIcon } from "lucide-react"
 import { useRouter } from "next/router"
 import React from "react"
 
 import { EntryFooter } from "@/components/entry-footer"
+import { Button } from "@/components/ui/button"
 import { HagetterPostInfo } from "@/features/posts/types"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import { observer, useSession, useStore } from "@/stores"
@@ -81,15 +80,20 @@ const EntriesPage = observer(() => {
 							/>
 						</div>
 						<div className="grow-0 basis-24 items-center justify-center">
-							<IconButton
-								sx={{ mr: 2 }}
+							<Button
+								variant="ghost"
+								size="icon"
 								onClick={() => router.push(`/edit/${post.id}`)}
 							>
-								<EditIcon />
-							</IconButton>
-							<IconButton onClick={() => onDeletePost(post.id)}>
-								<DeleteOutlineIcon />
-							</IconButton>
+								<PencilIcon />
+							</Button>
+							<Button
+								variant="ghost"
+								size="icon"
+								onClick={() => onDeletePost(post.id)}
+							>
+								<TrashIcon />
+							</Button>
 						</div>
 					</article>
 				))}

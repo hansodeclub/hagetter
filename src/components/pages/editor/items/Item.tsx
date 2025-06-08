@@ -23,7 +23,7 @@ import { TextItem } from "./text-item"
 
 export interface ItemProps {
 	item: EditorItemType
-	onClick?: (item: EditorItemType) => any
+	onClick?: (item: EditorItemType) => void
 	preferOriginal?: boolean
 	onAction?: ItemActionCallback
 	isMobile?: boolean
@@ -32,9 +32,7 @@ export interface ItemProps {
 const PopupMenu: React.FC<{ children?: React.ReactNode; show: boolean }> = ({
 	children,
 	show,
-}) => (
-	<Box sx={{ position: "absolute", left: 0, top: 0 }}>{show && children}</Box>
-)
+}) => <div className="absolute top-0 left-0">{show && children}</div>
 
 const FormatEdit: React.FC<{ item: EditorItemType }> = observer(({ item }) => {
 	return (
@@ -90,9 +88,9 @@ const Item: React.FC<ItemProps> = observer(
 							variant={item.size}
 							color={item.color}
 							onClick={onClick && (() => onClick(item))}
-							selected={item.selected}
 							status={data.data}
 							preferOriginal={preferOriginal}
+							className={item.selected ? "bg-red-50" : ""}
 						/>
 					</li>
 					<div />
@@ -130,8 +128,8 @@ const Item: React.FC<ItemProps> = observer(
 								text={data.data.text}
 								variant={data.size}
 								color={data.color}
-								selected={item.selected}
 								onClick={onClick && (() => onClick(item))}
+								className={item.selected ? "bg-red-50" : ""}
 							/>
 							{isMobile && (
 								<Box sx={{ position: "absolute", right: 5, top: 5 }}>

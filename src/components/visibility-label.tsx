@@ -4,15 +4,15 @@ import React from "react"
 
 const defaultLabelColors = {
 	public: "bg-sky-500 text-white font-bold",
-	unlisted: "bg-orange-400 text-white font-bold",
-	private: "bg-red-400 text-white font-bold",
+	noindex: "bg-orange-400 text-white font-bold",
+	unlisted: "bg-red-400 text-white font-bold",
 	draft: "bg-gray-400 text-white font-bold",
 }
 
 const defaultLabelNames = {
 	public: "公開",
-	unlisted: "未収載",
-	private: "限定公開",
+	noindex: "未収載",
+	unlisted: "限定公開",
 	draft: "下書き",
 }
 

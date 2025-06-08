@@ -1,6 +1,5 @@
 import dayjs from "dayjs"
 import { cast, types } from "mobx-state-tree"
-import stable from "stable"
 
 import {
 	HagetterItem,
@@ -16,14 +15,14 @@ import { EditorItem } from "./editor-item"
 
 const PostVisibilityModel = types.enumeration<PostVisibility>(
 	"PostVisibility",
-	["public", "unlisted", "private", "draft"],
+	["public", "noindex", "unlisted", "draft"],
 )
 
 const generateId = () => {
 	return Date.now()
 }
 
-const EditorStore = types
+export const EditorStore = types
 	.model("EditorModel", {
 		hid: types.optional(types.string, ""),
 		title: types.optional(types.string, ""),
@@ -32,6 +31,18 @@ const EditorStore = types
 		items: types.optional(types.array(EditorItem), []),
 	})
 	.actions((self) => ({
+		setId(hid: string) {
+			self.hid = hid
+		},
+		setTitle(title: string) {
+			self.title = title
+		},
+		setDescription(description: string) {
+			self.description = description
+		},
+		setVisibility(visibility: PostVisibility) {
+			self.visibility = visibility
+		},
 		// 一番下の選択済みアイテムを取得する(新規アイテム挿入は一番下に入れる)
 		getAnchor(): string | undefined {
 			for (let i = self.items.length - 1; i >= 0; i--) {
@@ -46,32 +57,6 @@ const EditorStore = types
 			self.description = ""
 			self.items = cast([])
 			self.visibility = "public"
-		},
-		setId(hid: string) {
-			self.hid = hid
-		},
-		setTitle(title: string) {
-			self.title = title
-		},
-		setDescription(description: string) {
-			self.description = description
-		},
-		setVisibility(visibility: PostVisibility) {
-			self.visibility = visibility
-		},
-		insertItem(item: HagetterItem, anchor?: string, sortKey?: number) {
-			if (self.items.find((i) => item.id === i.id)) {
-				return // duplicated item
-			}
-
-			const index = anchor
-				? self.items.findIndex((i) => i.id === anchor)
-				: self.items.length
-
-			self.items.splice(index === -1 ? 0 : index, 0, {
-				sortKey: sortKey ?? dayjs().valueOf(),
-				data: item,
-			})
 		},
 		setFormat(id: string, size?: TextSize, color?: string) {
 			for (const item of self.items) {
@@ -95,12 +80,6 @@ const EditorStore = types
 				item.setSelected(selected)
 			}
 		},
-		setShowMenu(id: string, showMenu: boolean) {
-			const item = self.items.find((item) => item.id === id)
-			if (item) {
-				item.setShowMenu(showMenu)
-			}
-		},
 		toggleSelected(id: string) {
 			const item = self.items.find((item) => item.id === id)
 			if (item) {
@@ -112,17 +91,61 @@ const EditorStore = types
 				if (item.selected) item.setSelected(false)
 			}
 		},
-		removeSelectedItem() {
-			self.items = cast(self.items.filter((item) => !item.selected))
-		},
-		removeItem(id: string) {
-			self.items = cast(self.items.filter((item) => item.id !== id))
+		setShowMenu(id: string, showMenu: boolean) {
+			const item = self.items.find((item) => item.id === id)
+			if (item) {
+				item.setShowMenu(showMenu)
+			}
 		},
 		setEdit(id: string, editMode: boolean) {
 			const item = self.items.find((item) => item.id === id)
 			if (item) {
 				item.setEditMode(editMode)
 			}
+		},
+		recalculateSortKeys() {
+			let lastSortKey = dayjs().add(10, "year").valueOf()
+
+			for (let i = self.items.length - 1; i >= 0; i--) {
+				// Statusのソートキーを設定する
+				if (self.items[i].data.type === "status") {
+					self.items[i].sortKey = lastSortKey
+					lastSortKey = self.items[i].sortKey
+				} else {
+					self.items[i].sortKey = lastSortKey - 1
+					lastSortKey -= 1
+				}
+			}
+		},
+	}))
+	.actions((self) => ({
+		insertItem(item: HagetterItem, anchor?: string, sortKey?: number) {
+			/**
+			 * エディタにアイテムを挿入する
+			 * anchorがあればその位置に、なければ一番下に挿入する
+			 * ユーザーがアイテムをソートした場合は、sortKeyに基いて並べかえられる
+			 */
+			if (self.items.find((i) => item.id === i.id)) {
+				return // duplicated item
+			}
+
+			const index = anchor
+				? self.items.findIndex((i) => i.id === anchor)
+				: self.items.length
+
+			self.items.splice(index === -1 ? 0 : index, 0, {
+				sortKey: sortKey ?? dayjs().valueOf(),
+				data: item,
+			})
+			self.recalculateSortKeys()
+		},
+		removeItem(id: string) {
+			self.items = cast(self.items.filter((item) => item.id !== id))
+			self.recalculateSortKeys()
+		},
+		removeSelectedItem() {
+			self.items = cast(self.items.filter((item) => !item.selected))
+			self.recalculateSortKeys()
 		},
 		moveItem(id: string, direction: "up" | "down") {
 			const index = self.items.findIndex((item) => item.id === id)
@@ -139,6 +162,8 @@ const EditorStore = types
 			items.splice(index, 1)
 			items.splice(targetIndex, 0, item)
 			self.items = cast(items)
+
+			self.recalculateSortKeys()
 		},
 		/**
 		 * 選択したStatusを上下に一つ移動する(複数選択も可)
@@ -148,6 +173,7 @@ const EditorStore = types
 			if (self.items.length <= 1) {
 				return
 			}
+
 			if (
 				(direction === "up" && self.items[0].selected) ||
 				(direction === "down" && self.items[self.items.length - 1].selected)
@@ -166,10 +192,11 @@ const EditorStore = types
 				}
 			}
 			self.items = cast(items)
+			self.recalculateSortKeys()
 		},
 		sort(by = "date") {
-			// sortKeyは重複するので安定ソート
-			self.items = cast(stable(self.items, (a, b) => a.sortKey > b.sortKey))
+			// Array.sortは安定ソートになった
+			self.items = cast(self.items.sort((a, b) => a.sortKey - b.sortKey))
 		},
 	}))
 	.actions((self) => ({
@@ -178,19 +205,28 @@ const EditorStore = types
 			anchor?: string,
 			size?: TextSize,
 			color?: string,
+			color2?: string,
 		) {
 			const item: StatusItem = {
 				type: "status",
 				id: status.id,
 				color: color ?? "#000000",
+				color2,
 				size: size ?? "inherit",
 				data: status,
 			}
+			const sortKey = dayjs(status.createdAt).valueOf()
 
-			self.insertItem(item, anchor)
+			self.insertItem(item, anchor, sortKey)
 		},
-		addText(text: string, size?: TextSize, color?: string, anchor?: string) {
-			const id = generateId()
+		addText(
+			text: string,
+			anchor?: string,
+			size?: TextSize,
+			color?: string,
+			color2?: string,
+			id?: string,
+		) {
 			const anchorIndex = anchor
 				? self.items.findIndex((item) => item.id === anchor)
 				: -1
@@ -199,8 +235,9 @@ const EditorStore = types
 
 			const item: TextItem = {
 				type: "text",
-				id: id.toString(),
+				id: id ?? generateId().toString(),
 				color: color ?? "#000000",
+				color2,
 				size: size ?? "inherit",
 				data: { text },
 			}
@@ -208,9 +245,14 @@ const EditorStore = types
 			self.insertItem(item, anchor, sortKey)
 		},
 		bulkAdd(items: HagetterItem[]) {
-			for (const item of items) {
-				self.insertItem(item)
-			}
+			self.items = cast(
+				items.map((item) => ({
+					sortKey:
+						item.type === "status" ? dayjs(item.data.createdAt).valueOf() : 0,
+					data: item,
+				})),
+			)
+			self.recalculateSortKeys()
 		},
 	}))
 	.views((self) => ({

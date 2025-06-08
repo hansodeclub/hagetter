@@ -85,7 +85,6 @@ const UrlSearchTimeline: React.FC = observer(() => {
 									onClick={onStatusSelect}
 									key={status.id}
 									status={status}
-									disabled={!isPublic(status.visibility)}
 									preferOriginal
 								/>
 							</Box>

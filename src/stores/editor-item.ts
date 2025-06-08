@@ -1,3 +1,5 @@
+import { Instance, types } from "mobx-state-tree"
+
 import {
 	type HagetterItem as HagetterItemType,
 	type TextSize,
@@ -5,15 +7,12 @@ import {
 	isSizeable,
 } from "@/entities/post"
 
-import { Instance, types } from "mobx-state-tree"
-
 export const EditorItem = types
 	.model("ItemBase", {
 		sortKey: types.number,
 		selected: types.optional(types.boolean, false),
 		editMode: types.optional(types.boolean, false),
 		showMenu: types.optional(types.boolean, false),
-		anchor: types.maybeNull(types.string),
 		data: types.frozen<HagetterItemType>(),
 	})
 	.actions((self) => ({
@@ -43,9 +42,9 @@ export const EditorItem = types
 				self.data = { ...self.data, size }
 			}
 		},
-		setColor(color: string) {
+		setColor(color: string, color2?: string) {
 			if (isColorable(self.data)) {
-				self.data = { ...self.data, color }
+				self.data = { ...self.data, color, color2 }
 			}
 		},
 		setText(text: string) {

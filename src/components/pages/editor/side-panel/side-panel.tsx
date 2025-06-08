@@ -22,12 +22,12 @@ export const SidePanel: React.FC<SidePanelProps> = observer<
 
 		return (
 			<div
-				className="pointer-events-none fixed top-0 right-0 z-50 flex h-dvh w-[375px] justify-items-end p-1 pr-0 pb-[68px]"
+				className="pointer-events-none fixed top-0 right-0 z-50 flex h-dvh w-[375px] justify-items-end pt-1 pr-0 pb-[68px]"
 				ref={ref}
 			>
 				<div className="grow" />
 				<div
-					className="pointer-events-auto flex h-full overflow-hidden rounded-l-xl border border-r-0 bg-background shadow-md lg:rounded-r-xl lg:border-r"
+					className="pointer-events-auto flex h-full overflow-hidden rounded-l-xl border border-r-0 bg-background shadow-md"
 					ref={ref}
 					{...props}
 				>
@@ -49,6 +49,7 @@ export const SidePanel: React.FC<SidePanelProps> = observer<
 						<StatusSelector
 							timeline={store.currentTimelineName}
 							invisible={invisible}
+							className="min-w-[321px] pr-2"
 						/>
 					</div>
 				</div>

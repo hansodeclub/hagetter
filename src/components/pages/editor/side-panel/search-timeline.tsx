@@ -5,7 +5,7 @@ import { Theme } from "@mui/material/styles"
 import { SystemStyleObject } from "@mui/system"
 import React from "react"
 
-import { Toot, isPublic } from "@/components/toot"
+import { Toot } from "@/components/toot"
 import { Status } from "@/features/posts/types"
 import { observer, useEditor, useSearchTimeline } from "@/stores"
 import styles from "../editorStyles"
@@ -30,15 +30,8 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 		}
 
 		return (
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					width: "100%",
-					height: "100%",
-				}}
-			>
-				<Box sx={{ marginTop: 1, mx: 1 }}>
+			<div className="flex h-full w-full flex-col">
+				<div className="mx-1 mt-1">
 					<form
 						onSubmit={(event) => {
 							event.preventDefault()
@@ -54,8 +47,8 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 							fullWidth
 						/>
 					</form>
-				</Box>
-				<Box sx={{ marginTop: 1, mx: 1 }}>
+				</div>
+				<div className="mx-1 mt-1">
 					<TextField
 						id="filter-input"
 						label={"フィルタ"}
@@ -63,14 +56,8 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 						onChange={onChangeFilter}
 						fullWidth
 					/>
-				</Box>
-				<Box
-					sx={{
-						position: "relative",
-						flexGrow: 1,
-						marginTop: 1,
-					}}
-				>
+				</div>
+				<div className="relative mt-1 flex grow">
 					{store.loading && <LinearProgress sx={styles.progress} />}
 					<Box sx={styles.tootSelector}>
 						{store.filteredStatuses.map((status) => (
@@ -85,14 +72,13 @@ const SearchTimeline: React.FC<{ invisible?: boolean }> = observer(
 									onClick={onStatusSelect}
 									key={status.id}
 									status={status}
-									disabled={!isPublic(status.visibility)}
 									preferOriginal
 								/>
 							</Box>
 						))}
 					</Box>
-				</Box>
-			</Box>
+				</div>
+			</div>
 		)
 	},
 )

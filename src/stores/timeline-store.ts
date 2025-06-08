@@ -1,7 +1,8 @@
+import { Instance, cast, types } from "mobx-state-tree"
+
 import { Status } from "@/features/posts/types"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
-import { Instance, cast, types } from "mobx-state-tree"
-import SessionStore from "./sessionStore"
+import SessionStore from "./session-store"
 
 const filterStatus = (statuses: Status[], filter: string) => {
 	return statuses.filter(
@@ -55,13 +56,16 @@ const TimelineStore = types
 		async reload() {
 			if (self.loading) return
 
+			const token = self.session.token
+			if (!token) {
+				console.error("token is not set")
+				return
+			}
+
 			this.setLoading(true)
 
 			const hagetterClient = new HagetterApiClient()
-			const res = await hagetterClient.getTimeline(
-				self.type,
-				self.session.token!,
-			)
+			const res = await hagetterClient.getTimeline(self.type, token)
 			this.setStatuses(res.data)
 			if (res.links?.next) this.setMaxId(res.links.next)
 			else if (res.data.length > 0)
@@ -71,11 +75,17 @@ const TimelineStore = types
 			this.setLoading(false)
 		},
 		async loadMore(newer = false) {
+			const token = self.session.token
+			if (!token) {
+				console.error("token is not set")
+				return
+			}
+
 			this.setLoading(true)
 			const hagetterClient = new HagetterApiClient()
 			const res = await hagetterClient.getTimeline(
 				self.type,
-				self.session.token!,
+				token,
 				newer ? undefined : self.maxId,
 				newer ? self.minId : undefined,
 			)

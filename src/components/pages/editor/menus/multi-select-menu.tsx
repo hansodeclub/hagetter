@@ -2,7 +2,7 @@ import Box from "@mui/material/Box"
 import Slide from "@mui/material/Slide"
 import React from "react"
 
-import { TextFormatter } from "@/components/ui/text-formatter"
+import { TextFormatter } from "@/components/text-formatter"
 import { observer, useEditor } from "@/stores"
 
 export interface MultiSelectMenuProps

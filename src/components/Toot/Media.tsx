@@ -1,3 +1,5 @@
+"use client"
+
 import dynamic from "next/dynamic"
 import React from "react"
 import { Lightbox } from "react-modal-image"
@@ -12,13 +14,12 @@ export interface MediaProps {
 }
 
 const filterMedia = (attachments: Attachment[], mediaType) => {
-	return attachments.filter((attachment) => attachment["type"] === mediaType)
+	return attachments.filter((attachment) => attachment.type === mediaType)
 }
 
 const filterVideo = (attachments: Attachment[]) => {
 	return attachments.filter(
-		(attachment) =>
-			attachment["type"] === "video" || attachment["type"] === "gifv",
+		(attachment) => attachment.type === "video" || attachment.type === "gifv",
 	)
 }
 
@@ -30,10 +31,11 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
 	return (
 		<div>
 			{images.map((attachment) => {
-				const displayUrl = attachment["remote_url"] || attachment["url"]
+				const displayUrl = attachment.remoteUrl || attachment.url
 				return (
 					<div key={attachment.id}>
-						<a
+						<button
+							type="button"
 							onClick={(e) => {
 								setPreviewUrl(displayUrl)
 								e.stopPropagation()
@@ -42,13 +44,9 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
 							<img
 								src={attachment.previewUrl}
 								alt="Click and show full size"
-								style={{
-									maxWidth: "100%",
-									maxHeight: "600px",
-									objectFit: "contain",
-								}}
+								className="max-h-[600px] max-w-full object-contain"
 							/>
-						</a>
+						</button>
 					</div>
 				)
 			})}
@@ -60,7 +58,7 @@ const Media: React.FC<MediaProps> = ({ attachments }) => {
 				/>
 			)}
 			{videos.map((attachment) => {
-				const displayUrl = attachment["remote_url"] || attachment["url"]
+				const displayUrl = attachment.remoteUrl || attachment.url
 				return (
 					<div
 						key={attachment.id}

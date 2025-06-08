@@ -1,9 +1,8 @@
 import { observer } from "mobx-react-lite"
-import { useRouter } from "next/router"
 import React from "react"
 
 import Avatar from "@/components/avatar"
-import { TextItem } from "@/components/item/post-item"
+import { PostItem, TextItem } from "@/components/item"
 import Timestamp from "@/components/timestamp"
 import { Toot } from "@/components/toot"
 import { Button } from "@/components/ui/button"
@@ -17,7 +16,7 @@ export interface PostContentProps {
 
 const PostContent = observer<PostContentProps>(({ post }) => {
 	const session = useSession()
-	const router = useRouter()
+
 	const isOwner =
 		session.loggedIn &&
 		session.account &&
@@ -63,7 +62,9 @@ const PostContent = observer<PostContentProps>(({ post }) => {
 					<div className="ml-1">
 						<Button
 							variant="secondary"
-							onClick={() => router.push(`/edit/${post.id}`)}
+							onClick={() => {
+								location.href = `/edit/${post.id}`
+							}}
 						>
 							編集
 						</Button>
@@ -73,31 +74,11 @@ const PostContent = observer<PostContentProps>(({ post }) => {
 			<hr className="mt-2 mb-3" />
 			<div>
 				{post.contents.map((item) => (
-					<PostItem key={item.id} item={item} />
+					<PostItem key={item.id} item={item} className="mb-4" />
 				))}
 			</div>
 		</div>
 	)
 })
-
-const PostItem: React.FC<{
-	item: HagetterItem
-}> = ({ item }) => {
-	if (item.type === "status") {
-		return (
-			<Toot
-				variant={item.size}
-				color={item.color}
-				status={item.data as Status}
-			/>
-		)
-	} else if (item.type === "text") {
-		return (
-			<TextItem text={item.data.text} variant={item.size} color={item.color} />
-		)
-	} else {
-		throw Error(`Unknown item type: ${item.type}`)
-	}
-}
 
 export default PostContent

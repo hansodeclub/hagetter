@@ -1,18 +1,18 @@
+import { useLocalObservable } from "mobx-react-lite"
+import { Instance, types } from "mobx-state-tree"
 import React from "react"
 
 import { TimelineName, timelineLabel, timelineNames } from "@/entities/timeline"
-import makeInspectable from "mobx-devtools-mst"
-import { useLocalObservable } from "mobx-react-lite"
-import { Instance, types } from "mobx-state-tree"
-import EditorStore from "./editor"
+import EditorStore from "./editor-store"
 import SearchTimelineStore, {
 	type SearchTimelineStoreType,
-} from "./searchTimelineStore"
-import SessionStore from "./sessionStore"
-import TimelineStore, { type TimelineStoreType } from "./timelineStore"
+} from "./search-timeline-store"
+import SessionStore from "./session-store"
+import TimelineStore, { type TimelineStoreType } from "./timeline-store"
 import UrlSearchTimelineStore, {
 	type UrlSearchTimelineStoreType,
-} from "./urlSearchTimelineStore"
+} from "./url-search-timeline-store"
+
 export { observer } from "mobx-react-lite"
 
 export const RootStore = types
@@ -111,7 +111,7 @@ export const storeContext = React.createContext<TRootStore | null>(null)
 export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
 	const store = useLocalObservable(() => {
 		const sessionStore = SessionStore.create({ id: "defaultSession" })
-		return RootStore.create({
+		const store = RootStore.create({
 			session: sessionStore,
 			editor: EditorStore.create({ title: "", description: "" }),
 			localTimeline: {
@@ -150,10 +150,14 @@ export const StoreProvider = ({ children }: { children?: React.ReactNode }) => {
 				session: sessionStore.id,
 			},
 		})
+
+		if (process.env.NODE_ENV === "development") {
+			// makeInspectable(store)
+		}
+
+		return store
 	})
-	if (process.env.NODE_ENV === "development") {
-		makeInspectable(store)
-	}
+
 	return <storeContext.Provider value={store}>{children}</storeContext.Provider>
 }
 

@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 		}
 	}
 
-	const posts = await queryPosts({ username, visibility: "public,unlisted" })
+	const posts = await queryPosts({ username, visibility: "public,noindex" })
 	if (posts.items.length === 0) {
 		// 非公開ポストしかない場合にも 404 を返す
 		return {
