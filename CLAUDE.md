@@ -2,7 +2,7 @@
 
 ## プロジェクト概要
 
-Hagetter は Mastodon 向けの Togetter ライクなポストまとめプラットフォームで、Next.js + TypeScript + Firebase で構築されています。現在 Material UI から Tailwind CSS へのリファクタリングを進行中です。
+Hagetter は Mastodon 向けの Togetter ライクなポストまとめプラットフォームで、Next.js + TypeScript + Firebase で構築されています。Tailwind CSS v4 と shadcn/ui を使用したモダンな UI アーキテクチャを採用しています。
 
 ## 技術スタック
 
@@ -10,10 +10,10 @@ Hagetter は Mastodon 向けの Togetter ライクなポストまとめプラッ
 
 - **フレームワーク**: Next.js 15
 - **言語**: TypeScript
-- **スタイリング**:
-  - **移行中**: Material UI 5.16.14 → Tailwind CSS 3.4.17
-  - **UI ライブラリ**: shadcn, Radix UI (新規採用)
+- **スタイリング**: Tailwind CSS v4
+  - **UI ライブラリ**: shadcn/ui, Radix UI
   - **スタイル管理**: clsx, tailwind-merge
+  - **アニメーション**: CSS Animations (Tailwind 組み込み)
 - **状態管理**: MobX + MobX State Tree
 - **フォーム**: React Hook Form + Zod
 - **アイコン**: Lucide React, Radix Icons
@@ -54,56 +54,7 @@ src/
 └── pages/              # Next.js ページ
 ```
 
-## リファクタリング状況
-
-### 完了済み
-
-- ✅ Tailwind CSS 設定 (tailwind.config.ts)
-- ✅ shadcn/ui ベース UI コンポーネント導入
-- ✅ 新規コンポーネントの Tailwind 化
-- ✅ `src/components/text-formatter/text-formatter.tsx` (Grid, Divider 削除)
-- ✅ `src/components/pages/editor/text-format-selector.tsx` (Grid, ToggleButton 削除)
-- ✅ `src/components/pages/editor/items/insert-divider.tsx` (Box, IconButton, Fade 削除)
-- ✅ `src/components/pages/editor/editor-items/text-edit.tsx` (TextField, Button, Box 削除)
-- ✅ `src/components/pages/editor/editor-items/item.tsx` (Stack, Box, IconButton 削除)
-- ✅ `src/components/pages/editor/menus/buttons.tsx` (IconButton, Material icons 削除)
-- ✅ `src/components/pages/editor/menus/multi-select-menu.tsx` (Box, Slide 削除)
-
-### ✅ 完了済み - Material UI から Tailwind CSS への移行
-
-**🎉 Material UI から Tailwind CSS への移行が完了しました！**
-
-#### 移行済みファイル:
-
-1. **テキストフォーマット関連** - 完了
-   - ✅ `src/components/text-formatter/text-formatter.tsx` (Grid, Divider 削除)
-   - ✅ `src/components/pages/editor/text-format-selector.tsx` (Grid, ToggleButton 削除)
-
-2. **エディター機能** - 完了
-   - ✅ `src/components/pages/editor/items/insert-divider.tsx` (Box, IconButton, Fade 削除)
-   - ✅ `src/components/pages/editor/editor-items/text-edit.tsx` (TextField, Button, Box 削除)
-   - ✅ `src/components/pages/editor/editor-items/item.tsx` (Stack, Box, IconButton 削除)
-   - ✅ `src/components/pages/editor/menus/buttons.tsx` (IconButton, Material icons 削除)
-   - ✅ `src/components/pages/editor/menus/multi-select-menu.tsx` (Box, Slide 削除)
-
-3. **サイドパネル** - 完了
-   - ✅ `src/components/pages/editor/side-panel/timeline.tsx` (LinearProgress 削除)
-   - ✅ `src/components/pages/editor/side-panel/search-timeline.tsx` (TextField, Box, LinearProgress 削除)
-   - ✅ `src/components/pages/editor/side-panel/url-search-timeline.tsx` (TextField, Button, Box, LinearProgress 削除)
-
-4. **その他** - 完了
-   - ✅ `src/components/pages/entries/entries-page.tsx` (CircularProgress 削除)
-   - ✅ `src/components/error-notification.tsx` (Snackbar, Button, ErrorIcon 削除)
-   - ✅ `src/pages/_document.tsx` (Emotion 設定削除)
-   - ✅ `src/pages/_app.tsx` (Emotion 設定削除)
-
-#### パッケージ削除:
-- ✅ `@mui/material` `@mui/icons-material` `@mui/lab`
-- ✅ `@emotion/cache` `@emotion/react` `@emotion/server` `@emotion/styled`
-- ✅ `src/theme.ts` `src/lib/createEmotionCache.ts`
-
-#### 新規作成コンポーネント:
-- ✅ `src/components/ui/progress-linear.tsx` (LinearProgress 代替)
+## アーキテクチャ更新履歴
 
 ## Core Development Rules
 
@@ -158,10 +109,11 @@ pnpm storybook
 3. **Design Token**: Tailwind 設定でカラーパレットを統一管理
 4. **型安全性**: class-variance-authority で型安全なバリアント管理
 
-### 依存関係の注意
+### 依存関係
 
-- Material UI 関連の依存関係は移行完了後に削除予定
-- Emotion も同時に削除予定 (現在は Material UI との互換性で残存)
+- **Tailwind CSS v4**: 最新の CSS フレームワーク
+- **shadcn/ui**: React + Radix UI ベースのコンポーネントライブラリ
+- **Next.js 15**: React 19 対応の最新フレームワーク
 
 ### テスト
 
@@ -173,14 +125,7 @@ pnpm storybook
 
 ### 🔴 緊急度：高
 
-#### 1. **バンドルサイズの肥大化**
-
-- **問題**: node_modules が 3.1GB と異常に巨大
-- **原因**: Material UI + Tailwind CSS + Emotion の混在
-- **影響**: 開発効率低下、デプロイ時間増加
-- **対策**: Material UI 完全削除、Tree Shaking 最適化
-
-#### 2. **型安全性の欠如**
+#### 1. **型安全性の欠如**
 
 - **問題**:
   - TypeScript strict モードが無効 (`"strict": false`)
@@ -189,7 +134,7 @@ pnpm storybook
 - **影響**: ランタイムエラーのリスク、開発時のバグ発見率低下
 - **対策**: strict モード有効化、any 型の段階的削除
 
-#### 3. **セキュリティリスク**
+#### 2. **セキュリティリスク**
 
 - **問題**:
   - LocalStorage に認証トークンを直接保存 (`session-store.ts:23`)
@@ -198,7 +143,7 @@ pnpm storybook
 - **影響**: XSS によるトークン盗用リスク
 - **対策**: HttpOnly Cookie 使用、環境変数整理
 
-#### 4. **テストカバレッジ不足**
+#### 3. **テストカバレッジ不足**
 
 - **問題**: テストファイルが 1 つのみ (`editor-store.test.ts`)
 - **影響**: リファクタリング時の安全性確保困難
@@ -206,7 +151,7 @@ pnpm storybook
 
 ### 🟡 緊急度：中
 
-#### 5. **アーキテクチャの問題**
+#### 4. **アーキテクチャの問題**
 
 - **巨大ファイルの存在**:
   - `hagetterApiClient.ts` (356 行)
@@ -215,13 +160,13 @@ pnpm storybook
 - **状態管理の複雑性**: MobX State Tree の適切な分割不足
 - **API 設計の非一貫性**: REST API と GraphQL 的アプローチの混在
 
-#### 6. **コード品質の問題**
+#### 5. **コード品質の問題**
 
 - **デバッグコードの残存**: 21 ファイルで`console.log/warn/error`
 - **未解決タスク**: 9 ファイルで`TODO/FIXME/HACK`コメント
 - **古い JavaScript ファイル**: TypeScript 移行が不完全
 
-#### 7. **パフォーマンス問題**
+#### 6. **パフォーマンス問題**
 
 - **画像最適化不足**: Next.js Image コンポーネント未使用箇所
 - **バンドル分割不足**: Dynamic Import の活用不足
@@ -229,7 +174,7 @@ pnpm storybook
 
 ### 🟢 緊急度：低
 
-#### 8. **開発体験の問題**
+#### 7. **開発体験の問題**
 
 - **設定の非最適化**:
   - Biome 設定で一部ルールが無効化
@@ -261,8 +206,8 @@ pnpm storybook
 
 ## 今後のタスク
 
-1. 残存 Material UI コンポーネントの Tailwind 化
-2. Emotion 関連コードの削除
-3. Material UI 依存関係の削除
-4. パフォーマンス最適化
-5. デザインシステムの整理
+1. ✅ ~~Material UI から Tailwind CSS への完全移行~~ (完了)
+2. TypeScript strict モードの段階的有効化
+3. テストカバレッジの向上
+4. 大型ファイルのリファクタリング
+5. パフォーマンス最適化とバンドルサイズ削減
