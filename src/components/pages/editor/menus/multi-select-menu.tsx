@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box"
-import Slide from "@mui/material/Slide"
+import { cn } from "@/lib/utils"
 import React from "react"
 
 import { TextFormatter } from "@/components/text-formatter"
+import { isTextSize } from "@/entities/post"
 import { observer, useEditor } from "@/stores"
 
 export interface MultiSelectMenuProps
@@ -16,8 +16,8 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
 	({ isMobile, color, size, className }) => {
 		const editor = useEditor()
 
-		const onChange = ({ size, color }) => {
-			if (size) {
+		const onChange = ({ size, color }: { size?: string; color?: string }) => {
+			if (size && isTextSize(size)) {
 				editor.setSelectedFormat(size)
 			}
 
@@ -31,21 +31,19 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
 		}
 
 		return (
-			<Box
-				sx={{
-					position: "fixed",
-					left: "min(45%, 380px)",
-					transform: "translateX(-50%)",
-					bottom: 56,
-				}}
+			<div
+				className="-translate-x-1/2 fixed bottom-14"
+				style={{ left: "min(45%, 380px)" }}
 			>
-				<Slide
-					direction="up"
-					in={editor.selectedCount > 0}
-					mountOnEnter
-					unmountOnExit
+				<div
+					className={cn(
+						"transform transition-all duration-300 ease-in-out",
+						editor.selectedCount > 0
+							? "translate-y-0 opacity-100"
+							: "pointer-events-none translate-y-4 opacity-0",
+					)}
 				>
-					<Box sx={{ display: "flex", mb: 1, alignItems: "center" }}>
+					<div className="mb-1 flex items-center rounded-t-lg border-l border-r border-t border-gray-300">
 						<TextFormatter
 							text={`${editor.selectedCount}個のアイテムを選択中`}
 							size={size}
@@ -55,9 +53,9 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
 							onUnselect={() => editor.resetSelect()}
 							onRemove={() => editor.removeSelectedItem()}
 						/>
-					</Box>
-				</Slide>
-			</Box>
+					</div>
+				</div>
+			</div>
 		)
 	},
 )
