@@ -77,11 +77,10 @@ src/
 
 2. **エディター機能** - 完了
 
-3. **サイドパネル**
-
-   - `src/components/pages/editor/side-panel/timeline.tsx`
-   - `src/components/pages/editor/side-panel/search-timeline.tsx`
-   - `src/components/pages/editor/side-panel/url-search-timeline.tsx`
+3. **サイドパネル** - 完了
+   - ✅ `src/components/pages/editor/side-panel/timeline.tsx` (LinearProgress 削除)
+   - ✅ `src/components/pages/editor/side-panel/search-timeline.tsx` (TextField, Box, LinearProgress 削除)
+   - ✅ `src/components/pages/editor/side-panel/url-search-timeline.tsx` (TextField, Button, Box, LinearProgress 削除)
 
 4. **その他**
    - `src/components/pages/entries/entries-page.tsx`

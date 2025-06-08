@@ -1,32 +1,11 @@
-import ErrorIcon from "@mui/icons-material/Error"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Snackbar from "@mui/material/Snackbar"
-import SnackbarContent from "@mui/material/SnackbarContent"
-import { amber } from "@mui/material/colors"
-import { SxProps, Theme } from "@mui/material/styles"
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { AlertTriangle } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import { useStore } from "@/stores"
-
-const styles: { [key: string]: SxProps<Theme> } = {
-	warning: {
-		backgroundColor: amber[700],
-	},
-	icon: {
-		fontSize: 20,
-	},
-	iconVariant: {
-		opacity: 0.9,
-		marginRight: 1,
-	},
-	message: {
-		display: "flex",
-		alignItems: "center",
-	},
-}
 
 const sendError = async (error: Error) => {
 	let url
@@ -48,7 +27,12 @@ const sendError = async (error: Error) => {
 }
 
 const Action: React.FC<{ error: Error }> = ({ error }) => (
-	<Button color="primary" size="small" onClick={() => sendError(error)}>
+	<Button 
+		variant="secondary" 
+		size="sm" 
+		onClick={() => sendError(error)}
+		className="ml-2 bg-white/20 text-white hover:bg-white/30"
+	>
 		報告する
 	</Button>
 )
@@ -56,33 +40,51 @@ const Action: React.FC<{ error: Error }> = ({ error }) => (
 export const ErrorNotification = observer(() => {
 	const rootStore = useStore()
 	const [open, setOpen] = React.useState(false)
+	const [visible, setVisible] = React.useState(false)
+
 	React.useEffect(() => {
 		if (rootStore.error) {
 			setOpen(true)
+			setVisible(true)
+			// Auto hide after 6 seconds
+			const timer = setTimeout(() => {
+				setVisible(false)
+				setTimeout(() => setOpen(false), 300) // Allow animation to complete
+			}, 6000)
+			return () => clearTimeout(timer)
 		}
 	}, [rootStore.error])
-	if (!rootStore.error) return null
+
+	if (!rootStore.error || !open) return null
+
 	return (
-		<Snackbar
-			anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-			open={open}
-			autoHideDuration={6000}
-			onClose={() => setOpen(false)}
-			ContentProps={{
-				"aria-describedby": "message-id",
-			}}
+		<div
+			className={cn(
+				"fixed bottom-4 left-4 z-50 max-w-md transform transition-all duration-300 ease-in-out",
+				visible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+			)}
 		>
-			<SnackbarContent
-				sx={styles.warning}
-				message={
-					<Box id="message-id" sx={styles.message}>
-						<ErrorIcon />
+			<div className="flex items-center rounded-lg bg-amber-600 p-4 text-white shadow-lg">
+				<AlertTriangle className="mr-3 h-5 w-5 flex-shrink-0" />
+				<div className="flex-1">
+					<p id="message-id" className="text-sm font-medium">
 						{rootStore.error.message}
-					</Box>
-				}
-				action={<Action error={rootStore.error} />}
-			/>
-		</Snackbar>
+					</p>
+				</div>
+				<Action error={rootStore.error} />
+				<Button
+					variant="ghost"
+					size="sm"
+					onClick={() => {
+						setVisible(false)
+						setTimeout(() => setOpen(false), 300)
+					}}
+					className="ml-2 h-6 w-6 p-0 text-white hover:bg-white/20"
+				>
+					×
+				</Button>
+			</div>
+		</div>
 	)
 })
 
