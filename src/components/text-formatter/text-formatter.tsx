@@ -1,15 +1,11 @@
 import React from "react"
 
-import Divider from "@mui/material/Divider"
-import Grid from "@mui/material/Grid"
-
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
 	CircleArrowDownIcon,
 	CircleArrowUpIcon,
 	TrashIcon,
-	TypeIcon,
 } from "lucide-react"
 
 import { Body2Icon } from "../icons/body2"
@@ -41,27 +37,8 @@ export const defaultColors = [
 	"#ffffff",
 ]
 
-const toggleButtonStyle = (theme) => ({
-	margin: "4px 3px",
-	padding: "6px",
-	border: 0,
-	"&.Mui-disabled": {
-		border: 0,
-	},
-	"&:not(:first-of-type)": {
-		borderRadius: 0.5,
-	},
-	"&:first-of-type": {
-		borderRadius: 0.5,
-	},
-})
-
-const toggleButtonGroupStyles = {
-	"& .MuiToggleButtonGroup-grouped": toggleButtonStyle,
-}
-
 const StyledDivider: React.FC = () => (
-	<Divider orientation="vertical" flexItem sx={{ my: "8px" }} />
+	<div className="mx-2 h-8 w-px bg-gray-300" />
 )
 
 export interface ChangeEvent {
@@ -146,17 +123,16 @@ const TextFormatter: React.FC<TextFormatterProps> = ({
 					</ToggleGroupItem>
 				</ToggleGroup>
 			</div>
-			<Grid container spacing={1} columns={7} sx={{ mt: 1 }}>
-				{defaultColors.map((c, i) => (
-					<Grid item xs={1} key={i}>
-						<Swatch
-							color={c}
-							selected={color === c}
-							onClick={() => onChange({ color: c })}
-						/>
-					</Grid>
+			<div className="mt-2 grid grid-cols-7 gap-1">
+				{defaultColors.map((c) => (
+					<Swatch
+						key={c}
+						color={c}
+						selected={color === c}
+						onClick={() => onChange({ color: c })}
+					/>
 				))}
-			</Grid>
+			</div>
 		</div>
 	)
 }
