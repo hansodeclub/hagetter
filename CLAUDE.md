@@ -61,6 +61,7 @@ src/
 - ✅ Tailwind CSS 設定 (tailwind.config.ts)
 - ✅ shadcn/ui ベース UI コンポーネント導入
 - ✅ 新規コンポーネントの Tailwind 化
+- ✅ `src/components/text-formatter/text-formatter.tsx` (Grid, Divider削除)
 
 ### 進行中 (Material UI 残存箇所)
 
@@ -69,7 +70,6 @@ src/
 1. **テキストフォーマット関連**
 
    - `src/components/pages/editor/text-format-selector.tsx` (Grid, ToggleButton 使用)
-   - `src/components/text-formatter/text-formatter.tsx`
 
 2. **エディター機能**
 

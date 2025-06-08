@@ -1,40 +1,13 @@
-import TButton from "@mui/icons-material/Title"
-import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
-import ToggleButton from "@mui/material/ToggleButton"
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
-import { SxProps, Theme } from "@mui/material/styles"
 import React from "react"
 import { GithubPicker } from "react-color"
 
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { Body2Icon } from "@/components/icons/body2"
+import { H3Icon } from "@/components/icons/h3"
+import { H6Icon } from "@/components/icons/h6"
+
 import { TextSize, isTextSize } from "@/entities/post"
 
-const styles: { [key: string]: SxProps<Theme> } = {
-	color: {
-		width: "36px",
-		height: "14px",
-		borderRadius: "2px",
-	},
-	swatch: {
-		padding: "5px",
-		background: "#fff",
-		borderRadius: "1px",
-		boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-		display: "inline-block",
-		cursor: "pointer",
-	},
-	popover: {
-		position: "absolute",
-		zIndex: 2,
-	},
-	cover: {
-		position: "fixed",
-		top: "0px",
-		right: "0px",
-		bottom: "0px",
-		left: "0px",
-	},
-}
 
 const colors = [
 	"#B80000",
@@ -74,7 +47,7 @@ const TextFormatSelector: React.FC<TextFormatSelectorProps> = ({
 	onColorChange,
 }) => {
 	const [showPicker, setShowPicker] = React.useState(false)
-	const handleSizeChange = (event, newSize) => {
+	const handleSizeChange = (newSize: string) => {
 		if (!isTextSize(newSize)) {
 			throw Error("Invalid text size")
 		}
@@ -82,52 +55,56 @@ const TextFormatSelector: React.FC<TextFormatSelectorProps> = ({
 		onSizeChange(newSize)
 	}
 
-	const handleColorChange = (newColor) => {
+	const handleColorChange = (newColor: { hex: string }) => {
 		setShowPicker(false)
-		if (color !== newColor) {
+		if (color !== newColor.hex) {
 			onColorChange(newColor.hex)
 		}
 	}
 
 	return (
-		<Grid container spacing={1} alignItems="center">
-			<Grid item>
-				<ToggleButtonGroup
-					size="small"
-					value={size}
-					exclusive
-					onChange={handleSizeChange}
+		<div className="flex items-center gap-2">
+			<ToggleGroup
+				type="single"
+				value={size || undefined}
+				onValueChange={handleSizeChange}
+				size="sm"
+			>
+				<ToggleGroupItem value="h3">
+					<H3Icon className="h-5 w-5" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="h6">
+					<H6Icon className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem value="body2">
+					<Body2Icon className="h-3.5 w-3.5" />
+				</ToggleGroupItem>
+			</ToggleGroup>
+			<div className="relative">
+				<div
+					className="inline-block cursor-pointer rounded-sm bg-white p-1 shadow-sm ring-1 ring-black/10"
+					onClick={() => setShowPicker(!showPicker)}
 				>
-					<ToggleButton key={1} value="h3">
-						<TButton style={{ fontSize: 30 }} />
-					</ToggleButton>
-					<ToggleButton key={2} value="h6">
-						<TButton style={{ fontSize: 24 }} />
-					</ToggleButton>
-					<ToggleButton key={3} value="body2">
-						<TButton style={{ fontSize: 18 }} />
-					</ToggleButton>
-				</ToggleButtonGroup>
-			</Grid>
-			<Grid item>
-				<Box sx={styles.swatch} onClick={() => setShowPicker(!showPicker)}>
-					<Box
-						sx={styles.color}
+					<div
+						className="h-3.5 w-9 rounded-sm"
 						style={{ backgroundColor: color || "black" }}
 					/>
-				</Box>
-				{showPicker ? (
-					<Box sx={styles.popover}>
-						<Box sx={styles.cover} onClick={handleColorChange} />
+				</div>
+				{showPicker && (
+					<div className="absolute z-10">
+						<div
+							className="fixed inset-0"
+							onClick={() => setShowPicker(false)}
+						/>
 						<GithubPicker
 							colors={colors}
 							color={color}
 							onChange={handleColorChange}
 						/>
-					</Box>
-				) : null}
-			</Grid>
-		</Grid>
+					</div>
+				)}
+			</div>
+		</div>
 	)
 }
 

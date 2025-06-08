@@ -49,7 +49,7 @@ export const EditorItem = types
 		},
 		setText(text: string) {
 			if (self.data.type === "text") {
-				self.data.data = { text }
+				self.data = { ...self.data, data: { text } }
 			}
 		},
 	}))
