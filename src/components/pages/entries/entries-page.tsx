@@ -1,9 +1,9 @@
-import CircularProgress from "@mui/material/CircularProgress"
 import { Pencil as PencilIcon, Trash2 as TrashIcon } from "lucide-react"
 import { useRouter } from "next/router"
 import React from "react"
 
 import { EntryFooter } from "@/components/entry-footer"
+import { Spinner } from "@/components/spinner"
 import { Button } from "@/components/ui/button"
 import { HagetterPostInfo } from "@/features/posts/types"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
@@ -62,7 +62,11 @@ const EntriesPage = observer(() => {
 	return (
 		<div className="mx-auto max-w-4xl px-2">
 			<h1 className="mt-4 mb-4 font-bold text-xl">投稿の管理</h1>
-			{loading && <CircularProgress sx={{ margin: 3 }} />}
+			{loading && (
+				<div className="flex justify-center p-8">
+					<Spinner className="h-8 w-8" />
+				</div>
+			)}
 			{!loading &&
 				posts &&
 				posts.map((post) => (

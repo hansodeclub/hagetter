@@ -84,7 +84,7 @@ src/
 
 4. **その他**
    - `src/components/pages/entries/entries-page.tsx`
-   - `src/components/error-notification.tsx`
+   - ✅ `src/components/error-notification.tsx` (Snackbar, Button, ErrorIcon 削除)
    - `src/pages/_document.tsx` (Emotion 設定)
    - `src/pages/_app.tsx` (Emotion 設定)
 
