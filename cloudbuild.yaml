@@ -9,7 +9,7 @@ steps:
       [
         "build",
         "-t",
-        "asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA",
+        "asia-northeast1-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
         ".",
       ]
     env:
@@ -19,7 +19,7 @@ steps:
     args:
       [
         "push",
-        "asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
+        "asia-northeast1-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
       ]
     # Deploy container image to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
@@ -30,7 +30,7 @@ steps:
         "deploy",
         "hagetter-$BRANCH_NAME",
         "--image",
-        "asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
+        "asia-northeast1-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA",
         "--region",
         "asia-northeast1",
         "--platform",
@@ -38,6 +38,20 @@ steps:
         "--allow-unauthenticated",
         "--quiet",
       ]
+  # Purge all CloudFlare cache
+  - name: "gcr.io/cloud-builders/curl"
+    args:
+      [
+        "-X",
+        "POST",
+        "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE}/purge_cache",
+        "-H",
+        "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}",
+        "-H",
+        "Content-Type: application/json",
+        "--data",
+        '{"purge_everything":true}',
+      ]
 images:
-  - asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA
+  - asia-northeast1-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA
 timeout: 1800s
