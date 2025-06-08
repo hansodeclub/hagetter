@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { leftColumnWidth } from "@/components/pages/editor/post-editor"
 import { isTextSize } from "@/entities/post"
 import { observer, useEditor } from "@/stores"
-import TextEdit from "../edit-items/text-edit"
+import { TextEdit } from "../editor-items/text-edit"
 
 export interface InsertDividerProps {
 	anchor?: string

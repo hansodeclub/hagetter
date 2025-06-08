@@ -5,21 +5,18 @@ import IconButton from "@mui/material/IconButton"
 import { observer } from "mobx-react-lite"
 import React from "react"
 
-import {
-	ItemActionCallback,
-	leftColumnWidth,
-} from "@/components/pages/editor/post-editor"
+import { TextItem } from "@/components/item/text-item"
+import { ItemActionCallback } from "@/components/pages/editor/post-editor"
 import TextFormatSelector from "@/components/pages/editor/text-format-selector"
 import { Toot } from "@/components/toot"
 import { EditorItemType } from "@/stores/editor-item"
-import TextEdit from "../edit-items/text-edit"
+import { TextEdit } from "../editor-items/text-edit"
 import {
 	DeleteItemButton,
 	EditItemButton,
 	MoveDownItemButton,
 	MoveUpItemButton,
 } from "../menus/buttons"
-import { TextItem } from "./text-item"
 
 export interface ItemProps {
 	item: EditorItemType
