@@ -1,49 +1,49 @@
-import { Theme } from '@mui/material/styles'
-import { SystemStyleObject } from '@mui/system'
+// Legacy styles converted to CSS-in-JS object format
+// Note: This file can be removed when all components are migrated to Tailwind CSS
 
-const styles: { [key: string]: SystemStyleObject<Theme> } = {
+const styles = {
   tabs: {
-    border: (theme: Theme) => theme.app.border,
+    border: '1px solid #ccc',
   },
   outer: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     height: '100%',
   },
   header: {
-    marginTop: 1,
+    marginTop: '8px',
   },
   textField: {
     backgroundColor: '#fff',
   },
   headerContent: {
-    border: (theme) => theme.app.border,
+    border: '1px solid #ccc',
     borderRadius: '5px',
-    marginTop: 1,
+    marginTop: '8px',
     backgroundColor: '#fff',
-    padding: 1,
+    padding: '8px',
   },
   content: {
-    position: 'relative',
+    position: 'relative' as const,
     flexGrow: 1,
-    border: (theme) => theme.app.border,
+    border: '1px solid #ccc',
     borderRadius: '5px',
-    marginTop: 1,
+    marginTop: '8px',
     backgroundColor: '#fff',
   },
   tootSelector: {
     flexGrow: 1,
-    position: 'absolute',
+    position: 'absolute' as const,
     top: 0,
     left: 0,
     height: '100%',
     width: '100%',
-    overflowY: 'scroll',
-    '-webkit-overflow-scrolling': 'touch',
+    overflowY: 'scroll' as const,
+    WebkitOverflowScrolling: 'touch',
     overscrollBehaviorY: 'none',
   },
   selectorButtom: {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     justifyContent: 'center',
     width: '100%',
     padding: '30px',
@@ -51,24 +51,24 @@ const styles: { [key: string]: SystemStyleObject<Theme> } = {
   howToContainer: {
     border: '1px solid #ccc',
     borderRadius: '5px',
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     backgroundColor: '#fff',
     flexGrow: 1,
     marginTop: '5px',
     marginBottom: '2px',
   },
   howTo: {
-    margin: 3,
-    paddingTop: 1,
-    paddingBottom: 1,
+    margin: '24px',
+    paddingTop: '8px',
+    paddingBottom: '8px',
     backgroundColor: '#f1f1f1',
   },
   howToTitle: {
     width: '100%',
-    textAlign: 'center',
+    textAlign: 'center' as const,
   },
   progress: {
-    position: 'absolute',
+    position: 'absolute' as const,
     top: 0,
     left: 0,
     width: '100%',
@@ -76,7 +76,7 @@ const styles: { [key: string]: SystemStyleObject<Theme> } = {
   },
   toot: {
     borderBottom: '1px solid #ccc',
-  } as SystemStyleObject<Theme>,
+  },
 }
 
 export default styles

@@ -1,9 +1,8 @@
-import CircularProgress from "@mui/material/CircularProgress"
-import Container from "@mui/material/Container"
 import NextError from "next/error"
 import { useRouter } from "next/router"
 import React from "react"
 
+import { Spinner } from "@/components/spinner"
 import { ErrorReport } from "@/features/error-reports/types"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import head from "@/lib/utils/head"
@@ -31,27 +30,25 @@ const Post = () => {
 	}, [eid])
 
 	return (
-		<div>
-			<Container>
-				{loading && <CircularProgress />}
-				{!loading && code === 404 && <NextError statusCode={404} />}
-				{!loading && code === 200 && item && (
-					<div>
-						<p>{item.page}</p>
-						<p>{item.time}</p>
-						<div style={{ backgroundColor: "#fee", padding: 5 }}>
-							StackTrace
-							<br />
-							{item.stack.map((line) => (
-								<>
-									{line}
-									<br />
-								</>
-							))}
-						</div>
+		<div className="mx-auto max-w-4xl px-4">
+			{loading && <Spinner />}
+			{!loading && code === 404 && <NextError statusCode={404} />}
+			{!loading && code === 200 && item && (
+				<div>
+					<p>{item.page}</p>
+					<p>{item.time}</p>
+					<div className="bg-red-50 p-2">
+						StackTrace
+						<br />
+						{item.stack.map((line) => (
+							<>
+								{line}
+								<br />
+							</>
+						))}
 					</div>
-				)}
-			</Container>
+				</div>
+			)}
 		</div>
 	)
 }

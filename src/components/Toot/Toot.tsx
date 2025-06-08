@@ -59,13 +59,7 @@ export const Toot: React.FC<StatusProps> = ({
 					</div>
 				</div>
 				<div
-					className="mt-1 min-h-8 [&>a]:no-underline [&_a:hover]:text-red-500 [&_a:hover]:underline [&_a]:text-blue-500"
-					style={{
-						wordBreak: "break-word",
-						"& p": {
-							wordBreak: "break-word",
-						},
-					}}
+					className="mt-1 min-h-8 break-words [&>a]:no-underline [&_a:hover]:text-red-500 [&_a:hover]:underline [&_a]:text-blue-500 [&_p]:break-words"
 				>
 					<Typography
 						size={variant}

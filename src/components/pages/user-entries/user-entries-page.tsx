@@ -23,7 +23,7 @@ const UserEntriesPage: React.FC<UserEntriesPageProps> = ({
 						src={owner.avatar}
 						acct={owner.acct}
 						alt=""
-						sx={{ width: 96, height: 96 }}
+						className="h-24 w-24"
 					/>
 				</div>
 				<div className="mt-2 ml-8">

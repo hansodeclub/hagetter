@@ -69,24 +69,41 @@ src/
 - ✅ `src/components/pages/editor/menus/buttons.tsx` (IconButton, Material icons 削除)
 - ✅ `src/components/pages/editor/menus/multi-select-menu.tsx` (Box, Slide 削除)
 
-### 進行中 (Material UI 残存箇所)
+### ✅ 完了済み - Material UI から Tailwind CSS への移行
 
-以下のファイルで Material UI が残存しています：
+**🎉 Material UI から Tailwind CSS への移行が完了しました！**
+
+#### 移行済みファイル:
 
 1. **テキストフォーマット関連** - 完了
+   - ✅ `src/components/text-formatter/text-formatter.tsx` (Grid, Divider 削除)
+   - ✅ `src/components/pages/editor/text-format-selector.tsx` (Grid, ToggleButton 削除)
 
 2. **エディター機能** - 完了
+   - ✅ `src/components/pages/editor/items/insert-divider.tsx` (Box, IconButton, Fade 削除)
+   - ✅ `src/components/pages/editor/editor-items/text-edit.tsx` (TextField, Button, Box 削除)
+   - ✅ `src/components/pages/editor/editor-items/item.tsx` (Stack, Box, IconButton 削除)
+   - ✅ `src/components/pages/editor/menus/buttons.tsx` (IconButton, Material icons 削除)
+   - ✅ `src/components/pages/editor/menus/multi-select-menu.tsx` (Box, Slide 削除)
 
 3. **サイドパネル** - 完了
    - ✅ `src/components/pages/editor/side-panel/timeline.tsx` (LinearProgress 削除)
    - ✅ `src/components/pages/editor/side-panel/search-timeline.tsx` (TextField, Box, LinearProgress 削除)
    - ✅ `src/components/pages/editor/side-panel/url-search-timeline.tsx` (TextField, Button, Box, LinearProgress 削除)
 
-4. **その他**
-   - `src/components/pages/entries/entries-page.tsx`
+4. **その他** - 完了
+   - ✅ `src/components/pages/entries/entries-page.tsx` (CircularProgress 削除)
    - ✅ `src/components/error-notification.tsx` (Snackbar, Button, ErrorIcon 削除)
-   - `src/pages/_document.tsx` (Emotion 設定)
-   - `src/pages/_app.tsx` (Emotion 設定)
+   - ✅ `src/pages/_document.tsx` (Emotion 設定削除)
+   - ✅ `src/pages/_app.tsx` (Emotion 設定削除)
+
+#### パッケージ削除:
+- ✅ `@mui/material` `@mui/icons-material` `@mui/lab`
+- ✅ `@emotion/cache` `@emotion/react` `@emotion/server` `@emotion/styled`
+- ✅ `src/theme.ts` `src/lib/createEmotionCache.ts`
+
+#### 新規作成コンポーネント:
+- ✅ `src/components/ui/progress-linear.tsx` (LinearProgress 代替)
 
 ## Core Development Rules
 

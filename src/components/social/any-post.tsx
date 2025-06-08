@@ -1,5 +1,6 @@
 "use client"
 
+import { Share2 } from "lucide-react"
 import React from "react"
 
 export const AnyPost: React.FC = () => {
@@ -31,13 +32,7 @@ export const AnyPost: React.FC = () => {
 						fontFamily: "Avenir,Helvetica,Arial,sans-serif",
 					}}
 				>
-					<img
-						src="https://anypost.dev/external-assets/share-b.svg"
-						width="24"
-						height="24"
-						alt="share"
-						style={{ marginLeft: "14px" }}
-					/>
+					<Share2 size={24} style={{ margin: "0 auto" }} />
 					<div
 						style={{ fontSize: "12px", marginTop: "9px", fontWeight: "bold" }}
 					>

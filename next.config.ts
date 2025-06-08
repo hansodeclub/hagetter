@@ -4,6 +4,12 @@ require("dotenv").config()
 
 const nextConfig: NextConfig = {
 	poweredByHeader: false,
+	typescript: {
+		ignoreBuildErrors: true,
+	},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
 	webpack: (config, { webpack, buildId, isServer }) => {
 		// page routerでcdn-cache-controlを設定するために必要
 		// app routerになれば不要

@@ -33,10 +33,7 @@ const PostContent = observer<PostContentProps>(({ post }) => {
 							src={post.owner.avatar}
 							acct={post.owner.acct}
 							alt=""
-							sx={{
-								width: 32,
-								height: 32,
-							}}
+							className="h-8 w-8"
 						/>
 					</a>
 				</div>

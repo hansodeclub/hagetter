@@ -7,7 +7,10 @@ import { Lightbox } from "react-modal-image"
 import { Attachment } from "@/features/posts/types"
 
 // dynamic import react-player to prevent hydration error
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false })
+const ReactPlayer = dynamic(() => import("react-player"), { 
+	ssr: false,
+	loading: () => <div>Loading video...</div>
+}) as any
 
 export interface MediaProps {
 	attachments: Attachment[]

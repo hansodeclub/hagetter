@@ -59,7 +59,7 @@ export const RecentPosts: React.FC<RecentPostsProps> = ({
 									src={item.owner.avatar}
 									acct={item.owner.acct}
 									alt=""
-									sx={{ width: 32, height: 32 }}
+									className="h-8 w-8"
 								/>
 							</a>
 							<div className="pl-2">

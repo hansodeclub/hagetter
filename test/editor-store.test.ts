@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { describe, expect, it } from "vitest"
 
 import { Status } from "@/entities/status"
-import { EditorStore } from "@/stores/editor"
+import { EditorStore } from "@/stores/editor-store"
 
 describe("EditorStore", () => {
 	it("should create an instance", () => {

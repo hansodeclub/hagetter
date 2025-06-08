@@ -52,7 +52,7 @@ const HitPost: React.FC<{ item: HitItem }> = ({ item }) => {
 							src={post.owner.avatar}
 							acct={post.owner.acct}
 							alt=""
-							sx={{ width: 32, height: 32 }}
+							className="h-8 w-8"
 						/>
 					</a>
 					<div className="pl-2">
