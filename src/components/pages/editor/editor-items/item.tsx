@@ -1,15 +1,15 @@
-import HighlightOffIcon from "@mui/icons-material/HighlightOff"
-import { Stack } from "@mui/material"
-import Box from "@mui/material/Box"
-import IconButton from "@mui/material/IconButton"
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { X } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 import { TextItem } from "@/components/item/text-item"
 import { ItemActionCallback } from "@/components/pages/editor/post-editor"
 import TextFormatSelector from "@/components/pages/editor/text-format-selector"
 import { Toot } from "@/components/toot"
 import { EditorItemType } from "@/stores/editor-item"
+import { TextSize } from "@/entities/post"
 import { TextEdit } from "../editor-items/text-edit"
 import {
 	DeleteItemButton,
@@ -33,24 +33,26 @@ const PopupMenu: React.FC<{ children?: React.ReactNode; show: boolean }> = ({
 
 const FormatEdit: React.FC<{ item: EditorItemType }> = observer(({ item }) => {
 	return (
-		<Box sx={{ display: "flex", alignItems: "center" }}>
-			<Box sx={{ ml: 2, pt: 1, pb: 2 }}>
+		<div className="flex items-center">
+			<div className="ml-2 pb-2 pt-1">
 				<TextFormatSelector
 					size={item.size ?? false}
 					onSizeChange={(size) => item.setSize(size)}
 					color={item.color ?? false}
 					onColorChange={(color) => item.setColor(color)}
 				/>
-			</Box>
-			<Box>
-				<IconButton sx={{ ml: 3 }} size="small">
-					<HighlightOffIcon
-						fontSize="large"
-						onClick={() => item.setEditMode(false)}
-					/>
-				</IconButton>
-			</Box>
-		</Box>
+			</div>
+			<div>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="ml-3 h-8 w-8 p-0"
+					onClick={() => item.setEditMode(false)}
+				>
+					<X className="h-6 w-6" />
+				</Button>
+			</div>
+		</div>
 	)
 })
 
@@ -58,7 +60,7 @@ const Item: React.FC<ItemProps> = observer(
 	({ item, onClick, preferOriginal, onAction, isMobile }) => {
 		const data = item.data
 
-		const onChangeText = (item, text, size, color) => {
+		const onChangeText = (item: EditorItemType, text: string, size: TextSize, color: string) => {
 			item.setFormat(size, color)
 			item.setText(text)
 			item.setEditMode(false)
@@ -68,16 +70,16 @@ const Item: React.FC<ItemProps> = observer(
 			return (
 				<>
 					<PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
-						<Stack spacing={1}>
-							<Stack direction="row" spacing={1}>
+						<div className="flex flex-col gap-1">
+							<div className="flex gap-1">
 								<DeleteItemButton item={item} onAction={onAction} />
 								<EditItemButton item={item} onAction={onAction} />
-							</Stack>
-							<Stack direction="row" spacing={1}>
+							</div>
+							<div className="flex gap-1">
 								<MoveUpItemButton item={item} onAction={onAction} />
 								<MoveDownItemButton item={item} onAction={onAction} />
-							</Stack>
-						</Stack>
+							</div>
+						</div>
 					</PopupMenu>
 					<li style={{ display: "inline" }}>
 						{item.editMode && <FormatEdit item={item} />}
@@ -97,21 +99,21 @@ const Item: React.FC<ItemProps> = observer(
 			return (
 				<>
 					<PopupMenu show={(item.showMenu || item.selected) && !isMobile}>
-						<Stack spacing={1}>
-							<Stack direction="row" spacing={1}>
+						<div className="flex flex-col gap-1">
+							<div className="flex gap-1">
 								<DeleteItemButton item={item} onAction={onAction} />
 								<EditItemButton item={item} onAction={onAction} />
-							</Stack>
-							<Stack direction="row" spacing={1}>
+							</div>
+							<div className="flex gap-1">
 								<MoveUpItemButton item={item} onAction={onAction} />
 								<MoveDownItemButton item={item} onAction={onAction} />
-							</Stack>
-						</Stack>
+							</div>
+						</div>
 					</PopupMenu>
 					{item.editMode && (
 						<TextEdit
 							onSubmit={(text, size, color) => {
-								onChangeText(item, text, size, color)
+								onChangeText(item, text, size as TextSize, color)
 							}}
 							onCancel={() => item.setEditMode(false)}
 							initialSize={data.size}
@@ -120,7 +122,7 @@ const Item: React.FC<ItemProps> = observer(
 						/>
 					)}
 					{!item.editMode && (
-						<Box sx={{ position: "relative" }}>
+						<div className="relative">
 							<TextItem
 								text={data.data.text}
 								variant={data.size}
@@ -129,11 +131,11 @@ const Item: React.FC<ItemProps> = observer(
 								className={item.selected ? "bg-red-50" : ""}
 							/>
 							{isMobile && (
-								<Box sx={{ position: "absolute", right: 5, top: 5 }}>
+								<div className="absolute right-1 top-1">
 									<EditItemButton item={item} onAction={onAction} />
-								</Box>
+								</div>
 							)}
-						</Box>
+						</div>
 					)}
 				</>
 			)

@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useEditor } from "@/stores"
 import { EditorItemType } from "@/stores/editor-item"
 import { observer } from "mobx-react-lite"
-import ItemList from "./items/item-list"
+import ItemList from "./editor-items/item-list"
 
 const HowTo: React.FC = () => {
 	return (

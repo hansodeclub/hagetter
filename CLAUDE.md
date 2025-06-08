@@ -64,6 +64,7 @@ src/
 - ✅ `src/components/text-formatter/text-formatter.tsx` (Grid, Divider 削除)
 - ✅ `src/components/pages/editor/text-format-selector.tsx` (Grid, ToggleButton 削除)
 - ✅ `src/components/pages/editor/items/insert-divider.tsx` (Box, IconButton, Fade 削除)
+- ✅ `src/components/pages/editor/editor-items/text-edit.tsx` (TextField, Button, Box 削除)
 
 ### 進行中 (Material UI 残存箇所)
 
@@ -76,7 +77,6 @@ src/
    - `src/components/pages/editor/items/item.tsx`
    - `src/components/pages/editor/menus/multi-select-menu.tsx`
    - `src/components/pages/editor/menus/buttons.tsx`
-   - `src/components/pages/editor/edit-items/text-edit.tsx`
 
 3. **サイドパネル**
 
