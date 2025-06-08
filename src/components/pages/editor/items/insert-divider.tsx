@@ -1,10 +1,11 @@
-import TitleIcon from "@mui/icons-material/Title"
-import { Fade } from "@mui/material"
-import Box from "@mui/material/Box"
-import IconButton from "@mui/material/IconButton"
+import { TypeIcon } from "lucide-react"
 import React from "react"
 
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
 import { leftColumnWidth } from "@/components/pages/editor/post-editor"
+import { isTextSize } from "@/entities/post"
 import { observer, useEditor } from "@/stores"
 import TextEdit from "../edit-items/text-edit"
 
@@ -19,78 +20,64 @@ export const InsertDivider: React.FC<InsertDividerProps> = observer(
 		const [mouseOver, setMouseOver] = React.useState(false)
 		const [insertTextMode, setInsertTextMode] = React.useState(false)
 
-		const onInsertText = (text, size, color) => {
-			editor.addText(text, anchor, size, color, undefined)
-			setInsertTextMode(false)
-			setMouseOver(false)
+		const onInsertText = (text: string, size: string, color: string) => {
+			if (isTextSize(size)) {
+				editor.addText(text, anchor, size, color, undefined)
+				setInsertTextMode(false)
+				setMouseOver(false)
+			} else {
+				console.error("Invalid size", size)
+			}
 		}
 
 		if (insertTextMode) {
 			return (
-				<Box sx={{ marginLeft: isMobile ? 0 : `${leftColumnWidth}px` }}>
+				<div style={{ marginLeft: isMobile ? 0 : `${leftColumnWidth}px` }}>
 					<TextEdit
 						onSubmit={onInsertText}
 						onCancel={() => setInsertTextMode(false)}
 					/>
-				</Box>
+				</div>
 			)
 		}
 
-		const selector = isMobile ? "&:before" : "&:hover:before"
-
 		return (
-			<Box
-				sx={{
-					height: "32px",
-					cursor: "pointer",
-					position: "relative",
-					marginLeft: isMobile ? 0 : `${leftColumnWidth}px`,
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					[selector]: {
-						content: "''",
-						position: "absolute",
-						top: "50%",
-						left: "0",
-						borderTop: "1px solid rgba(0,0,0,0.2)",
-						width: "100%",
-						transform: "translateY(-50%)",
-						animation: "fadein 0.3s fade-out forwards",
-					},
-					"@keyframes fadein": {
-						"0%": {
-							opacity: 0,
-						},
-						"100%": {
-							opacity: 1,
-						},
-					},
-				}}
+			<div
+				className={cn(
+					"relative flex h-8 items-center justify-center",
+					"before:-translate-y-1/2 before:absolute before:top-1/2 before:left-0 before:h-px before:w-full before:border-black/20 before:border-t before:transition-opacity before:duration-300",
+					isMobile
+						? "before:opacity-100"
+						: "before:opacity-0 hover:before:opacity-100",
+				)}
+				style={{ marginLeft: isMobile ? 0 : `${leftColumnWidth}px` }}
 				onMouseEnter={isMobile ? undefined : () => setMouseOver(true)}
 				onMouseLeave={isMobile ? undefined : () => setMouseOver(false)}
 			>
-				<Fade in={mouseOver || isMobile}>
-					<IconButton
-						sx={{
-							border: isMobile ? "1px solid rgba(0,0,0,0.2)" : "1px solid #888",
-							backgroundColor: "white",
-							"&:hover": {
-								backgroundColor: "#f5f5f5",
-							},
-						}}
-						size="small"
+				<div
+					className={cn(
+						"relative z-10 transition-opacity duration-300",
+						mouseOver || isMobile ? "opacity-100" : "opacity-0",
+					)}
+				>
+					<Button
+						variant="outline"
+						size="sm"
+						className={cn(
+							"h-8 w-8 rounded-full border bg-white p-0 transition-colors hover:bg-gray-50",
+							isMobile ? "border-black/20" : "border-gray-600",
+						)}
 						onClick={() => setInsertTextMode(true)}
 					>
-						<TitleIcon
-							fontSize="small"
-							sx={{
-								color: isMobile ? "rgba(0,0,0,0.2)" : "#888",
-							}}
+						<TypeIcon
+							className={cn(
+								"h-4 w-4",
+								isMobile ? "text-black/20" : "text-gray-600",
+							)}
 						/>
-					</IconButton>
-				</Fade>
-			</Box>
+					</Button>
+				</div>
+			</div>
 		)
 	},
 )
