@@ -39,5 +39,5 @@ steps:
         "--quiet",
       ]
 images:
-  - asia.gcr.io/$PROJECT_ID/hagetter-$BRANCH_NAME:$SHORT_SHA
+  - asia-docker.pkg.dev/$PROJECT_ID/hagetter/hagetter-$BRANCH_NAME:$SHORT_SHA
 timeout: 1800s
