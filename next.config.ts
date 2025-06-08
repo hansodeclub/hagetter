@@ -4,6 +4,7 @@ require("dotenv").config()
 
 const nextConfig: NextConfig = {
 	poweredByHeader: false,
+	output: "standalone",
 	typescript: {
 		ignoreBuildErrors: true,
 	},
