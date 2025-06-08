@@ -1,9 +1,7 @@
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownwardRounded"
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpwardRounded"
-import DeleteIcon from "@mui/icons-material/DeleteRounded"
-import EditIcon from "@mui/icons-material/EditRounded"
-import IconButton from "@mui/material/IconButton"
 import React from "react"
+import { ArrowDown, ArrowUp, Edit, Trash2 } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 import { ItemActionCallback } from "@/components/pages/editor/post-editor"
 import { EditorItemType } from "@/stores/editor-item"
@@ -13,14 +11,15 @@ export const DeleteItemButton: React.FC<{
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
-		<IconButton
+		<Button
+			variant="outline"
+			size="sm"
 			aria-label="delete"
 			onClick={() => onAction?.(item, { type: "delete" })}
-			size="small"
-			sx={{ color: "#888", border: "1px solid #aaa" }}
+			className="h-8 w-8 rounded-full border-gray-400 p-0 text-gray-600"
 		>
-			<DeleteIcon fontSize="small" />
-		</IconButton>
+			<Trash2 className="h-4 w-4" />
+		</Button>
 	)
 }
 
@@ -29,14 +28,15 @@ export const EditItemButton: React.FC<{
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
-		<IconButton
+		<Button
+			variant="outline"
+			size="sm"
 			aria-label="edit"
 			onClick={() => onAction?.(item, { type: "edit" })}
-			size="small"
-			sx={{ color: "#888", border: "1px solid #aaa", backgroundColor: "white" }}
+			className="h-8 w-8 rounded-full border-gray-400 bg-white p-0 text-gray-600"
 		>
-			<EditIcon fontSize="small" />
-		</IconButton>
+			<Edit className="h-4 w-4" />
+		</Button>
 	)
 }
 
@@ -45,14 +45,15 @@ export const MoveUpItemButton: React.FC<{
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
-		<IconButton
-			aria-label="delete"
+		<Button
+			variant="outline"
+			size="sm"
+			aria-label="move up"
 			onClick={() => onAction?.(item, { type: "moveUp" })}
-			size="small"
-			sx={{ color: "#888", border: "1px solid #aaa" }}
+			className="h-8 w-8 rounded-full border-gray-400 p-0 text-gray-600"
 		>
-			<ArrowUpwardIcon fontSize="small" />
-		</IconButton>
+			<ArrowUp className="h-4 w-4" />
+		</Button>
 	)
 }
 
@@ -61,13 +62,14 @@ export const MoveDownItemButton: React.FC<{
 	onAction?: ItemActionCallback
 }> = ({ item, onAction }) => {
 	return (
-		<IconButton
-			aria-label="delete"
+		<Button
+			variant="outline"
+			size="sm"
+			aria-label="move down"
 			onClick={() => onAction?.(item, { type: "moveDown" })}
-			size="small"
-			sx={{ color: "#888", border: "1px solid #aaa" }}
+			className="h-8 w-8 rounded-full border-gray-400 p-0 text-gray-600"
 		>
-			<ArrowDownwardIcon fontSize="small" />
-		</IconButton>
+			<ArrowDown className="h-4 w-4" />
+		</Button>
 	)
 }
