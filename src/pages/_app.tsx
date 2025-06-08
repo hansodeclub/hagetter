@@ -1,49 +1,16 @@
-//https://github.com/mui-org/material-ui/blob/master/examples/nextjs
-import React, { useEffect } from "react"
-
-import { CacheProvider, type EmotionCache } from "@emotion/react"
 import type { AppProps } from "next/app"
 import Head from "next/head"
-import { useRouter } from "next/router"
+import React from "react"
 
-import CssBaseline from "@mui/material/CssBaseline"
-import { ThemeProvider } from "@mui/material/styles"
-
-import ErrorNotification from "@/components/ErrorNotification"
-
-import createEmotionCache from "@/lib/createEmotionCache"
-import { analytics, logEvent } from "@/lib/firebase/client"
-
+import { ErrorNotification } from "@/components/error-notification"
 import { StoreProvider, useSession } from "@/stores"
 import "@/styles.css"
-import theme from "@/theme"
 
 require("setimmediate")
 
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache()
-
-interface MyAppProps extends AppProps {
-	emotionCache?: EmotionCache
-}
-
-export default function MyApp(props) {
-	const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-	const router = useRouter()
-	useEffect(() => {
-		const handleRouteChange = (url) => {
-			logEvent(analytics, "pageview", {
-				url: url,
-			})
-		}
-		router.events.on("routeChangeComplete", handleRouteChange)
-		return () => {
-			router.events.off("routeChangeComplete", handleRouteChange)
-		}
-	}, [router.events])
-
+export default function MyApp(props: AppProps) {
 	return (
-		<CacheProvider value={emotionCache}>
+		<>
 			<Head>
 				<title>Hagetter</title>
 				<meta property="og:site_name" content="Hagetter" />
@@ -53,27 +20,24 @@ export default function MyApp(props) {
 				/>
 			</Head>
 			<StoreProvider>
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
-					<MyComponent {...props} />
-					<ErrorNotification />
-				</ThemeProvider>
+				<MyComponent {...props} />
+				<ErrorNotification />
 			</StoreProvider>
-		</CacheProvider>
+		</>
 	)
 }
 
-const MyComponent = ({ Component, pageProps }) => {
+const MyComponent = ({ Component, pageProps }: AppProps) => {
 	const session = useSession()
 	React.useEffect(() => {
 		// useEffect内はクライアントサイドで呼ばれる
 		session
 			.getAccount()
-			.then((account) => {})
+			.then((_account) => {})
 			.catch((err) => {
 				console.error(err)
 			})
-	}, [])
+	}, [session])
 
 	return <Component {...pageProps} />
 }

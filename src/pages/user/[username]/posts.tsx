@@ -1,47 +1,29 @@
-import * as React from 'react'
+import { GetServerSideProps, NextPage } from "next"
+import React from "react"
 
-import { QueryResult } from 'features/api/types'
-import { GetServerSideProps, NextPage } from 'next'
+import head from "@/lib/utils/head"
 
-import UserEntriesPage from '@/components/pages/user-entries'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	/* 旧仕様のURL。
+	 * /user/[username]/posts から /[username] にリダイレクトする。
+	 */
+	const username = head(context.query.username)
+	if (!username) {
+		return {
+			notFound: true,
+		}
+	}
 
-import head from '@/lib/utils/head'
-import {
-  JsonString,
-  fromJson,
-  toJson,
-  toJsonObject,
-} from '@/lib/utils/serializer'
-
-import { queryPosts } from '@/features/posts/api'
-import { HagetterPostInfo } from '@/features/posts/types'
-
-interface PageProps {
-  username: string
-  posts: JsonString<QueryResult<HagetterPostInfo>>
+	return {
+		redirect: {
+			destination: `/${username}`,
+			permanent: true,
+		},
+	}
 }
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
-) => {
-  const username = head(context.query.username)
-  if (!username) {
-    return {
-      notFound: true,
-    }
-  }
-  const posts = await queryPosts({ username, visibility: 'public' })
-  return {
-    props: {
-      username: username,
-      posts: toJson(posts),
-    },
-  }
+export const UserEntries: NextPage = () => {
+	return <div>moved</div>
 }
 
-export const UserEntries: NextPage<PageProps> = (props) => {
-  const username = props.username
-  const posts = fromJson<QueryResult<HagetterPostInfo>>(props.posts)
-  return <UserEntriesPage username={username} posts={posts.items} />
-}
 export default UserEntries

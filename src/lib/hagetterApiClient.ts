@@ -2,29 +2,34 @@ import type { QueryResult } from "features/api/types"
 import fetch from "isomorphic-unfetch"
 import { v4 as uuidv4 } from "uuid"
 
-import type { ApiResponse, Links } from "@/features/api/types/ApiResponse"
-import type { ErrorReport } from "@/features/error-reports/types"
-import type { InstanceInfo } from "@/features/instances/types"
+import type { InstanceInfo } from "@/entities/instance"
 import type {
-	Account,
+	HagetterItem,
 	HagetterPost,
 	HagetterPostInfo,
-	Status,
-} from "@/features/posts/types"
-import { fromJsonObject, toJson } from "@/lib/utils/serializer"
-import type { TextItem } from "@/stores/editorStore"
+	PostVisibility,
+	VerifiableHagetterPost,
+} from "@/entities/post"
+
+import type { Account, Status } from "@/entities/status"
+import type { ApiResponse, Links } from "@/features/api/types/ApiResponse"
+import type { ErrorReport } from "@/features/error-reports/types"
+import { fromJsonObject, toJson } from "@/lib/serializer"
 
 export interface GetPostsOptions {
-	visibility?: "public" | "unlisted" | "private" | "draft"
+	visibility?: "public" | "noindex" | "unlisted" | "draft"
 	user?: string
 	cursor?: string
 	limit?: number
 }
 
-export class HagetterApiClient {
-	readonly apiRoot: string
+export type HagetterApiClientOptions = {
+	baseUrl?: string
+	token?: string
+}
 
-	constructor(apiRoot = "/api/") {
+export class HagetterApiClient {
+	constructor(readonly apiRoot = "/api/") {
 		this.apiRoot = apiRoot.endsWith("/") ? apiRoot : `${apiRoot}/`
 	}
 
@@ -71,7 +76,7 @@ export class HagetterApiClient {
 		return fromJsonObject<ApiResponse<T>>(await res.json())
 	}
 
-	private async postAuth<T>(path, token: string, body: object) {
+	private async authPost<T>(path, token: string, body: object) {
 		const options = {
 			method: "POST",
 			headers: {
@@ -143,7 +148,7 @@ export class HagetterApiClient {
 	 * @param id まとめID
 	 */
 	async getPost(id: string): Promise<HagetterPost> {
-		const res = await this.get<HagetterPost>(`post`, { id })
+		const res = await this.get<HagetterPost>("post", { id })
 		if (res.status === "ok") return res.data as HagetterPost
 		else throw Error(res.error.message)
 	}
@@ -159,7 +164,7 @@ export class HagetterApiClient {
 	}
 
 	/**
-	 * 自分のポスト一覧を取得する(public/unlisted含む)
+	 * 自分のポスト一覧を取得する(public/noindex/unlisted/draft含む)
 	 */
 	async getMyPosts(
 		user: string,
@@ -167,7 +172,7 @@ export class HagetterApiClient {
 	): Promise<QueryResult<HagetterPostInfo>> {
 		const res = await this.authGet("posts", token, {
 			user,
-			visibility: "unlisted",
+			visibility: "public,unlisted,noindex,draft",
 		})
 		return this.getData<QueryResult<HagetterPostInfo>>(res)
 	}
@@ -177,12 +182,15 @@ export class HagetterApiClient {
 	 * @param id まとめID
 	 * @param token セッショントークン
 	 */
-	async getVerifiablePost(id: string, token: string): Promise<HagetterPost> {
-		const res = await this.authGet(`post`, token, {
+	async getVerifiablePost(
+		id: string,
+		token: string,
+	): Promise<VerifiableHagetterPost> {
+		const res = await this.authGet("post", token, {
 			id,
 			action: "edit",
 		})
-		return this.getData<HagetterPost>(res)
+		return this.getData<VerifiableHagetterPost>(res)
 	}
 
 	/**
@@ -198,8 +206,8 @@ export class HagetterApiClient {
 		token: string,
 		title: string,
 		description: string,
-		visibility: "draft" | "unlisted" | "public",
-		items: (TextItem | Status)[],
+		visibility: PostVisibility,
+		items: HagetterItem[],
 		hid?: string,
 	): Promise<string> {
 		const body = {
@@ -213,7 +221,7 @@ export class HagetterApiClient {
 			body.hid = hid
 		}
 
-		const res = await this.postAuth(`post`, token, body)
+		const res = await this.authPost("post", token, body)
 		const data = this.getData<{ key: string }>(res)
 		return data.key
 	}
@@ -303,7 +311,7 @@ export class HagetterApiClient {
 	 * @param urls ステータスのURL
 	 */
 	async getUrlTimeline(token: string, urls: string[]) {
-		const res = await this.postAuth<Status[]>("mastodon/urls", token, { urls })
+		const res = await this.authPost<Status[]>("mastodon/urls", token, { urls })
 		return this.getData(res)
 	}
 

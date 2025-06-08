@@ -1,17 +1,14 @@
-import React from "react"
-
-import type { QueryResult } from "@/features/api/types"
 import type { GetServerSideProps, NextPage } from "next"
 import Head from "next/head"
+import React from "react"
 
-import Header from "@/components/header"
-
-import { sendCacheControl } from "@/lib/cdn/cloudflare"
-import { type JsonString, fromJson, toJson } from "@/lib/utils/serializer"
-
+import { Header } from "@/components/header"
 import { HomePage } from "@/components/pages/home"
-import { getRecentPublicPosts } from "@/features/posts/api"
+import type { QueryResult } from "@/features/api/types"
+import { getRecentPublicPosts } from "@/features/posts/actions"
 import type { HagetterPostInfo } from "@/features/posts/types"
+import { sendCacheControl } from "@/lib/cdn/cloudflare"
+import { type JsonString, fromJson, toJson } from "@/lib/serializer"
 
 interface PageProps {
 	code: number
@@ -35,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 			},
 		}
 	} catch (err) {
-		console.log(err)
+		console.warn(err)
 		return {
 			props: {
 				code: err.code ?? 500,

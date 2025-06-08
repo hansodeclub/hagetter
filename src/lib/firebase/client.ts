@@ -1,9 +1,9 @@
-import { getAnalytics } from 'firebase/analytics'
-import { initializeApp } from 'firebase/app'
+import { Analytics, getAnalytics } from "firebase/analytics"
+import { initializeApp } from "firebase/app"
 
-import clientConfig from '@/config/client'
+import clientConfig from "@/config/client"
 
-export { logEvent } from 'firebase/analytics'
+export { logEvent } from "firebase/analytics"
 
 //if (typeof window !== 'undefined' && firebase.apps.length === 0) {
 //  firebase.initializeApp(firebaseConfig);
@@ -12,9 +12,9 @@ export { logEvent } from 'firebase/analytics'
 
 const app = initializeApp(clientConfig.firebase)
 
-let analytics
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app)
+let analytics: Analytics | undefined
+if (typeof window !== "undefined") {
+	analytics = getAnalytics(app)
 }
 
 export { analytics }

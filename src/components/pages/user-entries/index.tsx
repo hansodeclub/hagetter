@@ -1,1 +1,1 @@
-export { default } from './UserEntriesPage'
+export { default } from "./user-entries-page"

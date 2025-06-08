@@ -10,6 +10,15 @@
       "style": {
         "noUselessElse": "off",
         "useImportType": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "fix": "safe"
+        }
       }
     }
   },

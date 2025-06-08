@@ -1,16 +1,18 @@
 import { NextApiHandler } from "next"
 
 import { respondError, withApi, withApiAuth } from "@/features/api/server"
-import { queryPosts } from "@/features/posts/api"
+import { queryPosts } from "@/features/posts/actions"
+
 import head from "@/lib/utils/head"
 
 const getMyPosts = withApiAuth(async ({ req, res, user }) => {
 	const username = head(req.query.user)
+	const visibility = head(req.query.visibility) ?? "public"
 	if (user !== username) {
 		throw Error("不正なユーザーID")
 	}
 
-	const items = await queryPosts({ username })
+	const items = await queryPosts({ username, visibility })
 	return { data: items }
 })
 
@@ -35,7 +37,7 @@ const handler: NextApiHandler = async (req, res) => {
 		if (req.method === "GET") {
 			const username = head(req.query.user)
 			const visibility = head(req.query.visibility) ?? "public"
-			console.log(username, visibility)
+
 			if (username && visibility !== "public") {
 				await getMyPosts(req, res)
 			} else if (username) {

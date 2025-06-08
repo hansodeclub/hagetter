@@ -1,110 +1,105 @@
-import generator, { MegalodonInterface } from 'megalodon'
-import { NextApiRequest, NextApiResponse } from 'next'
+import generator, { MegalodonInterface } from "megalodon"
+import { NextApiRequest, NextApiResponse } from "next"
 
+import { HagetterItem, VerifiableHagetterItem } from "@/entities/post"
+import { Status, fromMastoAccount, fromMastoStatus } from "@/entities/status"
+import { VerifiableStatus } from "@/entities/verifiable-status"
 import {
-  ApiResponse,
-  Links,
-  failure,
-  success,
-} from '@/features/api/types/ApiResponse'
-import { NotFound } from '@/features/api/types/HttpResponse'
-import { decrypt, encrypt, verifyAuthorization } from '@/features/auth/server'
-import {
-  HagetterItem,
-  Status,
-  VerifiableHagetterItem,
-  VerifiableStatus,
-  fromMastoAccount,
-  fromMastoStatus,
-} from '@/features/posts/types'
-import { fromJson, toJson } from '@/lib/utils/serializer'
+	ApiResponse,
+	Links,
+	failure,
+	success,
+} from "@/features/api/types/ApiResponse"
+import { NotFound } from "@/features/api/types/HttpResponse"
+import { decrypt, encrypt, verifyAuthorization } from "@/features/auth/server"
+import { fromJson, toJson } from "@/lib/serializer"
 
 export const respondSuccess = <T>(
-  res: NextApiResponse,
-  data?: T,
-  links?: Links,
-  code: number = 200
+	res: NextApiResponse,
+	data?: T,
+	links?: Links,
+	code = 200,
 ) => {
-  res.status(code).json(success(data, links))
+	res.status(code).json(success(data, links))
 }
 
 export const respondError = (
-  res: NextApiResponse,
-  message: string,
-  code: number = 400
+	res: NextApiResponse,
+	message: string,
+	code = 400,
 ) => {
-  res.status(code).json(failure(message))
+	res.status(code).json(failure(message))
 }
 
 export interface WithApiParams {
-  req: NextApiRequest
-  res: NextApiResponse
+	req: NextApiRequest
+	res: NextApiResponse
 }
 
 export type WithApiProc<Params, T = {}> = (
-  params: Params
+	params: Params,
 ) => Promise<ApiResponse<T> | void>
 
 export const withApi = (proc: (params: WithApiParams) => Promise<any>) => {
-  return async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-      const response = await proc({ req, res })
-      if (response) {
-        respondSuccess(res, response.data, response?.links)
-      }
+	return async (req: NextApiRequest, res: NextApiResponse) => {
+		try {
+			const response = await proc({ req, res })
+			if (response) {
+				respondSuccess(res, response.data, response?.links)
+			}
 
-      return response
-    } catch (err) {
-      if (err instanceof NotFound) {
-        respondError(res, err.message, 404)
-      } else {
-        console.error(err)
-        respondError(res, err.message, 500)
-      }
-    }
-  }
+			return response
+		} catch (err) {
+			if (err instanceof NotFound) {
+				respondError(res, err.message, 404)
+			} else {
+				console.error(err)
+				respondError(res, err.message, 500)
+			}
+		}
+	}
 }
 
 export interface WithAuthParams extends WithApiParams {
-  user: string
-  accessToken: string
+	user: string
+	accessToken: string
 }
 
 export const withApiAuth = (proc: (params: WithAuthParams) => Promise<any>) => {
-  return withApi(async ({ req, res }) => {
-    const { user, accessToken } = verifyAuthorization(
-      req.headers.authorization!
-    )
-    return proc({ req, res, user, accessToken })
-  })
+	return withApi(async ({ req, res }) => {
+		const { user, accessToken } = verifyAuthorization(
+			req.headers.authorization!,
+		)
+		return proc({ req, res, user, accessToken })
+	})
 }
 
 export interface WithMastoParams extends WithAuthParams {
-  client: MegalodonInterface
+	client: MegalodonInterface
 }
 
 export const withApiMasto = (
-  proc: (params: WithMastoParams) => Promise<any>
+	proc: (params: WithMastoParams) => Promise<any>,
 ) => {
-  return withApiAuth(async ({ req, res, user, accessToken }) => {
-    const [_, instance] = user.split('@')
-    /*const masto = await mastoLogin({
+	return withApiAuth(async ({ req, res, user, accessToken }) => {
+		const [_, instance] = user.split("@")
+		/*const masto = await mastoLogin({
       url: `https://${instance}`,
       accessToken: accessToken,
     })*/
 
-    const client = generator('mastodon', `https://${instance}`, accessToken)
+		const client = generator("mastodon", `https://${instance}`, accessToken)
 
-    return proc({ req, res, user, accessToken, client })
-  })
+		return proc({ req, res, user, accessToken, client })
+	})
 }
 
 export const getMyAccount = async (
-  client: MegalodonInterface,
-  server: string
+	client: MegalodonInterface,
+	server: string,
 ) => {
-  const res = await client.verifyAccountCredentials()
-  return fromMastoAccount(res.data, server)
+	const res = await client.verifyAccountCredentials()
+	return fromMastoAccount(res.data, server)
 }
 
 /**
@@ -112,10 +107,10 @@ export const getMyAccount = async (
  * @param status
  */
 export const signStatus = (status: Status): VerifiableStatus => {
-  return {
-    ...status,
-    secure: encrypt(toJson(status)),
-  }
+	return {
+		...status,
+		secure: encrypt(toJson(status)),
+	}
 }
 
 /**
@@ -123,28 +118,28 @@ export const signStatus = (status: Status): VerifiableStatus => {
  * @param secureStatus
  */
 export const verifyStatus = (secureStatus: VerifiableStatus): Status => {
-  const status = fromJson<Status>(decrypt(secureStatus.secure))
-  if (secureStatus.id !== status.id) throw Error('Invalid Status')
+	const status = fromJson<Status>(decrypt(secureStatus.secure))
+	if (secureStatus.id !== status.id) throw Error("Invalid Status")
 
-  return status
+	return status
 }
 
 export const verifyItems = (
-  items: VerifiableHagetterItem[]
+	items: VerifiableHagetterItem[],
 ): HagetterItem[] => {
-  try {
-    return items.map((item) => {
-      if (item.type === 'status') {
-        return {
-          ...item,
-          data: verifyStatus(item.data),
-        }
-      } else return item
-    })
-  } catch (err) {
-    console.error(err)
-    throw Error('Invalid Status')
-  }
+	try {
+		return items.map((item) => {
+			if (item.type === "status") {
+				return {
+					...item,
+					data: verifyStatus(item.data),
+				}
+			} else return item
+		})
+	} catch (err) {
+		console.error(err)
+		throw Error("Invalid Status")
+	}
 }
 
 /**
@@ -153,11 +148,11 @@ export const verifyItems = (
  * @param server
  */
 export const transformStatus = (
-  statuses: Entity.Status[],
-  instance: string
+	statuses: Entity.Status[],
+	instance: string,
 ): VerifiableStatus[] => {
-  return statuses.map((mastoStatus) => {
-    const status = fromMastoStatus(mastoStatus, instance)
-    return signStatus(status)
-  })
+	return statuses.map((mastoStatus) => {
+		const status = fromMastoStatus(mastoStatus, instance)
+		return signStatus(status)
+	})
 }

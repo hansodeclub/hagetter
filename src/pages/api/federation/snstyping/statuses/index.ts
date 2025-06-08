@@ -1,5 +1,5 @@
 import { withApi } from "@/features/api/server"
-import { getRecentPublicPosts } from "@/features/posts/api"
+import { getRecentPublicPosts } from "@/features/posts/actions"
 
 const getPosts = withApi(async ({ res }) => {
 	const posts = await getRecentPublicPosts({ limit: 10 })

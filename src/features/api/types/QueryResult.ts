@@ -25,7 +25,7 @@ export const makeResult = <T>(
 
 	// 記事がmaxItemsより多い場合はmaxItems件まで返して、cursorを付ける
 	const returnItems = items.slice(0, -1)
-	const cursorItem = returnItems[returnItems.length - 1]
+	const cursorItem = items[items.length - 1]
 
 	const cursor = cursorItem[cursorKey] as never as string // fix later
 

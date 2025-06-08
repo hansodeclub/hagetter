@@ -1,28 +1,28 @@
-import algoliasearch from 'algoliasearch'
-import { serverConfig } from '@/config/server'
+import { serverConfig } from "@/config/server"
+import algoliasearch from "algoliasearch"
 
 export const getHitString = (hit: any): string | undefined => {
-  const res = hit._highlightResult
+	const res = hit._highlightResult
 
-  if (res.description.matchLevel !== 'none') {
-    return res.description.value
-  }
+	if (res.description.matchLevel !== "none") {
+		return res.description.value
+	}
 
-  for (const item of res.items) {
-    if (item.matchLevel !== 'none') return item.value
-  }
+	for (const item of res.items) {
+		if (item.matchLevel !== "none") return item.value
+	}
 
-  return undefined
+	return undefined
 }
 
 export const search = async (keyword: string, page?: number) => {
-  const client = algoliasearch(
-    serverConfig.algoliaAppId,
-    serverConfig.algoliaApiKey
-  )
-  const index = client.initIndex('posts')
+	const client = algoliasearch(
+		serverConfig.algoliaAppId,
+		serverConfig.algoliaApiKey,
+	)
+	const index = client.initIndex("posts")
 
-  const hits = await index.search(keyword, { page })
+	const hits = await index.search(keyword, { page })
 
-  return hits
+	return hits
 }

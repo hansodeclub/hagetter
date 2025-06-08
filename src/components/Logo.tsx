@@ -1,10 +1,9 @@
-import React from "react"
-
 import { Roboto_Condensed } from "next/font/google"
 import Link from "next/link"
+import React from "react"
 
 const robotoCondensedBold = Roboto_Condensed({
-	weight: "700",
+	weight: "900",
 	subsets: ["latin"],
 })
 
@@ -13,10 +12,8 @@ const Logo: React.FC = () => {
 		<Link
 			href="/"
 			style={{
-				textDecoration: "none",
-				color: "black",
 				fontSize: 24,
-				fontWeight: 700,
+				fontWeight: 900,
 			}}
 			className={robotoCondensedBold.className}
 		>

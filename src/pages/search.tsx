@@ -1,144 +1,106 @@
-import * as React from 'react'
+import { GetServerSideProps, NextPage } from "next"
+import Head from "next/head"
+import React from "react"
+import sanitizeHtml from "sanitize-html"
 
-import { GetServerSideProps, NextPage } from 'next'
-import Head from 'next/head'
-import sanitizeHtml from 'sanitize-html'
+import { Header } from "@/components/header"
+import { HitItem, SearchPage } from "@/components/pages/search"
+import { getHitString, search } from "@/features/search/algolia"
+import { JsonString, fromJson, toJson } from "@/lib/serializer"
+import head from "@/lib/utils/head"
 
-import Box from '@mui/material/Box'
-import { SxProps, Theme } from '@mui/material/styles'
-
-import Header from '@/components/header'
-
-import head from '@/lib/utils/head'
-import { JsonString, fromJson, toJson } from '@/lib/utils/serializer'
-
-import { getHitString, search } from '@/features/search/algolia'
-
-const styles: { [key: string]: SxProps<Theme> } = {
-  container: {
-    margin: 1,
-  },
-  keyword: {
-    paddingBottom: 2,
-  },
-  hitItem: {
-    '& em': {
-      fontWeight: 'bold',
-    },
-    paddingBottom: 2,
-  },
-}
-
-interface HitItem {
-  hid: string
-  title: string
-  description: string
-  created_at: string
-  highlight: string
-}
+const sanitizer = (text) =>
+	sanitizeHtml(text, {
+		allowedTags: ["em"],
+	})
 
 const processItem = (hit: any): HitItem => {
-  const sanitizer = (text) =>
-    sanitizeHtml(text, {
-      allowedTags: ['em'],
-    })
-  return {
-    hid: hit.objectID,
-    title: sanitizer(hit.title),
-    description: sanitizer(hit.description),
-    created_at: hit.created_at,
-    highlight: getHitString(hit) || '',
-  }
+	return {
+		hid: hit.objectID,
+		highlightedTitle: sanitizer(hit._highlightResult.title.value),
+		highlightedDescription: sanitizer(hit._highlightResult.description.value),
+		highlightedContent: getHitString(hit) || "",
+		post: {
+			id: hit.id,
+			title: hit.title,
+			image: hit.image,
+			stars: hit.stars,
+			owner: hit.owner,
+			description: hit.description,
+			visibility: hit.visibility,
+			createdAt: hit.created_at,
+			updatedAt: hit.updated_at,
+		},
+	}
 }
 
 interface PageProps {
-  keyword: string
-  items: JsonString<HitItem[]>
-  hits: number
-  page: number | null
-  pages: number | null
-  error: string | null
+	keyword: string
+	items: JsonString<HitItem[]>
+	hits: number
+	page: number | null
+	pages: number | null
+	error: string | null
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
-  context
+	context,
 ) => {
-  try {
-    const keyword = head(context.query.q)
+	try {
+		const keyword = head(context.query.q)
 
-    if (!keyword) {
-      return {
-        props: {
-          keyword: '',
-          items: toJson([]),
-          hits: 0,
-          page: null,
-          pages: null,
-          error: null,
-        },
-      }
-    }
+		if (!keyword) {
+			return {
+				props: {
+					keyword: "",
+					items: toJson([]),
+					hits: 0,
+					page: null,
+					pages: null,
+					error: null,
+				},
+			}
+		}
 
-    const { hits, nbHits, page, nbPages } = await search(keyword)
+		const { hits, nbHits, page, nbPages } = await search(keyword)
 
-    return {
-      props: {
-        keyword,
-        items: toJson(hits.map(processItem)),
-        hits: nbHits,
-        page: page,
-        pages: nbPages,
-        error: null,
-      },
-    }
-  } catch (err) {
-    console.log(err)
-    return {
-      props: {
-        keyword: '',
-        hits: 0,
-        items: toJson([]),
-        page: null,
-        pages: null,
-        error: err.message,
-      },
-    }
-  }
+		return {
+			props: {
+				keyword,
+				items: toJson(hits.map(processItem)),
+				hits: nbHits,
+				page: page,
+				pages: nbPages,
+				error: null,
+			},
+		}
+	} catch (err) {
+		console.warn(err)
+		return {
+			props: {
+				keyword: "",
+				hits: 0,
+				items: toJson([]),
+				page: null,
+				pages: null,
+				error: err.message,
+			},
+		}
+	}
 }
 
-const Item: React.FC<{ item: HitItem }> = ({ item }) => {
-  return (
-    <Box sx={styles.hitItem}>
-      <a href={`/hi/${item.hid}`}>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: item.title,
-          }}
-        />
-      </a>
-      <Box>
-        <span dangerouslySetInnerHTML={{ __html: item.highlight }} />
-      </Box>
-    </Box>
-  )
+const Search: NextPage<PageProps> = (props) => {
+	const items: HitItem[] = fromJson(props.items)
+
+	return (
+		<div>
+			<Head>
+				<title>検索結果：{props.keyword} - Hagetter</title>
+			</Head>
+			<Header />
+			<SearchPage items={items} keyword={props.keyword} />
+		</div>
+	)
 }
 
-const SearchPage: NextPage<PageProps> = (props) => {
-  const items: HitItem[] = fromJson(props.items)
-
-  return (
-    <div>
-      <Head>
-        <title>Hagetter - 検索結果：{props.keyword}</title>
-      </Head>
-      <Header />
-      <Box sx={styles.container}>
-        {items.map((item) => (
-          <Item item={item} key={item.hid} />
-        ))}
-      </Box>
-    </div>
-  )
-}
-
-export default SearchPage
+export default Search
