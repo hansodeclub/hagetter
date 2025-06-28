@@ -17,15 +17,17 @@ import {
 	SelectValue,
 } from "@/components/ui/select"
 import { postVisibilityLabels } from "@/entities/post"
+import { cn } from "@/lib/utils"
 import { observer, useEditor } from "@/stores"
 
 export interface BottomBarProps {
 	onSubmit: () => void
 	submitting: boolean
+	className?: string
 }
 
 export const BottomBar: React.FC<BottomBarProps> = observer(
-	({ onSubmit, submitting }) => {
+	({ onSubmit, submitting, className }) => {
 		const editor = useEditor()
 		const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 		const menuOpen = Boolean(anchorEl)
@@ -49,7 +51,12 @@ export const BottomBar: React.FC<BottomBarProps> = observer(
 		}, [editor.hasPrivateStatus, editor.visibility])
 
 		return (
-			<div className="fixed right-0 bottom-0 left-0 flex h-[64px] items-center border-gray-200 border-t bg-white px-4 text-black shadow-none">
+			<div
+				className={cn(
+					"fixed right-0 bottom-0 left-0 flex h-[64px] items-center border-gray-200 border-t bg-white px-4 text-black shadow-none",
+					className,
+				)}
+			>
 				<div>
 					<Button
 						color="primary"

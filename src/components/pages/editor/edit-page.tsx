@@ -9,9 +9,9 @@ import { usePageLeaveConfirmation } from "@/hooks/use-page-leave-confirmation"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
 import head from "@/lib/utils/head"
 import { useEditor, useSession, useStore } from "@/stores"
-import BottomBar from "./bottom-bar"
-import MultiSelectMenu from "./menus/multi-select-menu"
-import PostEditor, { leftColumnWidth } from "./post-editor"
+import { BottomBar } from "./bottom-bar"
+import { MultiSelectMenu } from "./menus/multi-select-menu"
+import { PostEditor, leftColumnWidth } from "./post-editor"
 import { SidePanel } from "./side-panel"
 
 const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
@@ -158,7 +158,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 				color={editor.selectedItemsFormat.color}
 				size={editor.selectedItemsFormat.size}
 			/>
-			<BottomBar onSubmit={onSubmit} submitting={submitting} />
+			<BottomBar onSubmit={onSubmit} submitting={submitting} className="z-20" />
 		</div>
 	)
 })

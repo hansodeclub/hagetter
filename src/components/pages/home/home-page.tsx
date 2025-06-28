@@ -34,7 +34,7 @@ export const HomePage: React.FC<HomePageProps> = ({ recentPosts }) => {
 							</React.Suspense>
 						</CardContent>
 					</Card>
-					<SearchBox className="px- 1 my-2 w-full md:w-[300px] md:px-0" />
+					<SearchBox className="my-2 w-full px-1 md:w-[300px] md:px-0" />
 				</div>
 				<Card className="border-0 px-1 md:border md:p-0">
 					<CardHeader className="p-3">

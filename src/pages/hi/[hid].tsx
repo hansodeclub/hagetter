@@ -79,7 +79,7 @@ const PostPage: NextPage<Props> = (props) => {
 			</Head>
 			<Header />
 			<div className="flex">
-				<div className="hidden sm:mt-10 sm:ml-2 sm:block">
+				<div className="hidden sm:mt-2 sm:ml-2 sm:block">
 					<AnyPost />
 				</div>
 				<div className="mt-2 w-full bg-white p-2 sm:m-2 sm:max-w-screen-sm sm:rounded sm:border">
