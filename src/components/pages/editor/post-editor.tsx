@@ -35,7 +35,7 @@ export interface PostEditorProps extends React.HTMLAttributes<HTMLDivElement> {
 	isMobile?: boolean
 }
 
-const PostEditor: React.FC<PostEditorProps> = observer(
+export const PostEditor: React.FC<PostEditorProps> = observer(
 	({ isMobile, ...props }) => {
 		const editor = useEditor()
 

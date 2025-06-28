@@ -12,7 +12,7 @@ export interface MultiSelectMenuProps
 	size?: string
 }
 
-const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
+export const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
 	({ isMobile, color, size, className }) => {
 		const editor = useEditor()
 
@@ -43,7 +43,7 @@ const MultiSelectMenu: React.FC<MultiSelectMenuProps> = observer(
 							: "pointer-events-none translate-y-4 opacity-0",
 					)}
 				>
-					<div className="mb-1 flex items-center rounded-t-lg border-l border-r border-t border-gray-300">
+					<div className="mb-1 flex items-center rounded-t-lg border-gray-300 border-t border-r border-l">
 						<TextFormatter
 							text={`${editor.selectedCount}個のアイテムを選択中`}
 							size={size}

@@ -2,12 +2,10 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 
 import Avatar from "@/components/avatar"
-import { PostItem, TextItem } from "@/components/item"
-import Timestamp from "@/components/timestamp"
-import { Toot } from "@/components/toot"
+import { PostItem } from "@/components/item"
+import { Timestamp } from "@/components/timestamp"
 import { Button } from "@/components/ui/button"
-import { HagetterItem } from "@/features/posts/types"
-import { HagetterPost, Status } from "@/features/posts/types"
+import { HagetterPost } from "@/features/posts/types"
 import { useSession } from "@/stores"
 
 export interface PostContentProps {
