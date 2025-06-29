@@ -1,13 +1,12 @@
 import { Spinner } from "@/components/spinner"
 import { observer } from "mobx-react-lite"
-import { useRouter } from "next/router"
+import { useRouter, useParams } from "next/navigation"
 import React from "react"
 
 import Logo from "@/components/logo"
 import { useDocumentRect } from "@/hooks/use-document-height"
 import { usePageLeaveConfirmation } from "@/hooks/use-page-leave-confirmation"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
-import head from "@/lib/utils/head"
 import { useEditor, useSession, useStore } from "@/stores"
 import { BottomBar } from "./bottom-bar"
 import { MultiSelectMenu } from "./menus/multi-select-menu"
@@ -16,6 +15,7 @@ import { SidePanel } from "./side-panel"
 
 const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 	const router = useRouter()
+	const params = useParams()
 	const [loading, setLoading] = React.useState(true)
 	const [code, setCode] = React.useState<number>()
 	const [error, setError] = React.useState<string>()
@@ -46,7 +46,7 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 		}
 	}, [width])
 
-	const hid = head(router.query.hid)
+	const hid = params.hid as string
 	React.useEffect(() => {
 		if (create) {
 			editor.clear()

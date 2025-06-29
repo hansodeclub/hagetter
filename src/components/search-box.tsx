@@ -1,5 +1,7 @@
+"use client"
+
 import { Search as SearchIcon } from "lucide-react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import React from "react"
 
 import { Input } from "@/components/ui/input"

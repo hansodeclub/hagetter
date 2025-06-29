@@ -1,13 +1,14 @@
 import { NextApiRequest } from 'next'
 
-import { getHost } from '@/lib/utils/url'
+import { getUrlHost } from '@/lib/utils/url'
 
 export const purgeCache = async (
   req: NextApiRequest,
   hid: string,
   purgeHome: boolean = true
 ) => {
-  const baseUrl = `${getHost(req)}`
+  const { protocol, host } = getUrlHost(req, undefined)
+  const baseUrl = `${protocol}//${host}`
   if (purgeHome) {
     try {
       await fetch(baseUrl, { method: 'PURGE' })
@@ -27,7 +28,7 @@ export const purgeCache = async (
     }
   }
 
-  const url = `${getHost(req)}/hi/${hid}`
+  const url = `${baseUrl}/hi/${hid}`
   try {
     await fetch(url, { method: 'PURGE' })
     await fetch(

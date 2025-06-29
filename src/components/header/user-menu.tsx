@@ -1,5 +1,7 @@
+"use client"
+
 import { FileText as FileTextIcon, LogOut as LogOutIcon } from "lucide-react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import React from "react"
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
@@ -30,7 +32,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger>
+			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" size="icon">
 					<Avatar>
 						<AvatarImage src={avatar} alt="" />

@@ -1,3 +1,5 @@
+"use client"
+
 import Head from "next/head"
 import React from "react"
 
@@ -5,7 +7,7 @@ import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { InstanceInfo } from "@/entities/instance"
 import { HagetterApiClient } from "@/lib/hagetterApiClient"
-import { getHost } from "@/lib/utils/url"
+import { getClientHost } from "@/lib/utils/url"
 import { InstanceSelector } from "./instance-selector"
 export interface PageProps {
 	instances: InstanceInfo[]
@@ -22,7 +24,7 @@ export const LoginPage: React.FC<PageProps> = ({ instances, error }) => {
 	const handleSubmit = (instance?: InstanceInfo) => {
 		if (!instance) return
 		const client = new HagetterApiClient()
-		const callbackUri = `${getHost(window)}/auth/${instance.id}`
+		const callbackUri = `${getClientHost()}/auth/${instance.id}`
 		location.href = client.getOAuthUrl(instance, callbackUri)
 	}
 

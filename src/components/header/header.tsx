@@ -26,15 +26,15 @@ export const Header: React.FC = observer(() => {
 				</div>
 				<div className="flex-1 grow" />
 				{!session.loading && !session.account && (
-					<Link href="/login">
-						<Button>ログイン</Button>
-					</Link>
+					<Button asChild>
+						<Link href="/login">ログイン</Link>
+					</Button>
 				)}
 				{!session.loading && session.account && (
 					<>
-						<Link href="/edit">
-							<Button color="primary">まとめを作る</Button>
-						</Link>
+						<Button asChild variant="default">
+							<Link href="/edit">まとめを作る</Link>
+						</Button>
 						<UserMenu
 							avatar={session.account.avatar}
 							displayName={

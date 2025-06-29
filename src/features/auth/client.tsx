@@ -1,11 +1,13 @@
 // https://github.com/zeit/next.js/blob/canary/examples/with-cookie-auth/utils/auth.js
+"use client"
+
 import { Component } from "react"
 
 import "client-only"
 import cookie from "js-cookie"
 import jwt from "jsonwebtoken"
 import nextCookie from "next-cookies"
-import Router from "next/router"
+import { useRouter } from "next/navigation"
 
 import { Account } from "@/entities/status"
 
@@ -104,7 +106,8 @@ export function withAuthSync(WrappedComponent) {
 		syncLogout(event) {
 			if (event.key === "logout") {
 				console.info("logged out from storage!")
-				Router.push("/login")
+				// Router.push("/login") // App Routerでは異なる方法で処理
+				window.location.href = "/login"
 			}
 		}
 
@@ -128,7 +131,10 @@ export function auth(ctx) {
 
 	// We already checked for server. This should only happen on client.
 	if (!token) {
-		Router.push("/login")
+		// Router.push("/login") // App Routerでは異なる方法で処理
+		if (typeof window !== "undefined") {
+			window.location.href = "/login"
+		}
 	}
 
 	return token

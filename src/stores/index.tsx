@@ -1,3 +1,5 @@
+"use client"
+
 import { useLocalObservable } from "mobx-react-lite"
 import { Instance, types } from "mobx-state-tree"
 import React from "react"
