@@ -1,1 +1,1 @@
-export { default } from "./entries-page"
+export { EntriesPage } from "./entries-page"

@@ -1,12 +1,16 @@
+"use client"
+
 import React from "react"
 
+import { Header } from "@/components/header"
 import SearchBox from "@/components/search-box"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { HagetterPostInfo } from "@/features/posts/types"
 import { RecentPosts } from "./recent-posts"
 
 interface HomePageProps {
-	recentPosts: HagetterPostInfo[]
+	recentPosts?: HagetterPostInfo[]
+	error?: string
 }
 
 const DonmiChan: React.FC = () => {
@@ -22,14 +26,25 @@ const DonmiChan: React.FC = () => {
 	return <img src={logo} style={{ width: "100%", display: "block" }} alt="" />
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ recentPosts }) => {
+const HomePage: React.FC<HomePageProps> = ({ recentPosts = [], error }) => {
+	if (error) {
+		return (
+			<div>
+				<Header />
+				<div className="p-4">{error}</div>
+			</div>
+		)
+	}
+
 	return (
-		<div className="mx-auto max-w-7xl bg-white md:bg-transparent md:px-4 md:pt-4">
-			<div className="xs:dishplay-block mb-2 md:flex">
-				<div>
-					<Card className="mr-4 hidden w-[300px] grow-1 bg-white md:block">
-						<CardContent className="p-0">
-							<React.Suspense fallback={""}>
+		<div>
+			<Header />
+			<div className="mx-auto max-w-7xl bg-white md:bg-transparent md:px-4 md:pt-4">
+				<div className="xs:dishplay-block mb-2 md:flex">
+					<div>
+						<Card className="mr-4 hidden w-[300px] grow-1 bg-white md:block">
+							<CardContent className="p-0">
+								<React.Suspense fallback={""}>
 								<DonmiChan />
 							</React.Suspense>
 						</CardContent>
@@ -46,7 +61,9 @@ export const HomePage: React.FC<HomePageProps> = ({ recentPosts }) => {
 				</Card>
 			</div>
 		</div>
+		</div>
 	)
 }
 
+export { HomePage }
 export default HomePage

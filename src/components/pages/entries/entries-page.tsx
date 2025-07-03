@@ -6,10 +6,10 @@ import { EntryFooter } from "@/components/entry-footer"
 import { Spinner } from "@/components/spinner"
 import { Button } from "@/components/ui/button"
 import { HagetterPostInfo } from "@/features/posts/types"
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import { HagetterApiClient } from "@/lib/hagetter-api-client"
 import { observer, useSession, useStore } from "@/stores"
 
-const EntriesPage = observer(() => {
+export const EntriesPage = observer(() => {
 	const app = useStore()
 	const session = useSession()
 	const router = useRouter()

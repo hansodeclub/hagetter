@@ -1,5 +1,9 @@
-import { listInstances } from "@/features/instances/actions"
 import { LoginPage } from "@/components/pages/login"
+import { listInstances } from "@/features/instances/actions"
+
+export const metadata = {
+	title: "ログイン - Hagetter",
+}
 
 export default async function Login() {
 	try {
@@ -8,9 +12,13 @@ export default async function Login() {
 	} catch (error) {
 		console.error("Error fetching instances:", error)
 		return (
-			<LoginPage 
-				instances={[]} 
-				error={error instanceof Error ? error : new Error("Failed to fetch instances")} 
+			<LoginPage
+				instances={[]}
+				error={
+					error instanceof Error
+						? error
+						: new Error("Failed to fetch instances")
+				}
 			/>
 		)
 	}

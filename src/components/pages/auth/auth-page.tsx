@@ -3,7 +3,7 @@
 import React from "react"
 import { useSession } from "@/stores"
 
-interface AuthClientProps {
+interface AuthPageProps {
 	status: "loading" | "success" | "error"
 	error?: string
 	user?: any
@@ -11,7 +11,7 @@ interface AuthClientProps {
 	profile?: any
 }
 
-export function AuthClient({ status, error, user, token, profile }: AuthClientProps) {
+export function AuthPage({ status, error, user, token, profile }: AuthPageProps) {
 	const session = useSession()
 
 	React.useEffect(() => {

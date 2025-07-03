@@ -1,5 +1,5 @@
 import { getPost } from "@/features/posts/actions"
-import { PostClient } from "./post-client"
+import { PostContent } from "@/components/pages/post/post-content"
 
 interface PostPageProps {
 	params: Promise<{ hid: string }>
@@ -12,12 +12,12 @@ export default async function PostPage({ params }: PostPageProps) {
 		const post = await getPost(hid)
 		
 		if (!post) {
-			return <PostClient error="投稿が見つかりません" />
+			return <PostContent error="投稿が見つかりません" />
 		}
 
-		return <PostClient post={post} />
+		return <PostContent post={post} />
 	} catch (error) {
 		console.error("Failed to load post:", error)
-		return <PostClient error="エラーが発生しました" />
+		return <PostContent error="エラーが発生しました" />
 	}
 }

@@ -1,6 +1,8 @@
+"use client"
+
 import { Spinner } from "@/components/spinner"
 import { observer } from "mobx-react-lite"
-import { useRouter, useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import React from "react"
 
 import Logo from "@/components/logo"
@@ -13,9 +15,8 @@ import { MultiSelectMenu } from "./menus/multi-select-menu"
 import { PostEditor, leftColumnWidth } from "./post-editor"
 import { SidePanel } from "./side-panel"
 
-const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
+const EditPage: React.FC<{ hid?: string }> = observer(({ hid }) => {
 	const router = useRouter()
-	const params = useParams()
 	const [loading, setLoading] = React.useState(true)
 	const [code, setCode] = React.useState<number>()
 	const [error, setError] = React.useState<string>()
@@ -46,17 +47,14 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 		}
 	}, [width])
 
-	const hid = params.hid as string
 	React.useEffect(() => {
-		if (create) {
+		if (!hid) {
 			editor.clear()
 			setCode(200)
 			setLoading(false)
 			return
 		}
 		let unmounted = false
-
-		if (!hid) return
 		if (!session.loading && !session.loggedIn) {
 			setError("ログインしていません")
 		}
@@ -163,4 +161,5 @@ const EditPage: React.FC<{ create?: boolean }> = observer(({ create }) => {
 	)
 })
 
+export { EditPage }
 export default EditPage

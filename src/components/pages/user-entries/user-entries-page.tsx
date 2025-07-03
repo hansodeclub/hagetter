@@ -1,7 +1,10 @@
+"use client"
+
 import React from "react"
 
 import { FallbackAvatar } from "@/components/avatar"
 import { EntryFooter } from "@/components/entry-footer"
+import { Header } from "@/components/header"
 import { HagetterPostInfo } from "@/features/posts/types"
 
 export interface UserEntriesPageProps {
@@ -9,14 +12,16 @@ export interface UserEntriesPageProps {
 	posts: HagetterPostInfo[]
 }
 
-const UserEntriesPage: React.FC<UserEntriesPageProps> = ({
+export const UserEntriesPage: React.FC<UserEntriesPageProps> = ({
 	username,
 	posts,
 }) => {
 	const owner = posts[0].owner
 
 	return (
-		<div className="mx-auto max-w-4xl px-2">
+		<div>
+			<Header />
+			<div className="mx-auto max-w-4xl px-2">
 			<div className="mt-4 flex">
 				<div>
 					<FallbackAvatar
@@ -53,7 +58,9 @@ const UserEntriesPage: React.FC<UserEntriesPageProps> = ({
 				</div>
 			</div>
 		</div>
+		</div>
 	)
 }
+
 
 export default UserEntriesPage
