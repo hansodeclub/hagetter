@@ -1,4 +1,4 @@
-import type { QueryResult } from "features/api/types"
+import type { QueryResult } from "@/lib/pagination/types"
 import { v4 as uuidv4 } from "uuid"
 
 import type { InstanceInfo } from "@/entities/instance"
@@ -11,7 +11,7 @@ import type {
 } from "@/entities/post"
 
 import type { Account, Status } from "@/entities/status"
-import type { ApiResponse, Links } from "@/features/api/types/ApiResponse"
+import type { ApiResponse, Links } from "@/features/api/types"
 import type { ErrorReport } from "@/features/error-reports/types"
 import { fromJsonObject, toJson } from "@/lib/serializer"
 

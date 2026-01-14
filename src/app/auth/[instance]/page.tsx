@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken"
 
 import { AuthPage } from "@/components/pages/auth"
-import { signIn } from "@/features/auth/auth"
+import { OAuthSignIn } from "@/features/auth/signin"
+import { getInstanceSecret } from "@/features/instances/actions"
 import { getHost } from "@/lib/utils/server-url"
 
-interface PageProps {
+export interface PageProps {
 	params: Promise<{ instance: string }>
 	searchParams: Promise<{ code?: string }>
 }
@@ -20,7 +21,20 @@ export default async function Page({ params, searchParams }: PageProps) {
 
 	try {
 		const redirectUri = `${host}/auth/${instance}`
-		const { token, profile } = await signIn(code, instance, redirectUri)
+		const instanceInfo = await getInstanceSecret(instance)
+		if (!instanceInfo) {
+			throw new Error(`Unable to find instance: ${instance}`)
+		}
+
+		const { token, profile } = await OAuthSignIn(
+			instanceInfo.name,
+			instanceInfo.server,
+			instanceInfo.clientId,
+			instanceInfo.clientSecret,
+			instanceInfo.sns,
+			code,
+			redirectUri,
+		)
 
 		const decodedToken = jwt.decode(token)
 		if (!decodedToken || typeof decodedToken !== "object") {

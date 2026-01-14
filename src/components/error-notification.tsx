@@ -6,7 +6,7 @@ import { AlertTriangle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import { HagetterApiClient } from "@/lib/hagetter-api-client"
 import { useStore } from "@/stores"
 
 const sendError = async (error: Error) => {

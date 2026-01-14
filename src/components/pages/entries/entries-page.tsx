@@ -1,3 +1,5 @@
+"use client"
+
 import { Pencil as PencilIcon, Trash2 as TrashIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React from "react"
@@ -41,6 +43,7 @@ export const EntriesPage = observer(() => {
 		hagetterClient
 			.getMyPosts(session.account.acct, token)
 			.then((result) => {
+				console.log(result)
 				if (!unmounted) {
 					setPosts(result.items)
 					setLoading(false)

@@ -6,7 +6,7 @@ import React from "react"
 
 import { Spinner } from "@/components/spinner"
 import { ErrorReport } from "@/features/error-reports/types"
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import { HagetterApiClient } from "@/lib/hagetter-api-client"
 
 export default function ErrorPage() {
 	const params = useParams()

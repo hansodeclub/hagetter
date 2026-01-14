@@ -1,12 +1,11 @@
 "use client"
 
-import Head from "next/head"
 import React from "react"
 
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { InstanceInfo } from "@/entities/instance"
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import { HagetterApiClient } from "@/lib/hagetter-api-client"
 import { getClientHost } from "@/lib/utils/url"
 import { InstanceSelector } from "./instance-selector"
 export interface PageProps {
@@ -30,9 +29,6 @@ export const LoginPage: React.FC<PageProps> = ({ instances, error }) => {
 
 	return (
 		<div>
-			<Head>
-				<title>Hagetter - ログイン</title>
-			</Head>
 			<Header />
 			<div className="container mx-auto mt-8 p-2">
 				<p>ログインするインスタンスを選択してください。</p>

@@ -1,7 +1,7 @@
 import { Instance, cast, types } from "mobx-state-tree"
 
 import { Status } from "@/features/posts/types"
-import { HagetterApiClient } from "@/lib/hagetterApiClient"
+import { HagetterApiClient } from "@/lib/hagetter-api-client"
 import SessionStore from "./session-store"
 
 const UrlSearchTimelineStore = types

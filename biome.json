@@ -10,7 +10,6 @@
       "style": {
         "noUselessElse": "off",
         "useImportType": "off",
-        "useDefaultImportName": "off",
         "noDefaultExport": "off"
       },
       "a11y": {

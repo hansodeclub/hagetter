@@ -1,38 +1,27 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
+
+import { getMastoSession } from "@/features/auth/session"
+import { errorResponse, successResponse } from "@/features/rest-api/response"
 
 export async function GET(request: NextRequest) {
 	try {
 		// 認証とMastodonクライアントが必要
-		const authHeader = request.headers.get("authorization")
-		if (!authHeader) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+		const session = getMastoSession(request)
+		if (!session) {
+			return errorResponse("Unauthorized", 401)
 		}
 
-		// withApiMastoの代替実装が必要（簡略化）
-		// TODO: 実際のMastodonクライアント実装
-		// const response = await client.verifyAccountCredentials()
-		// const profile = response.data
-		// const [_, instance] = user.split('@')
-		// if (!profile.acct.includes('@')) {
-		//   profile.acct = `${profile.acct}@${instance}`
-		// }
-		// return NextResponse.json({ data: profile })
-		
-		// 一時的なモック実装
-		return NextResponse.json({ 
-			data: {
-				id: "mock_user_id",
-				username: "mock_user",
-				acct: "mock_user@example.com",
-				display_name: "Mock User",
-				avatar: "",
-				followers_count: 0,
-				following_count: 0,
-				statuses_count: 0
-			}
-		})
+		const { client, instance } = session
+		const response = await client.verifyAccountCredentials()
+		const profile = response.data
+
+		if (!profile.acct.includes("@")) {
+			profile.acct = `${profile.acct}@${instance}`
+		}
+
+		return successResponse(profile)
 	} catch (err) {
 		console.error(err)
-		return NextResponse.json({ error: err.message }, { status: 500 })
+		return errorResponse(err.message, 500)
 	}
 }

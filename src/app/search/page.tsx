@@ -1,20 +1,34 @@
-"use client"
-
-import React from "react"
-import Head from "next/head"
-import { useSearchParams } from "next/navigation"
+import { Metadata } from "next"
 import sanitizeHtml from "sanitize-html"
 
 import { Header } from "@/components/header"
 import { HitItem, SearchPage } from "@/components/pages/search"
 import { getHitString, search } from "@/features/search/algolia"
 
-const sanitizer = (text) =>
+const sanitizer = (text: string): string =>
 	sanitizeHtml(text, {
 		allowedTags: ["em"],
 	})
 
-const processItem = (hit: any): HitItem => {
+interface AlgoliaHit {
+	objectID: string
+	id: string
+	title: string
+	image?: string
+	stars: number
+	owner: string
+	description: string
+	visibility: string
+	created_at: string
+	updated_at: string
+	_highlightResult: {
+		title: { value: string }
+		description: { value: string }
+		items?: Array<{ value: string; matchLevel: string }>
+	}
+}
+
+const processItem = (hit: AlgoliaHit): HitItem => {
 	return {
 		hid: hit.objectID,
 		highlightedTitle: sanitizer(hit._highlightResult.title.value),
@@ -34,47 +48,46 @@ const processItem = (hit: any): HitItem => {
 	}
 }
 
-export default function Search() {
-	const searchParams = useSearchParams()
-	const keyword = searchParams.get("q") || ""
-	
-	const [items, setItems] = React.useState<HitItem[]>([])
-	const [loading, setLoading] = React.useState(true)
-	const [error, setError] = React.useState<string | null>(null)
+type PageProps = {
+	searchParams: { q?: string }
+}
 
-	React.useEffect(() => {
-		if (!keyword) {
-			setItems([])
-			setLoading(false)
-			return
+export async function generateMetadata({
+	searchParams,
+}: PageProps): Promise<Metadata> {
+	const keyword = searchParams.q || ""
+	return {
+		title: keyword ? `検索結果：${keyword} - Hagetter` : "検索 - Hagetter",
+	}
+}
+
+export default async function SearchPage({ searchParams }: PageProps) {
+	const keyword = searchParams.q || ""
+
+	let items: HitItem[] = []
+	let error: string | null = null
+
+	if (keyword) {
+		try {
+			const { hits } = await search(keyword)
+			items = (hits as AlgoliaHit[]).map(processItem)
+		} catch (err) {
+			console.warn(err)
+			error = err instanceof Error ? err.message : "検索エラーが発生しました"
 		}
+	}
 
-		search(keyword)
-			.then(({ hits }) => {
-				setItems(hits.map(processItem))
-				setLoading(false)
-			})
-			.catch((err) => {
-				console.warn(err)
-				setError(err.message)
-				setLoading(false)
-			})
-	}, [keyword])
-
-	if (loading) {
+	if (error) {
 		return (
 			<div>
 				<Header />
-				<div className="p-4">検索中...</div>
+				<div className="p-4">エラー: {error}</div>
 			</div>
 		)
 	}
 
 	return (
 		<div>
-			<Head>
-				<title>検索結果：{keyword} - Hagetter</title>
-			</Head>
 			<Header />
 			<SearchPage items={items} keyword={keyword} />
 		</div>

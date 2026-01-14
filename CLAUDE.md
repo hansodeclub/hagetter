@@ -51,7 +51,7 @@ src/
 ├── entities/           # データ型定義
 ├── hooks/              # React hooks (固有ドメインを持たないもの)
 ├── lib/                # ユーティリティ (固有ドメインを持たないもの)
-└── pages/              # Next.js ページ
+└── app/               # Next.js ページ
 ```
 
 ## アーキテクチャ更新履歴

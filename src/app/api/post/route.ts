@@ -1,21 +1,19 @@
-import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath, revalidateTag } from "next/cache"
+import { NextRequest } from "next/server"
 
-import { HagetterItem, PostVisibility, isPostVisibility } from "@/entities/post"
+import { HagetterItem, isPostVisibility } from "@/entities/post"
 import { VerifiableStatus } from "@/entities/verifiable-status"
-import {
-	getMyAccount,
-	signStatus,
-	withApiAuth,
-	withApiMasto,
-} from "@/features/api/server"
-import { NotFound } from "@/features/api/types/HttpResponse"
+import { getMyAccount } from "@/features/auth/mastodon"
+import { signStatus } from "@/features/posts/verification"
+
+import { getMastoSession, getSession } from "@/features/auth/session"
 import {
 	createPost,
 	deletePost,
 	getPost,
 	updatePost,
 } from "@/features/posts/actions"
+import { errorResponse, successResponse } from "@/features/rest-api/response"
 import { fromJsonObject, toJsonObject } from "@/lib/serializer"
 import head from "@/lib/utils/head"
 
@@ -35,22 +33,21 @@ export async function GET(request: NextRequest) {
 		const { searchParams } = new URL(request.url)
 		const id = searchParams.get("id")
 		const action = searchParams.get("action")
-		
+
 		if (!id) {
-			return NextResponse.json({ error: "No ID" }, { status: 400 })
+			return errorResponse("No ID", 400)
 		}
 
 		if (action === "edit") {
 			// 認証が必要な編集用取得
-			const authHeader = request.headers.get("authorization")
-			if (!authHeader) {
-				return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+			const session = getSession(request)
+			if (!session) {
+				return errorResponse("Unauthorized", 401)
 			}
 
-			// withApiAuthの代替実装が必要（ここでは簡略化）
 			const post = await getPost(id)
 			if (!post) {
-				return NextResponse.json({ error: "Item not found" }, { status: 404 })
+				return errorResponse("Item not found", 404)
 			}
 
 			const securePost = {
@@ -59,36 +56,38 @@ export async function GET(request: NextRequest) {
 				id,
 			}
 
-			return NextResponse.json({ data: securePost })
+			return successResponse(securePost)
 		} else {
 			// 一般的な取得
 			const post = await getPost(id)
 			if (!post) {
-				return NextResponse.json({ error: "Item not found" }, { status: 404 })
+				return errorResponse("Item not found", 404)
 			}
 
-			return NextResponse.json({ data: toJsonObject(post) })
+			return successResponse(toJsonObject(post))
 		}
 	} catch (err) {
 		console.error(err)
-		return NextResponse.json({ error: err.message }, { status: 500 })
+		return errorResponse(err.message, 500)
 	}
 }
 
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json()
-		
+
 		// 認証とMastodonクライアントの取得が必要
-		// withApiMastoの代替実装が必要（ここでは簡略化）
-		
-		if (!isPostVisibility(body.visibility)) {
-			return NextResponse.json(
-				{ error: `Invalid visibility: ${body.visibility}` },
-				{ status: 400 }
-			)
+		const session = getMastoSession(request)
+		if (!session) {
+			return errorResponse("Unauthorized", 401)
 		}
 
+		if (!isPostVisibility(body.visibility)) {
+			return errorResponse(`Invalid visibility: ${body.visibility}`, 400)
+		}
+
+		// Get full account object
+		const account = await getMyAccount(session.client, session.instance)
 		let result
 		if (!body.hid) {
 			// 新規投稿作成
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
 					visibility: body.visibility,
 					contents: fromJsonObject(body.data),
 				},
-				body.owner // 実際の実装では認証から取得
+				account,
 			)
 		} else {
 			// 投稿更新
@@ -114,7 +113,7 @@ export async function POST(request: NextRequest) {
 					visibility: body.visibility,
 					contents: fromJsonObject(body.data),
 				},
-				body.owner // 実際の実装では認証から取得
+				account,
 			)
 		}
 
@@ -125,10 +124,10 @@ export async function POST(request: NextRequest) {
 			revalidateTag("posts")
 		}
 
-		return NextResponse.json({ data: result })
+		return successResponse(result)
 	} catch (err) {
 		console.error(err)
-		return NextResponse.json({ error: err.message }, { status: 500 })
+		return errorResponse(err.message, 500)
 	}
 }
 
@@ -136,28 +135,28 @@ export async function DELETE(request: NextRequest) {
 	try {
 		const { searchParams } = new URL(request.url)
 		const id = searchParams.get("id")
-		
+
 		if (!id) {
-			return NextResponse.json({ error: "ID not specified" }, { status: 400 })
+			return errorResponse("ID not specified", 400)
 		}
 
 		// 認証が必要
-		const authHeader = request.headers.get("authorization")
-		if (!authHeader) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+		const session = getSession(request)
+		if (!session) {
+			return errorResponse("Unauthorized", 401)
 		}
 
-		// withApiAuthの代替実装が必要（ここでは簡略化）
-		await deletePost(id, "user") // 実際の実装では認証から取得
+		const { user } = session
+		await deletePost(id, user)
 
 		// キャッシュの再検証
 		revalidatePath("/")
 		revalidatePath(`/hi/${id}`)
 		revalidateTag("posts")
 
-		return NextResponse.json({ data: { key: id } })
+		return successResponse({ key: id })
 	} catch (err) {
 		console.error(err)
-		return NextResponse.json({ error: err.message }, { status: 500 })
+		return errorResponse(err.message, 500)
 	}
 }

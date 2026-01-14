@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
-import { transformStatus } from "@/features/api/server"
+import { getMastoSession } from "@/features/auth/session"
+import { transformStatus } from "@/features/posts/verification"
+import { errorResponse, successResponse } from "@/features/rest-api/response"
 
 export async function POST(request: NextRequest) {
 	try {
@@ -8,40 +10,36 @@ export async function POST(request: NextRequest) {
 		const urls = body.urls
 
 		if (!urls || !Array.isArray(urls)) {
-			return NextResponse.json(
-				{ error: "urls array is required" },
-				{ status: 400 }
-			)
+			return errorResponse("urls array is required", 400)
 		}
 
 		// 認証とMastodonクライアントが必要
-		const authHeader = request.headers.get("authorization")
-		if (!authHeader) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+		const session = getMastoSession(request)
+		if (!session) {
+			return errorResponse("Unauthorized", 401)
 		}
 
-		// withApiMastoの代替実装が必要（簡略化）
-		// const [_, instance] = user.split('@')
-		// const ids: string[] = []
-		// urls.forEach((url) => {
-		//   const match = url.match(`https://${instance.replace('.', '\\.')}/.*/(\\d*)$`)
-		//   if (match) {
-		//     ids.push(match[1])
-		//   }
-		// })
-		// 
-		// const result: any[] = []
-		// for (const id of ids) {
-		//   const status = await client.getStatus(id)
-		//   result.push(status.data)
-		// }
-		// 
-		// return NextResponse.json({ data: transformStatus(result, instance) })
+		const { client, instance } = session
+		const ids: string[] = []
 
-		// 一時的なモック実装
-		return NextResponse.json({ data: [] })
+		urls.forEach((url) => {
+			const match = url.match(
+				`https://${instance.replace(".", "\\.")}/.*/(\\d*)$`,
+			)
+			if (match) {
+				ids.push(match[1])
+			}
+		})
+
+		const result: any[] = []
+		for (const id of ids) {
+			const status = await client.getStatus(id)
+			result.push(status.data)
+		}
+
+		return successResponse(transformStatus(result, instance))
 	} catch (err) {
 		console.error(err)
-		return NextResponse.json({ error: err.message }, { status: 500 })
+		return errorResponse(err.message, 500)
 	}
 }

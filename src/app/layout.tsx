@@ -4,10 +4,9 @@ import React from "react"
 import { ErrorNotification } from "@/components/error-notification"
 import { ResponsiveIndicator } from "@/components/responsive-indicator"
 import { StoreProvider } from "@/stores"
-import "@/styles.css"
 import { ClientSessionProvider } from "./client-session-provider"
 
-require("setimmediate")
+import "@/styles.css"
 
 export const metadata: Metadata = {
 	title: "Hagetter",

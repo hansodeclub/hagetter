@@ -11,4 +11,4 @@ import EditPage from "./edit-page"
 // |     BottomBar                     |
 // +-------------------+---------------+
 
-export default EditPage
+export { EditPage}
