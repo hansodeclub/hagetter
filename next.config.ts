@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-	eslint: {
-		ignoreDuringBuilds: true,
+	turbopack: {
+		root: __dirname,
 	},
 	// App Router用のカスタムキャッシュハンドラー（一時的に無効）
 	// cacheHandler: require.resolve("./cache-handler.js"),

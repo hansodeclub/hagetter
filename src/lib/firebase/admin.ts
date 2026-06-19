@@ -1,10 +1,6 @@
-import admin from 'firebase-admin'
+import { getApp, getApps, initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 
-const initializeApp = () => {
-  return admin.initializeApp({})
-}
-
 export const firestore = getFirestore(
-  admin.apps.length ? admin.app() : initializeApp()
+  getApps().length ? getApp() : initializeApp({})
 )

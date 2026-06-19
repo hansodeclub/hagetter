@@ -5,10 +5,10 @@ import { toJsonObject } from "@/lib/serializer"
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { hid: string } }
+	{ params }: { params: Promise<{ hid: string }> }
 ) {
 	try {
-		const id = params.hid
+		const { hid: id } = await params
 		if (!id) {
 			return NextResponse.json(
 				{ message: "ID not specified" },

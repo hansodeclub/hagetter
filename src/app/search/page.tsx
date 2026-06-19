@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import sanitizeHtml from "sanitize-html"
 
 import { Header } from "@/components/header"
-import { HitItem, SearchPage } from "@/components/pages/search"
+import { HitItem, SearchPage as SearchPageView } from "@/components/pages/search"
 import { getHitString, search } from "@/features/search/algolia"
 
 const sanitizer = (text: string): string =>
@@ -49,20 +49,22 @@ const processItem = (hit: AlgoliaHit): HitItem => {
 }
 
 type PageProps = {
-	searchParams: { q?: string }
+	searchParams: Promise<{ q?: string }>
 }
 
 export async function generateMetadata({
 	searchParams,
 }: PageProps): Promise<Metadata> {
-	const keyword = searchParams.q || ""
+	const { q } = await searchParams
+	const keyword = q || ""
 	return {
 		title: keyword ? `検索結果：${keyword} - Hagetter` : "検索 - Hagetter",
 	}
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
-	const keyword = searchParams.q || ""
+	const { q } = await searchParams
+	const keyword = q || ""
 
 	let items: HitItem[] = []
 	let error: string | null = null
@@ -89,7 +91,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
 	return (
 		<div>
 			<Header />
-			<SearchPage items={items} keyword={keyword} />
+			<SearchPageView items={items} keyword={keyword} />
 		</div>
 	)
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import React from "react"
 
 import { ErrorNotification } from "@/components/error-notification"
@@ -13,7 +13,12 @@ export const metadata: Metadata = {
 	other: {
 		"og:site_name": "Hagetter",
 	},
-	viewport: "minimum-scale=1, initial-scale=1, width=device-width",
+}
+
+export const viewport: Viewport = {
+	minimumScale: 1,
+	initialScale: 1,
+	width: "device-width",
 }
 
 export default function RootLayout({

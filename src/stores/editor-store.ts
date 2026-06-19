@@ -231,7 +231,7 @@ export const EditorStore = types
 				? self.items.findIndex((item) => item.id === anchor)
 				: -1
 			const sortKey =
-				anchorIndex !== -1 ? self.items[anchorIndex].sortKey - 1 : id
+				anchorIndex !== -1 ? self.items[anchorIndex].sortKey - 1 : undefined
 
 			const item: TextItem = {
 				type: "text",

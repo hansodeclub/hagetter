@@ -11,7 +11,7 @@ import type {
 } from "@/entities/post"
 
 import type { Account, Status } from "@/entities/status"
-import type { ApiResponse, Links } from "@/features/api/types"
+import type { ApiResponse, Links } from "@/features/rest-api/types"
 import type { ErrorReport } from "@/features/error-reports/types"
 import { fromJsonObject, toJson } from "@/lib/serializer"
 

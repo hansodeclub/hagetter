@@ -1,34 +1,32 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "style": {
-        "noUselessElse": "off",
-        "useImportType": "off",
-        "noDefaultExport": "off"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "off"
-      },
-      "nursery": {
-        "useSortedClasses": {
-          "level": "warn",
-          "fix": "safe"
-        }
-      },
-      "complexity": {
-        "noForEach": "off"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "semicolons": "asNeeded"
-    }
-  }
+	"$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"noUselessElse": "off",
+				"useImportType": "off",
+				"noDefaultExport": "off"
+			},
+			"a11y": {
+				"useKeyWithClickEvents": "off"
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"level": "warn",
+					"fix": "safe"
+				}
+			},
+			"complexity": {
+				"noForEach": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded"
+		}
+	}
 }
